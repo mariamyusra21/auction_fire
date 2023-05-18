@@ -1,3 +1,3 @@
 # auction_fire
 
-A new Flutter project.
+FYP ActionFreeApp is an Online Auction System based on Real-time bidding system
