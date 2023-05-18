@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "812678785636",
+    "project_id": "fyp-auction-fire",
+    "storage_bucket": "fyp-auction-fire.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:812678785636:android:9935c6ae78e00a3bd90d71",
+        "android_client_info": {
+          "package_name": "com.example.auction_fire"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "812678785636-51e7gj8lpmbrg46io16bn8g2i56espvr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIMla3FMEDMMhCekV0nOXE4oYeg_37ORk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "812678785636-51e7gj8lpmbrg46io16bn8g2i56espvr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
