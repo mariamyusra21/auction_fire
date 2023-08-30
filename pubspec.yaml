@@ -16,7 +16,7 @@ dependencies:
   firebase_auth: ^4.2.10
   cloud_firestore: ^4.6.0
   fluttertoast: ^8.2.1
-  #google_sign_in: ^6.1.0
+  google_sign_in: 
   wc_form_validators: ^1.0.0
 
 dev_dependencies:

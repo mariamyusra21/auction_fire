@@ -1,4 +1,5 @@
 import 'package:auction_fire/services/utilities.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -32,15 +33,25 @@ class _SignUpState extends State<SignUp> {
     usernameController.dispose();
   }
 
-  void signup() {
+  void signup(email, password) {
     setState(() {
       loading = true;
     });
     auth
-        .createUserWithEmailAndPassword(
-            email: emailController.text.toString(),
-            password: passwordController.text.toString())
+        .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
+      if (auth.currentUser!.email!.endsWith('@gmail.com')) {
+        FirebaseFirestore.instance
+            .collection('Users')
+            .doc(auth.currentUser!.uid)
+            .set({
+          'username': usernameController.text,
+          'email': email,
+          'phoneNumber': phoneNumController.text,
+          'password': password
+        });
+        Utilities().toastMessage('Account Created Successfully');
+      }
       setState(() {
         loading = false;
       });
@@ -221,7 +232,8 @@ class _SignUpState extends State<SignUp> {
                             child: TextButton(
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                  signup();
+                                  signup(emailController.text,
+                                      passwordController.text);
                                   Navigator.pushNamed(context, 'LoginPage');
                                 }
                               },
@@ -237,9 +249,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                         TextButton(
                           onPressed: () {
-                            
-                              Navigator.pushNamed(context, 'LoginPage');
-                            
+                            Navigator.pushNamed(context, 'LoginPage');
                           },
                           child: Text(
                             "Back",

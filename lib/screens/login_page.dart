@@ -1,9 +1,10 @@
-import 'package:auction_fire/screens/home_screen.dart';
-import 'package:auction_fire/screens/login_phone_num.dart';
 import 'package:auction_fire/services/utilities.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'home_screen.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -14,6 +15,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
+  final resetEmailController = TextEditingController();
 
   final passwordController = TextEditingController();
 
@@ -26,18 +28,26 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    resetEmailController.dispose();
     super.dispose();
   }
 
-  void login() {
+  void login(email, password) {
     setState(() {
       loading = true;
     });
     _auth
-        .signInWithEmailAndPassword(
-            email: emailController.text, password: passwordController.text)
+        .signInWithEmailAndPassword(email: email, password: password)
         .then((value) {
       Utilities().toastMessage(value.user!.email.toString());
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(_auth.currentUser!.uid)
+          .update({
+        "password": password,
+      }).then((_) {
+        Utilities().toastMessage('New Password Updated!');
+      });
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => HomeScreen()));
       setState(() {
@@ -50,6 +60,16 @@ class _LoginPageState extends State<LoginPage> {
         loading = false;
       });
     });
+  }
+
+  void resetPasswordEmail(email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      Utilities().toastMessage('Password Reset Email has been sent');
+    } on FirebaseAuthException catch (e) {
+      // TODO
+      Utilities().toastMessage(e.toString());
+    }
   }
 
   @override
@@ -175,7 +195,41 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Change Password'),
+                                      content: TextFormField(
+                                          controller: resetEmailController,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Email',
+                                              helperText: 'Enter your Email',
+                                              prefixIcon:
+                                                  Icon(Icons.lock_open)),
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Enter a new valid password';
+                                            }
+                                            return null;
+                                          }),
+                                      actions: [
+                                        IconButton(
+                                          onPressed: () {
+                                            resetPasswordEmail(
+                                                resetEmailController.text);
+                                          },
+                                          icon: Icon(Icons.mail_lock),
+                                        )
+                                      ],
+                                    );
+                                  });
+                            },
                             child: Text(
                               "Forget Password?",
                               style: TextStyle(
@@ -205,7 +259,8 @@ class _LoginPageState extends State<LoginPage> {
                           child: TextButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                login();
+                                login(emailController.text,
+                                    passwordController.text);
                               }
                             },
                             child: Text(
@@ -233,21 +288,16 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () async {},
                           icon: Icon(
                             FontAwesomeIcons.google,
                             color: Colors.orangeAccent[700],
                           ),
                         ),
                         IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: ((context) => LoginPhoneNum())));
-                          },
+                          onPressed: () {},
                           icon: Icon(
-                            FontAwesomeIcons.phone,
+                            FontAwesomeIcons.facebook,
                             color: Colors.orangeAccent[700],
                           ),
                         ),
