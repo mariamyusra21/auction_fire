@@ -18,6 +18,8 @@ dependencies:
   fluttertoast: ^8.2.1
   google_sign_in: 
   wc_form_validators: ^1.0.0
+  sizer:
+  flutter_admin_scaffold: ^1.2.0
 
 dev_dependencies:
   flutter_test:
