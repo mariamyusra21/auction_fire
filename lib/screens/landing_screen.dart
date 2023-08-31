@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ class LandiingScreen extends StatelessWidget {
   // const LandiingScreen({super.key});
 
   // to initialize app in firebase
-  // Future<FirebaseApp> initialize = Firebase.initializeApp();
+  Future<FirebaseApp> initialize = Firebase.initializeApp();
 
   LandiingScreen({super.key});
 
@@ -20,7 +21,7 @@ class LandiingScreen extends StatelessWidget {
     //a widget that responds to changes in state or dependencies by building itself
     //based on the most recent snapshot of a Future
     return FutureBuilder(
-      // future: initialize,
+      future: initialize,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         //agr koi error aye example internet issue then ye if wala block chale
         if (snapshot.hasError) {

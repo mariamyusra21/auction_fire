@@ -10,10 +10,12 @@ class Layout_Screen extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       //contraints check the max and min height, width of the screen on which app is running
-      if (constraints.minWidth > 900) {
-        return WebLoginScreen();
-      } else {
+      if (constraints.maxWidth < 700) {
         return LandiingScreen();
+      } else {
+        // kIsWeb:
+        // true;
+        return WebLoginScreen();
       }
     });
   }
