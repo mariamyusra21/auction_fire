@@ -10,13 +10,13 @@ import '../../widgets/bidtextfield.dart';
 import '../../widgets/styles.dart';
 
 class WebLoginScreen extends StatefulWidget {
-  static const String id = "weblogin";
+  const WebLoginScreen({Key? key}) : super(key: key);
+  final String id = "weblogin";
   @override
   State<WebLoginScreen> createState() => _WebLoginScreenState();
 }
 
 class _WebLoginScreenState extends State<WebLoginScreen> {
-  // const WebLoginScreen({Key? key}) : super(key: key);
   TextEditingController userNameC = TextEditingController();
 
   TextEditingController passwordC = TextEditingController();
@@ -84,7 +84,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
                       controller: userNameC,
                       HintText: "UserName...",
                       validate: (v) {
-                        if (v!.isEmpty) {
+                        if (v.isEmpty) {
                           return "email should not be empty";
                         }
                         return null;

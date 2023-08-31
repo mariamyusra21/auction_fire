@@ -1,6 +1,5 @@
 import 'package:auction_fire/screens/landing_screen.dart';
 import 'package:flutter/material.dart';
-
 import 'admin_screens/web_login.dart';
 
 class Layout_Screen extends StatelessWidget {
