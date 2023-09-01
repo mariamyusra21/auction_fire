@@ -1,3 +1,4 @@
+import 'package:auction_fire/screens/admin_screens/web_main.dart';
 import 'package:auction_fire/screens/layout_screen.dart';
 import 'package:auction_fire/screens/login_page.dart';
 import 'package:auction_fire/screens/signup_page.dart';
@@ -41,7 +42,8 @@ void main() async {
       routes: {
         'LayoutPage': (context) => Layout_Screen(),
         'LoginPage': (context) => LoginPage(),
-        'SignUp': (context) => SignUp()
+        'SignUp': (context) => SignUp(),
+        'webmain': (context) => WebMainScreen()
       },
     ),
   ));
