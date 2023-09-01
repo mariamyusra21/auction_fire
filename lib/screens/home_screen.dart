@@ -1,3 +1,5 @@
+import 'package:auction_fire/models/add_product_model.dart';
+import 'package:auction_fire/screens/user_main_func/add_product_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,7 +13,26 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+          color: Colors.blue,
+        ),
+        child: Text('Drawer Header'),
+            ),
+             ListTile(
+        title: const Text('Add Product'),
+        onTap: () {
+          setState(() {
+            AddProduct();
+          });
+        },
+      ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         backgroundColor: Color(0xFFD45A2D),
         title: Text(

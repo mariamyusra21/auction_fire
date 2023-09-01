@@ -20,6 +20,8 @@ dependencies:
   wc_form_validators: ^1.0.0
   sizer:
   flutter_admin_scaffold: ^1.2.0
+  image_picker: ^1.0.2
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:
