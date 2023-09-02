@@ -1,5 +1,5 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Uploadproduct {
   String? category;
@@ -14,26 +14,28 @@ class Uploadproduct {
   bool? isPopular;
   bool? isFavorite;
 
-  Uploadproduct({
-   required this.category,
-   required this.id,
-   required this.productName,
-   required this.detail,
-   required this.price,
-   required this.discountPrice,
-   required this.serialNo,
-   required this.imageUrls,
-   required this.isOnSale,
-   required this.isPopular,
-   required this.isFavorite
-  });
+  Uploadproduct(
+      {required this.category,
+      required this.id,
+      required this.productName,
+      required this.detail,
+      required this.price,
+      required this.discountPrice,
+      required this.serialNo,
+      required this.imageUrls,
+      required this.isOnSale,
+      required this.isPopular,
+      required this.isFavorite});
 
-
-static Future<void> addProduct(Uploadproduct addproduct) async{
+  static Future<void> addProduct(Uploadproduct addproduct) async {
     //function to add data in firestore database
-  //to point out collections we use collectionreference
-  CollectionReference db = FirebaseFirestore.instance.collection('Updateproduct'); //<= OBJECT
-    Map<String, dynamic> data= {
+    //to point out collections we use collectionreference
+    var user = FirebaseAuth.instance.currentUser;
+    CollectionReference db = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(user!.uid)
+        .collection('Updateproduct'); //<= OBJECT
+    Map<String, dynamic> data = {
       "category": addproduct.category,
       "productName": addproduct.productName,
       "detail": addproduct.detail,
@@ -45,6 +47,6 @@ static Future<void> addProduct(Uploadproduct addproduct) async{
       "isPopular": addproduct.isPopular,
       "isFavorite": addproduct.isFavorite,
     };
-   await db.add(data);
+    await db.add(data);
   }
 }

@@ -4,8 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/styles.dart';
-import 'home_screen.dart';
-import 'login_page.dart';
+import 'user_screens/home_screen.dart';
+import 'user_screens/login_page.dart';
 
 // ignore: must_be_immutable
 class LandiingScreen extends StatelessWidget {

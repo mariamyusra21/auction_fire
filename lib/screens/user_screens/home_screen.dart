@@ -1,4 +1,4 @@
-import 'package:auction_fire/screens/user_main_func/add_product_screen.dart';
+import 'package:auction_fire/screens/user_screens/user_main_func/add_product_screen.dart';
 import 'package:auction_fire/widgets/bid_color.dart';
 import 'package:flutter/material.dart';
 
@@ -10,49 +10,47 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-   // id used to access pages of app 
+  // id used to access pages of app
   Widget selectedScreen = HomeScreen();
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       drawer: Drawer(
         child: ListView(
           children: [
             const DrawerHeader(
               decoration: BoxDecoration(
-          color: Colors.blue,
-        ),
-        child: Text('Drawer Header'),
+                color: Colors.blue,
+              ),
+              child: Text('Drawer Header'),
             ),
-             ListTile(
-        title: const Text('Add Product'),
-        onTap: () { 
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddProduct(), // Replace with your actual screen widget
+            ListTile(
+              title: const Text('Add Product'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        AddProduct(), // Replace with your actual screen widget
+                  ),
+                );
+              },
             ),
-            );
-        },
-      ),
           ],
         ),
-    //  child: SingleChildScrollView(
-    //   child: Container(
-    //     child: Column(
-    //       children: [
-    //         const DrawerHeader(child: Text('WELCOME')),
-    //         MyDrawerList(),
-    //       ],
-    //     ),
-    //   ),
-    //  ),
+        //  child: SingleChildScrollView(
+        //   child: Container(
+        //     child: Column(
+        //       children: [
+        //         const DrawerHeader(child: Text('WELCOME')),
+        //         MyDrawerList(),
+        //       ],
+        //     ),
+        //   ),
+        //  ),
       ),
-     
-     
       appBar: AppBar(
         backgroundColor: Color(0xFFD45A2D),
         title: Text(
@@ -60,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-       // leading: IconButton(onPressed: () {}, icon: Icon(Icons.menu)), this is like a drawer in appbar 
+        // leading: IconButton(onPressed: () {}, icon: Icon(Icons.menu)), this is like a drawer in appbar
         actions: <Widget>[
           //notice bell button
           IconButton(
@@ -74,12 +72,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-    
       bottomNavigationBar: BottomAppBar(
         height: 60,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Padding(padding: EdgeInsets.all(10)),
+            // Padding(padding: EdgeInsets.all(5)),
             IconButton(
               onPressed: () {},
               icon: Icon(
@@ -113,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-           const  backGroundcolor(),
+            const backGroundcolor(),
             Container(
               // height: MediaQuery.of(context).size.height,
               // width: MediaQuery.of(context).size.width,
@@ -214,8 +212,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-  Widget MyDrawerList(){
-  return Container();
-}
-} 
 
+  // Widget MyDrawerList() {
+  //   return Container();
+  // }
+}
