@@ -125,8 +125,8 @@ class _HomeScreenState extends State<HomeScreen> {
               // ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
+                  const Padding(
+                    padding: EdgeInsets.all(10.0),
                     child: Text(
                       "Welcome!",
                       textAlign: TextAlign.center,
