@@ -1,13 +1,16 @@
-import 'dart:io';
+//import 'dart:io';
 import 'package:auction_fire/models/add_product_model.dart';
-import 'package:auction_fire/widgets/bid_color.dart';
+import 'package:auction_fire/screens/user_main_func/upload_image.dart';
+import 'package:auction_fire/services/storage_service.dart';
+// import 'package:auction_fire/widgets/bid_color.dart';
 import 'package:auction_fire/widgets/bidbutton.dart';
 import 'package:auction_fire/widgets/bidtextfield.dart';
 import 'package:auction_fire/widgets/styles.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
+//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
+//import 'package:permission_handler/permission_handler.dart';
 import 'package:sizer/sizer.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -99,48 +102,48 @@ class _AddProductState extends State<AddProduct> {
      }  
     }
 
-    uploadImage() async{
-      // for (var image in images) {
-      //   await postImage(image).then((downloadUrls) => imageUrls.add(downloadUrls));
-      // }
+    // uploadImage() async{
+    //   for (var image in images) {
+    //     await postImage(image).then((downloadUrls) => imageUrls.add(downloadUrls));
+    //   }
 
-      final _firebaseStorage = FirebaseStorage.instance;
-    ImagePicker _imagePicker = ImagePicker();
-    PickedFile image;
+    //   final _firebaseStorage = FirebaseStorage.instance;
+    // ImagePicker _imagePicker = ImagePicker();
+    // PickedFile image;
 
-     //Check Permissions
-    await Permission.photos.request();
+    //  //Check Permissions
+    // await Permission.photos.request();
 
-    var permissionStatus = await Permission.photos.status;
+    // var permissionStatus = await Permission.photos.status;
 
-    if (permissionStatus.isGranted){
-      //Select Image
-      XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
-      var file = File(image!.path);
+    // if (permissionStatus.isGranted){
+    //   //Select Image
+    //   XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
+    //   var file = File(image!.path);
 
-      if (image != null){
-        //Upload to Firebase
-        var snapshot = await _firebaseStorage.ref()
-        .child('images/imageName')
-        .putFile(file);
-        var downloadUrl = await snapshot.ref.getDownloadURL();
-        setState(() {
-          imageUrl = downloadUrl;
-        });
-      } else {
-        print('No Image Path Received');
-      }
-    } else {
-      print('Permission not granted. Try Again with permission access');
-    }
-    }
+    //   if (image != null){
+    //     //Upload to Firebase
+    //     var snapshot = await _firebaseStorage.ref()
+    //     .child('images/imageName')
+    //     .putFile(file);
+    //     var downloadUrl = await snapshot.ref.getDownloadURL();
+    //     setState(() {
+    //       imageUrl = downloadUrl;
+    //     });
+    //   } else {
+    //     print('No Image Path Received');
+    //   }
+    // } else {
+    //   print('Permission not granted. Try Again with permission access');
+    // }
+    // }
 
     save() async{
     setState(() {
       isSaving=true; //for loading the products saving
     });
     
-     await uploadImage();
+     PicUpload();
      await Uploadproduct.addProduct(
       Uploadproduct(category: selectedvlaue,
        id: uuid.v4(), 
@@ -167,7 +170,8 @@ class _AddProductState extends State<AddProduct> {
     var uuid = Uuid(); // generate everytime new
   @override
   Widget build(BuildContext context) {
-    
+    final Storage  storage= Storage();
+    String? selectedImagePath;
     return  Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -183,7 +187,7 @@ class _AddProductState extends State<AddProduct> {
                 BidButton(buttonTitle: 'save',
                 onPress: (){
                   save(); 
-                  
+                 PicUpload();
                 }, isLoading: isSaving,
                 
                 ), 
@@ -277,8 +281,34 @@ class _AddProductState extends State<AddProduct> {
     
                 BidButton(
                   buttonTitle: "Choose image",
-                  onPress: () {
-                    imagepick();
+                  onPress: ()  async{
+                    // imagepick();
+                    // store file from storage
+              final result= await FilePicker.platform.pickFiles(
+                type: FileType.custom,
+                allowedExtensions: ['png', 'jpg']
+              );
+
+              if(result == null){
+                ScaffoldMessenger.of(context)
+                .showSnackBar( const SnackBar(
+                  content: Text('No file selected')));
+                    return null;
+              } 
+              // save the pic path and name
+                 final path = result.files.single.path;
+                   final fileName = result.files.single.name;
+
+                   
+                   setState(() {
+              selectedImagePath = fileName;
+                 });
+
+                  //  print(path);
+                  //  print(fileName);
+                  storage.uploadFile(path!, fileName).then((value) => print('done'));
+ 
+
                   }, isLoading: isSaving,
                 ),
                 Container(
@@ -287,100 +317,32 @@ class _AddProductState extends State<AddProduct> {
                   color: Colors.grey.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(20)
                 ),
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2 // this will show 2 image in one row in container if we want more than 2 we can increase number
-                    ),
-                    itemCount: images.length, 
-                  itemBuilder: (BuildContext context, int index) {
-                    //(File(images[index].path).path)    this will fetch image file from network gives us link 
-                    // in link first image index path is images path and second one is document path
-                    // if we want to access or pick images from memory we should use memory instead of network
-                    return Stack(
-                      children: [
-                        Image.network(File(images[index].path).path,
-                       height: double.infinity, width: double.infinity, //for image size in container
-                        fit: BoxFit.cover,
-                        ),
-                        IconButton(onPressed: (){
-                         setState(() {
-                            images.removeAt(index);
-                         });
-                        }, icon: const Icon(Icons.cancel_outlined))
-                      ],
-                    );
-                  }),
-                ),
-      //           Container(
-      //             height: 120,
-      //             width: 140,
-      //   color: Colors.white,
-      //   child: Column(  
-      //     children: <Widget>[
-      //       Container(
-      //         margin: EdgeInsets.all(15),
-      //         padding: EdgeInsets.all(15),
-      //         decoration: BoxDecoration(
-      //           color: Colors.white,
-      //           borderRadius: BorderRadius.all(
-      //             Radius.circular(15),
-      //           ),
-      //           border: Border.all(color: Colors.white),
-      //           boxShadow: [
-      //             BoxShadow(
-      //               color: Colors.black12,
-      //               offset: Offset(2, 2),
-      //               spreadRadius: 2,
-      //               blurRadius: 1,
-      //             ),
-      //           ],
-      //         ),
-      //         child: Builder(
+                // child: GridView.builder(
+                //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                //     crossAxisCount: 2 // this will show 2 image in one row in container if we want more than 2 we can increase number
+                //     ),
+                //     itemCount: images.length, 
+                //   itemBuilder: (BuildContext context, int index) {
+                //     //(File(images[index].path).path)    this will fetch image file from network gives us link 
+                //     // in link first image index path is images path and second one is document path
+                //     // if we want to access or pick images from memory we should use memory instead of network
+                //     return Stack(
+                //       children: [
+                       
+                //         Image.memory(Uint8List.fromList(images),
+                //        height: double.infinity, width: double.infinity, //for image size in container
+                //         fit: BoxFit.cover,
+                //         ),
+                //         IconButton(onPressed: (){
+                //          setState(() {
+                //             images.removeAt(index);
+                //          });
+                //         }, icon: const Icon(Icons.cancel_outlined))
+                //       ],
+                //     );
+                //   }),
                 
-      //           builder: (BuildContext context,) {
-      //             try {
-      //                return (imageUrl != null)
-      //               ? Image.file(File(images[index].path))
-      //               : Image.network("https://cdn.pixabay.com/photo/2016/11/19/11/33/footwear-1838767_1280.jpg"); 
-      //             } catch (e) {
-      //               print('Error: $e');
-      //             }  return Container();
-      //           }
-      //         )
-      //       ),
-      //     ],
-      //   ),
-      // ),
-                // Container(
-                //   height: 45.h,
-                //   decoration: BoxDecoration(
-                //     color: Colors.grey.withOpacity(0.4),
-                //     borderRadius: BorderRadius.circular(20)
-                //   ),
-                //   child: GridView.builder(
-                //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                //       crossAxisCount: 2 // this will show 2 image in one row in container if we want more than 2 we can increase number
-                //       ),
-                //       itemCount: images.length, 
-                //     itemBuilder: (BuildContext context, int index) {
-                //       //(File(images[index].path).path)    this will fetch image file from network gives us link 
-                //       // in link first image index path is images path and second one is document path
-                //       // if we want to access or pick images from memory we should use memory instead of network
-                //       return Stack(
-                //         children: [
-                //           Image.network(File(images[index].path).path,
-                //           height: 200, width: 250, //for image size in container
-                //           fit: BoxFit.cover,
-                //           ),
-                //           IconButton(onPressed: (){
-                //            setState(() {
-                //               images.removeAt(index);
-                //            });
-                //           }, icon: const Icon(Icons.cancel_outlined))
-                //         ],
-                //       );
-                //     }),
-                // ),
+                ),
                 
                 SwitchListTile(
                   title: const Text('Is this on Sale?'),
