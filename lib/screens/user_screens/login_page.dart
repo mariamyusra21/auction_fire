@@ -111,7 +111,8 @@ class _LoginPageState extends State<LoginPage> {
                 height: 550,
                 width: 325,
                 decoration: BoxDecoration(
-                    color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10)),
                 child: Form(
                   key: _formKey,
                   child: Column(

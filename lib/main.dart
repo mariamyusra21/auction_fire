@@ -1,7 +1,7 @@
 import 'package:auction_fire/screens/admin_screens/web_main.dart';
 import 'package:auction_fire/screens/layout_screen.dart';
-import 'package:auction_fire/screens/login_page.dart';
-import 'package:auction_fire/screens/signup_page.dart';
+import 'package:auction_fire/screens/user_screens/login_page.dart';
+import 'package:auction_fire/screens/user_screens/signup_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
