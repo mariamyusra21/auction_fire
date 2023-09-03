@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:auction_fire/services/storage_service.dart';
-import 'package:file_picker/file_picker.dart';
+
 import 'package:flutter/material.dart';
 
 class PicUpload extends StatefulWidget {

@@ -2,15 +2,12 @@
 import 'package:auction_fire/models/add_product_model.dart';
 import 'package:auction_fire/screens/user_main_func/upload_image.dart';
 import 'package:auction_fire/services/storage_service.dart';
-// import 'package:auction_fire/widgets/bid_color.dart';
 import 'package:auction_fire/widgets/bidbutton.dart';
 import 'package:auction_fire/widgets/bidtextfield.dart';
 import 'package:auction_fire/widgets/styles.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-//import 'package:permission_handler/permission_handler.dart';
 import 'package:sizer/sizer.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -101,42 +98,6 @@ class _AddProductState extends State<AddProduct> {
     return urls;
      }  
     }
-
-    // uploadImage() async{
-    //   for (var image in images) {
-    //     await postImage(image).then((downloadUrls) => imageUrls.add(downloadUrls));
-    //   }
-
-    //   final _firebaseStorage = FirebaseStorage.instance;
-    // ImagePicker _imagePicker = ImagePicker();
-    // PickedFile image;
-
-    //  //Check Permissions
-    // await Permission.photos.request();
-
-    // var permissionStatus = await Permission.photos.status;
-
-    // if (permissionStatus.isGranted){
-    //   //Select Image
-    //   XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
-    //   var file = File(image!.path);
-
-    //   if (image != null){
-    //     //Upload to Firebase
-    //     var snapshot = await _firebaseStorage.ref()
-    //     .child('images/imageName')
-    //     .putFile(file);
-    //     var downloadUrl = await snapshot.ref.getDownloadURL();
-    //     setState(() {
-    //       imageUrl = downloadUrl;
-    //     });
-    //   } else {
-    //     print('No Image Path Received');
-    //   }
-    // } else {
-    //   print('Permission not granted. Try Again with permission access');
-    // }
-    // }
 
     save() async{
     setState(() {
@@ -317,30 +278,7 @@ class _AddProductState extends State<AddProduct> {
                   color: Colors.grey.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(20)
                 ),
-                // child: GridView.builder(
-                //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                //     crossAxisCount: 2 // this will show 2 image in one row in container if we want more than 2 we can increase number
-                //     ),
-                //     itemCount: images.length, 
-                //   itemBuilder: (BuildContext context, int index) {
-                //     //(File(images[index].path).path)    this will fetch image file from network gives us link 
-                //     // in link first image index path is images path and second one is document path
-                //     // if we want to access or pick images from memory we should use memory instead of network
-                //     return Stack(
-                //       children: [
-                       
-                //         Image.memory(Uint8List.fromList(images),
-                //        height: double.infinity, width: double.infinity, //for image size in container
-                //         fit: BoxFit.cover,
-                //         ),
-                //         IconButton(onPressed: (){
-                //          setState(() {
-                //             images.removeAt(index);
-                //          });
-                //         }, icon: const Icon(Icons.cancel_outlined))
-                //       ],
-                //     );
-                //   }),
+            
                 
                 ),
                 
