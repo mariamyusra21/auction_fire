@@ -60,22 +60,18 @@ class UserListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text('${userData.username}'),
-      subtitle: Text('${userData.password}'),
+      subtitle: Column(
+        children: [
+          Text('${userData.email}'),
+          Text('${userData.password}'),
+          Text('${userData.phoneNum}'),
+        ],
+      ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TextButton(
-            child: Text(
-              "Edit",
-              style: TextStyle(color: Colors.blue, fontSize: 15),
-            ),
-            onPressed: () {},
-          ),
-          TextButton(
-            child: Text("Delete",
-                style: TextStyle(color: Colors.red, fontSize: 15)),
-            onPressed: () {},
-          )
+          IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+          IconButton(onPressed: () {}, icon: Icon(Icons.delete))
         ],
       ),
     );

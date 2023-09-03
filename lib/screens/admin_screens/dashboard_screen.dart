@@ -1,3 +1,4 @@
+import 'package:auction_fire/screens/admin_screens/product_list.dart';
 import 'package:auction_fire/screens/admin_screens/users_list.dart';
 import 'package:flutter/material.dart';
 
@@ -79,7 +80,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               IconButton(
                                 icon: Icon(Icons.shopping_cart),
                                 iconSize: 100,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProductList()));
+                                },
                               ),
                               Text(
                                 'Products List',
