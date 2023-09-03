@@ -32,8 +32,8 @@ class Uploadproduct {
     //to point out collections we use collectionreference
     var user = FirebaseAuth.instance.currentUser;
     CollectionReference db = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(user!.uid)
+        // .collection('Users')
+        // .doc(user!.uid)
         .collection('Updateproduct'); //<= OBJECT
     Map<String, dynamic> data = {
       "category": addproduct.category,
@@ -49,4 +49,16 @@ class Uploadproduct {
     };
     await db.add(data);
   }
+
+  Uploadproduct.fromSnapshot(snapshot)
+      : category = snapshot.data()["category"],
+        productName = snapshot.data()["productName"],
+        detail = snapshot.data()["detail"],
+        price = snapshot.data()["price"],
+        discountPrice = snapshot.data()["discountPrice"],
+        serialNo = snapshot.data()["serial Code"],
+        // imageUrls = snapshot.data()["ImageUrls"],
+        isOnSale = snapshot.data()["isOnSale"],
+        isPopular = snapshot.data()["isPopular"],
+        isFavorite = snapshot.data()["isFavorite"];
 }
