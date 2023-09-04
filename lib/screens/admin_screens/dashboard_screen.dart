@@ -74,11 +74,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: Container(
                           height: 170,
                           width: 170,
-                          color: Colors.grey[100],
                           child: Column(
                             children: [
                               IconButton(
-                                icon: Icon(Icons.shopping_cart),
+                                icon: Icon(Icons.shopping_cart_outlined),
                                 iconSize: 100,
                                 onPressed: () {
                                   Navigator.push(

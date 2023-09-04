@@ -1,5 +1,6 @@
 import 'package:auction_fire/models/add_product_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProductList extends StatefulWidget {
@@ -10,15 +11,22 @@ class ProductList extends StatefulWidget {
 }
 
 class _ProductListState extends State<ProductList> {
-  CollectionReference referenceProduct = FirebaseFirestore.instance
-      // .collection('Users')
-      // .doc()
-      .collection('Updateproduct');
+  // CollectionReference referenceProduct = FirebaseFirestore.instance;
+  // .collection('Users')'
+  // .doc()
+  // .collection('Updateproduct');
 
   List<dynamic> productsList = [];
   Future getProductList() async {
-    // final uid = FirebaseAuth.instance.currentUser!.uid;
-    var data = await referenceProduct.get();
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
+    var data = await FirebaseFirestore.instance
+        // .collection('Users')
+        // .doc()
+        // .doc(uid.toString())
+        .collection('Updateproduct')
+        // .orderBy(uid!)
+        .get();
 
     setState(() {
       productsList =
@@ -60,21 +68,20 @@ class ProductListTile extends StatelessWidget {
       title: Text('${product.productName}'),
       subtitle: Column(
         children: [
-          Text('${product.detail}'),
+          Text('description: ${product.detail}'),
           // Text('${product.imageUrls}'),
-          Text('${product.price}'),
-          Text('${product.discountPrice}'),
+          Text('price: ${product.price}'),
+          Text('discount: ${product.discountPrice}'),
         ],
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('${product.serialNo}'),
+          Text('serial No: ${product.serialNo}'),
           IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
           IconButton(onPressed: () {}, icon: Icon(Icons.delete))
         ],
       ),
     );
-    ;
   }
 }

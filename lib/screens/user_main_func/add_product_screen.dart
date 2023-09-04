@@ -2,6 +2,7 @@
 import 'package:auction_fire/models/add_product_model.dart';
 import 'package:auction_fire/screens/user_main_func/upload_image.dart';
 import 'package:auction_fire/services/storage_service.dart';
+import 'package:auction_fire/widgets/bid_color.dart';
 import 'package:auction_fire/widgets/bidbutton.dart';
 import 'package:auction_fire/widgets/bidtextfield.dart';
 import 'package:auction_fire/widgets/styles.dart';
@@ -135,180 +136,182 @@ class _AddProductState extends State<AddProduct> {
     String? selectedImagePath;
     return  Scaffold(
       body: SingleChildScrollView(
-        child: Center(
-          
-        //we will use this code in seller panel
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 9.h),
-            child: Column(
-              children: <Widget>[
-                  
-                const Text('add products',
-                style: BidStyle.boldStyle,),
-                BidButton(buttonTitle: 'save',
-                onPress: (){
-                  save(); 
-                 PicUpload();
-                }, isLoading: isSaving,
-                
-                ), 
-                Container( 
-                  margin: const EdgeInsets.symmetric(horizontal: 13,vertical: 7),
-                 decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.5) ,     // color of formfeild where we input information like email, password etc
-                 borderRadius: BorderRadius.circular(10)
-             ),
-             
-                  child: DropdownButtonFormField(
-                    hint: const Text('Choose category'),
-                    decoration:const  InputDecoration(border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(10)),
+        child: Column(
+          children: [
+            Center(
+            //we will use this code in seller panel
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 9.h),
+                child: Column(
+                  children: <Widget>[
+                    const Text('add products',
+                    style: BidStyle.boldStyle,),
+                    BidButton(buttonTitle: 'save',
+                    onPress: (){
+                      save(); 
+                     PicUpload();
+                    }, isLoading: isSaving,
                     
-                    validator: (value){
-                      if(value!.isEmpty){
-                        return "category must be selected";
-                      }
-                      return null;
-                    },
-                    value: selectedvlaue,
-                    items: categories
-                  .map((e) => DropdownMenuItem<String>(
-                   value: e, child: Text(e)))
-                   .toList(),
-                  onChanged: (value){
-                    setState(() {
-                       selectedvlaue = value.toString();
-                    });
-                  }),
-                ), 
+                    ), 
+                    Container( 
+                      margin: const EdgeInsets.symmetric(horizontal: 13,vertical: 7),
+                     decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.5) ,     // color of formfeild where we input information like email, password etc
+                     borderRadius: BorderRadius.circular(10)
+                 ),
+                 
+                      child: DropdownButtonFormField(
+                        hint: const Text('Choose category'),
+                        decoration:const  InputDecoration(border: InputBorder.none,
+                        contentPadding: EdgeInsets.all(10)),
+                        
+                        validator: (value){
+                          if(value!.isEmpty){
+                            return "category must be selected";
+                          }
+                          return null;
+                        },
+                        value: selectedvlaue,
+                        items: categories
+                      .map((e) => DropdownMenuItem<String>(
+                       value: e, child: Text(e)))
+                       .toList(),
+                      onChanged: (value){
+                        setState(() {
+                           selectedvlaue = value.toString();
+                        });
+                      }),
+                    ), 
     
-                              
-                BidTextField(
-                  validate: (v) {
-                    if(v.isEmpty){
-                      return 'should not be empty';
-                    } return null;
-                  },
-                  HintText: 'Product Name',  
-                 controller: productNameC,
-                  icon: const Icon(Icons.production_quantity_limits_rounded), 
-                  inputAction: TextInputAction.next, 
-                  ),
-                  BidTextField(
-                  validate: (v) {
-                    if(v.isEmpty){
-                      return 'should not be empty';
-                    } return null;
-                  },
-                 // maxLines: 5,
-                  HintText: 'detail of product',   
-                 controller: detailC,
-                  icon: const Icon(Icons.details), 
-                  inputAction: TextInputAction.next, 
-                  ),
-                  BidTextField(
-                  validate: (v) {
-                    if(v.isEmpty){
-                      return 'should not be empty';
-                    } return null;
-                  },
-                  HintText: 'Prouct Price',  
-                 controller: priceC,
-                  icon: const Icon(Icons.money), 
-                  inputAction: TextInputAction.next, 
-                  ),
-                   BidTextField(
-                  validate: (v) {
-                    if(v.isEmpty){
-                      return 'should not be empty';
-                    } return null;
-                  },
-                  HintText: 'Discount',  
-                 controller: discountPriceC,
-                  icon: const Icon(Icons.money), 
-                  inputAction: TextInputAction.next, 
-                  ),
-                   BidTextField(
-                  validate: (v) {
-                    if(v.isEmpty){
-                      return 'should not be empty';
-                    } return null;
-                  },
-                  HintText: 'Serial Code',  
-                 controller: serialNoC,
-                  icon: const Icon(Icons.sell_rounded), 
-                  inputAction: TextInputAction.next, 
-                  ),
+                                  
+                    BidTextField(
+                      validate: (v) {
+                        if(v.isEmpty){
+                          return 'should not be empty';
+                        } return null;
+                      },
+                      HintText: 'Product Name',  
+                     controller: productNameC,
+                      icon: const Icon(Icons.production_quantity_limits_rounded), 
+                      inputAction: TextInputAction.next, 
+                      ),
+                      BidTextField(
+                      validate: (v) {
+                        if(v.isEmpty){
+                          return 'should not be empty';
+                        } return null;
+                      },
+                     // maxLines: 5,
+                      HintText: 'detail of product',   
+                     controller: detailC,
+                      icon: const Icon(Icons.details), 
+                      inputAction: TextInputAction.next, 
+                      ),
+                      BidTextField(
+                      validate: (v) {
+                        if(v.isEmpty){
+                          return 'should not be empty';
+                        } return null;
+                      },
+                      HintText: 'Prouct Price',  
+                     controller: priceC,
+                      icon: const Icon(Icons.money), 
+                      inputAction: TextInputAction.next, 
+                      ),
+                       BidTextField(
+                      validate: (v) {
+                        if(v.isEmpty){
+                          return 'should not be empty';
+                        } return null;
+                      },
+                      HintText: 'Discount',  
+                     controller: discountPriceC,
+                      icon: const Icon(Icons.money), 
+                      inputAction: TextInputAction.next, 
+                      ),
+                       BidTextField(
+                      validate: (v) {
+                        if(v.isEmpty){
+                          return 'should not be empty';
+                        } return null;
+                      },
+                      HintText: 'Serial Code',  
+                     controller: serialNoC,
+                      icon: const Icon(Icons.sell_rounded), 
+                      inputAction: TextInputAction.next, 
+                      ),
     
-                BidButton(
-                  buttonTitle: "Choose image",
-                  onPress: ()  async{
-                    // imagepick();
-                    // store file from storage
-              final result= await FilePicker.platform.pickFiles(
-                type: FileType.custom,
-                allowedExtensions: ['png', 'jpg']
-              );
+                    BidButton(
+                      buttonTitle: "Choose image",
+                      onPress: ()  async{
+                        // imagepick();
+                        // store file from storage
+                  final result= await FilePicker.platform.pickFiles(
+                    type: FileType.custom,
+                    allowedExtensions: ['png', 'jpg']
+                  );
 
-              if(result == null){
-                ScaffoldMessenger.of(context)
-                .showSnackBar( const SnackBar(
-                  content: Text('No file selected')));
-                    return null;
-              } 
-              // save the pic path and name
-                 final path = result.files.single.path;
-                   final fileName = result.files.single.name;
+                  if(result == null){
+                    ScaffoldMessenger.of(context)
+                    .showSnackBar( const SnackBar(
+                      content: Text('No file selected')));
+                        return null;
+                  } 
+                  // save the pic path and name
+                     final path = result.files.single.path;
+                       final fileName = result.files.single.name;
 
-                   
-                   setState(() {
-              selectedImagePath = fileName;
-                 });
+                       
+                       setState(() {
+                  selectedImagePath = fileName;
+                     });
 
-                  //  print(path);
-                  //  print(fileName);
-                  storage.uploadFile(path!, fileName).then((value) => print('done'));
+                      //  print(path);
+                      //  print(fileName);
+                      storage.uploadFile(path!, fileName).then((value) => print('done'));
  
 
-                  }, isLoading: isSaving,
+                      }, isLoading: isSaving,
+                    ),
+                    Container(
+                         height: 45.h,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.4),
+                      borderRadius: BorderRadius.circular(20)
+                    ),
+                
+                    
+                    ),
+                    
+                    SwitchListTile(
+                      title: const Text('Is this on Sale?'),
+                      value: isOnSale, 
+                    onChanged: (v){
+                      setState(() {
+                        isOnSale =! isOnSale;
+                      });
+                    }),
+                    SwitchListTile(
+                      title: const Text('Is this popular'),
+                      value: isPopular, 
+                    onChanged: (v){
+                      setState(() {
+                        isPopular =! isPopular;
+                      });
+                    }),
+                    // BidButton(buttonTitle: 'save',
+                    // onPress: (){
+                    //   save(); 
+                      
+                    // }, isLoading: isSaving,
+                    
+                    // ), 
+                    
+                  ],
                 ),
-                Container(
-                     height: 45.h,
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(20)
-                ),
-            
-                
-                ),
-                
-                SwitchListTile(
-                  title: const Text('Is this on Sale?'),
-                  value: isOnSale, 
-                onChanged: (v){
-                  setState(() {
-                    isOnSale =! isOnSale;
-                  });
-                }),
-                SwitchListTile(
-                  title: const Text('Is this popular'),
-                  value: isPopular, 
-                onChanged: (v){
-                  setState(() {
-                    isPopular =! isPopular;
-                  });
-                }),
-                // BidButton(buttonTitle: 'save',
-                // onPress: (){
-                //   save(); 
-                  
-                // }, isLoading: isSaving,
-                
-                // ), 
-                
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

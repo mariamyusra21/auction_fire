@@ -19,7 +19,9 @@ class _UserListScreenState extends State<UserListScreen> {
   Future getUsersList() async {
     final uid = auth.currentUser!.uid;
     var data =
-        await referenceUsers.orderBy('username', descending: false).get();
+        await referenceUsers
+        // .orderBy('username', descending: false)
+        .get();
 
     setState(() {
       usersList = List.from(data.docs.map((doc) => UserData.fromSnapshot(doc)));
