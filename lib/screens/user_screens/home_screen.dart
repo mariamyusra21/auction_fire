@@ -1,6 +1,9 @@
 import 'package:auction_fire/screens/user_screens/user_main_func/add_product_screen.dart';
-import 'package:auction_fire/widgets/bid_color.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import '../../models/add_product_model.dart';
+import '../../widgets/product_cards.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,6 +15,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // id used to access pages of app
   Widget selectedScreen = HomeScreen();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getProductList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,113 +117,29 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const backGroundcolor(),
-            Container(
-              // height: MediaQuery.of(context).size.height,
-              // width: MediaQuery.of(context).size.width,
-              // decoration: BoxDecoration(
-              //     gradient: LinearGradient(colors: [
-              //   Color(0xFFD45A2D),
-              //   Color(0xFFBD861C),
-              //   Color.fromARGB(67, 0, 130, 181)
-              // ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
-              child: Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text(
-                      "Welcome!",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Card(
-                            margin: EdgeInsets.only(left: 15),
-                            child: Container(
-                              height: 170, width: 170,
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 120,
-                                    width: 110,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        image: DecorationImage(
-                                            image: AssetImage(
-                                                "./images/apple_watch.png"))),
-                                  ),
-                                  Text(
-                                    'Rs/= 1999',
-                                    style: TextStyle(color: Colors.grey[600]),
-                                  ),
-                                  Text(
-                                    'Apple Watch',
-                                    style: TextStyle(color: Colors.black),
-                                  )
-                                ],
-                              ),
-                              // decoration: BoxDecoration( color: Colors.amber[100],
-                              //   image: DecorationImage(image: AssetImage("images/t_shirt.png"))
-                              // ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Card(
-                        child: Container(
-                          height: 170,
-                          width: 170,
-                          color: Colors.grey[100],
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 120,
-                                width: 110,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            "./images/t_shirt.png"))),
-                              ),
-                              Text(
-                                'Rs/= 599',
-                                style: TextStyle(color: Colors.grey[600]),
-                              ),
-                              Text(
-                                'Man Long T_Shirt',
-                                style: TextStyle(color: Colors.black),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            itemCount: productsList.length,
+            itemBuilder: (context, index) {
+              return ProductCard(
+                product: productsList[index] as Uploadproduct,
+                onpress: () {},
+              );
+            }),
       ),
     );
   }
 
-  // Widget MyDrawerList() {
-  //   return Container();
-  // }
+  List<dynamic> productsList = [];
+  Future getProductList() async {
+    var data =
+        await FirebaseFirestore.instance.collection('Updateproduct').get();
+
+    setState(() {
+      productsList =
+          List.from(data.docs.map((doc) => Uploadproduct.fromSnapshot(doc)));
+    });
+  }
 }

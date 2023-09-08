@@ -1,3 +1,4 @@
+import 'package:auction_fire/screens/user_screens/guest_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_core/firebase_core.dart';
@@ -5,7 +6,6 @@ import 'package:flutter/material.dart';
 
 import '../widgets/styles.dart';
 import 'user_screens/home_screen.dart';
-import 'user_screens/login_page.dart';
 
 // ignore: must_be_immutable
 class LandiingScreen extends StatelessWidget {
@@ -52,7 +52,7 @@ class LandiingScreen extends StatelessWidget {
                       .data; //if above cond true save data in user object
 
                   if (user == null) {
-                    return LoginPage();
+                    return GuestPage();
                   } else {
                     return HomeScreen();
                   }
