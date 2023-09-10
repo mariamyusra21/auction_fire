@@ -155,14 +155,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Card(
-                            margin: EdgeInsets.only(left: 5),
+                           margin: EdgeInsets.all(15),
                             child: Container(
-                              height: 170, width: 170,
+                              height: 170, width: 130,
                               child: Column(
                                 children: [
                                   Container(
                                     height: 120,
-                                    width: MediaQuery.of(context).size.width,
+                                    width: 130,
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         image: DecorationImage(
@@ -187,18 +187,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       SizedBox(
-                        width: 20,
+                        width: 8,
                       ),
                       Card(
+                        margin: EdgeInsets.only(right: 15),
                         child: Container(
                           height: 170,
-                          width: 170,
+                          width: 140,
                           color: Colors.grey[100],
                           child: Column(
                             children: [
                               Container(
                                 height: 120,
-                                width: 110,
+                                width: MediaQuery.of(context).size.width,
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     image: DecorationImage(
