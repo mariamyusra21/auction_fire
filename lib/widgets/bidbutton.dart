@@ -22,7 +22,7 @@ class BidButton extends StatelessWidget {
       child: Container( 
         margin: const EdgeInsets.symmetric(horizontal: 13,vertical: 10), //verticle 10 create the create new account button on bottom
         decoration: BoxDecoration(
-          color: isLoginButton==false ? Colors.cyan : Colors.black,
+         // color: isLoginButton==false ? Colors.cyan : Colors.black,
           borderRadius: BorderRadius.circular(10),
           
         ),

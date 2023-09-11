@@ -94,8 +94,9 @@ class _LoginPageState extends State<LoginPage> {
             // SizedBox(height: 90,),
             // Image.asset('images/ss .png'),
             SizedBox(
-              height: 15,
+              height: 35,
             ),
+            
             Text(
               "Auction Fire",
               style: TextStyle(
@@ -106,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 30,
             ),
+<<<<<<< HEAD:lib/screens/user_screens/login_page.dart
             Expanded(
               child: Container(
                 height: 550,
@@ -115,6 +117,16 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(10)),
                 child: Form(
                   key: _formKey,
+=======
+            Container(
+              height: 550,
+              width: 325,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(10)),
+              child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+>>>>>>> image:lib/screens/login_page.dart
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [

@@ -27,45 +27,13 @@ class _MyPicUploadStateState extends State<PicUpload> {
             ),
             child: selectedImagePath != null
       ? Image.file(
-        File(selectedImagePath!),
+        File(selectedImagePath),
         fit: BoxFit.cover,
       )
       : const Center(
         child: Text('No Image Selected'),
       ),
           ),
-          // Center(
-            
-          //   child: ElevatedButton(onPressed: () async
-          //   {
-          //     // store file from storage
-          //     final result= await FilePicker.platform.pickFiles(
-          //       type: FileType.custom,
-          //       allowedExtensions: ['png', 'jpg']
-          //     );
-
-          //     if(result == null){
-          //       ScaffoldMessenger.of(context)
-          //       .showSnackBar( const SnackBar(
-          //         content: Text('No file selected')));
-          //           return null;
-          //     } 
-          //     // save the pic path and name
-          //        final path = result.files.single.path;
-          //          final fileName = result.files.single.name;
-
-                   
-          //          setState(() {
-          //     selectedImagePath = path;
-          //        });
-
-          //         //  print(path);
-          //         //  print(fileName);
-          //         storage.uploadFile(path!, fileName).then((value) => print('done'));
-          //   },
-          //    child: const Text('upload pic') ),
-          // ),
-
 
         ],
       ),

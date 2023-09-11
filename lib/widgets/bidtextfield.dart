@@ -46,7 +46,7 @@ class _BidTextFieldState extends State<BidTextField> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 13,vertical: 7),
        decoration: BoxDecoration(
-         color: Colors.grey.withOpacity(0.5) ,     // color of formfeild where we input information like email, password etc
+         color: Colors.white,     // color of formfeild where we input information like email, password etc
          borderRadius: BorderRadius.circular(10)
         ),
         child: TextFormField(
