@@ -107,17 +107,6 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 30,
             ),
-<<<<<<< HEAD:lib/screens/user_screens/login_page.dart
-            Expanded(
-              child: Container(
-                height: 550,
-                width: 325,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Form(
-                  key: _formKey,
-=======
             Container(
               height: 550,
               width: 325,
@@ -126,7 +115,6 @@ class _LoginPageState extends State<LoginPage> {
               child: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
->>>>>>> image:lib/screens/login_page.dart
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [

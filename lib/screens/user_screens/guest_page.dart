@@ -15,13 +15,17 @@ class GuestPage extends StatefulWidget {
 class _GuestPageState extends State<GuestPage> {
   List<dynamic> productsList = [];
   Future getProductList() async {
-    var data =
-        await FirebaseFirestore.instance.collection('Updateproduct').get();
-
-    setState(() {
-      productsList =
-          List.from(data.docs.map((doc) => Uploadproduct.fromSnapshot(doc)));
-    });
+    try {
+      var data =
+          await FirebaseFirestore.instance.collection('Updateproduct').get();
+      setState(() {
+        productsList =
+            List.from(data.docs.map((doc) => Uploadproduct.fromSnapshot(doc)));
+      });
+    } on FirebaseException catch (e) {
+      e.toString();
+      print(e);
+    }
   }
 
   @override
@@ -35,61 +39,35 @@ class _GuestPageState extends State<GuestPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Action Fire'),
+        backgroundColor: Color(0xFFD45A2D),
+        title: Text(
+          'Action Fire Welcome Page',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: Container(
+        height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+          Color(0xFFD45A2D),
+          Color(0xFFBD861C),
+          Color.fromARGB(67, 0, 130, 181)
+        ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
         child: ListView.builder(
             scrollDirection: Axis.vertical,
             itemCount: productsList.length,
             itemBuilder: (context, index) {
-              return ProductCard(
-                product: productsList[index] as Uploadproduct,
-                onpress: () => Navigator.push(context,
+              return GestureDetector(
+                onTap: () => Navigator.push(context,
                     MaterialPageRoute(builder: (context) => LoginPage())),
+                child: ProductCard(
+                  product: productsList[index] as Uploadproduct,
+                ),
               );
             }),
       ),
     );
   }
 }
-
-
-
-
-
-
-
-// Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: StreamBuilder<QuerySnapshot>(
-//           stream: db.collection('Users').snapshots(),
-//           builder: (context, snapshot) {
-//             if (snapshot.hasData) {
-//               var doc = snapshot.data.documents;
-//               return new ListView.builder(
-//                   itemCount: doc.length,
-//                   itemBuilder: (context, index) {
-//                     return Padding(
-//                       padding: const EdgeInsets.all(8.0),
-//                       child: Card(
-//                         child: Column(
-//                           children: <Widget>[
-//                             Text(doc[index].data['email']),
-//                             SizedBox(
-//                               height: 10.0,
-//                             ),
-//                             Text(doc[index].data['phone']),
-//                           ],
-//                         ),
-//                       ),
-//                     );
-//                   });
-//             } else {
-//               return LinearProgressIndicator();
-//             }
-//           },
-//         ),
-//       ),
-//     );

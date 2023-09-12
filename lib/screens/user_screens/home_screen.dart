@@ -1,17 +1,11 @@
-<<<<<<< HEAD
-import 'package:auction_fire/screens/user_screens/user_main_func/add_product_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-
-import '../../models/add_product_model.dart';
-import '../../widgets/product_cards.dart';
-
-=======
-// import 'package:auction_fire/screens/user_screens/user_main_func/add_product_screen.dart';
+import 'package:auction_fire/models/add_product_model.dart';
 import 'package:auction_fire/screens/user_main_func/add_product_screen.dart';
+import 'package:auction_fire/screens/user_screens/login_page.dart';
+import 'package:auction_fire/widgets/product_cards.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
->>>>>>> image
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -23,8 +17,27 @@ class _HomeScreenState extends State<HomeScreen> {
   // id used to access pages of app
   Widget selectedScreen = HomeScreen();
 
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  List<dynamic> productsList = [];
+  Future getProductList() async {
+    var data =
+        await FirebaseFirestore.instance.collection('Updateproduct').get();
+
+    setState(() {
+      productsList =
+          List.from(data.docs.map((doc) => Uploadproduct.fromSnapshot(doc)));
+    });
+  }
+
+  //signout function
+  signOut() async {
+    await auth.signOut();
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => LoginPage()));
+  }
+
   @override
-<<<<<<< HEAD
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -32,47 +45,39 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-=======
->>>>>>> image
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       drawer: Drawer(
-        child: ListView(
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+            Color(0xFFD45A2D),
+            Color(0xFFBD861C),
+            Color.fromARGB(67, 0, 130, 181)
+          ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
+          child: ListView(
+            children: [
+              const DrawerHeader(
+                child: Text('Drawer Header'),
               ),
-              child: Text('Drawer Header'),
-            ),
-            ListTile(
-              title: const Text('Add Product'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        AddProduct(), // Replace with your actual screen widget
-                  ),
-                );
-              },
-            ),
-          ],
+              ListTile(
+                title: const Text('Add Product'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          AddProduct(), // Replace with your actual screen widget
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
-<<<<<<< HEAD
-        //  child: SingleChildScrollView(
-        //   child: Container(
-        //     child: Column(
-        //       children: [
-        //         const DrawerHeader(child: Text('WELCOME')),
-        //         MyDrawerList(),
-        //       ],
-        //     ),
-        //   ),
-        //  ),
-=======
->>>>>>> image
       ),
       appBar: AppBar(
         backgroundColor: Color(0xFFD45A2D),
@@ -90,17 +95,18 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           //profile button
           IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.circle_outlined),
+            onPressed: () {
+              signOut();
+            },
+            icon: Icon(Icons.logout),
           ),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
         height: 60,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Padding(padding: EdgeInsets.all(5)),
             IconButton(
               onPressed: () {},
               icon: Icon(
@@ -109,7 +115,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               alignment: Alignment.bottomRight,
             ),
-            Padding(padding: EdgeInsets.only(right: 105)),
             IconButton(
               onPressed: () {},
               icon: Icon(
@@ -118,7 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               alignment: Alignment.bottomCenter,
             ),
-            Padding(padding: EdgeInsets.only(left: 105)),
             IconButton(
               onPressed: () {},
               icon: Icon(
@@ -130,140 +134,31 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-<<<<<<< HEAD
       body: Container(
+        height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+          Color(0xFFD45A2D),
+          Color(0xFFBD861C),
+          Color.fromARGB(67, 0, 130, 181)
+        ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
         child: ListView.builder(
             scrollDirection: Axis.vertical,
             itemCount: productsList.length,
             itemBuilder: (context, index) {
-              return ProductCard(
-                product: productsList[index] as Uploadproduct,
-                onpress: () {},
+              return GestureDetector(
+                onTap: () {},
+                child: ProductCard(
+                  product: productsList[index] as Uploadproduct,
+                ),
               );
             }),
-=======
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-        
-            Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                Color(0xFFD45A2D),
-                Color(0xFFBD861C),
-                Color.fromARGB(67, 0, 130, 181)
-              ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
-              child: Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text(
-                      "Welcome!",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Card(
-                            margin: EdgeInsets.only(left: 15),
-                            child: Container(
-                              height: 170, width: 170,
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 120,
-                                    width: 110,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        image: DecorationImage(
-                                            image: AssetImage(
-                                                "./images/apple_watch.png"))),
-                                  ),
-                                  Text(
-                                    'Rs/= 1999',
-                                    style: TextStyle(color: Colors.grey[600]),
-                                  ),
-                                  Text(
-                                    'Apple Watch',
-                                    style: TextStyle(color: Colors.black),
-                                  )
-                                ],
-                              ),
-                              // decoration: BoxDecoration( color: Colors.amber[100],
-                              //   image: DecorationImage(image: AssetImage("images/t_shirt.png"))
-                              // ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Card(
-                        child: Container(
-                          height: 170,
-                          width: 170,
-                          color: Colors.grey[100],
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 120,
-                                width: 110,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            "./images/t_shirt.png"))),
-                              ),
-                              Text(
-                                'Rs/= 599',
-                                style: TextStyle(color: Colors.grey[600]),
-                              ),
-                              Text(
-                                'Man Long T_Shirt',
-                                style: TextStyle(color: Colors.black),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
->>>>>>> image
       ),
     );
   }
 
-<<<<<<< HEAD
-  List<dynamic> productsList = [];
-  Future getProductList() async {
-    var data =
-        await FirebaseFirestore.instance.collection('Updateproduct').get();
-
-    setState(() {
-      productsList =
-          List.from(data.docs.map((doc) => Uploadproduct.fromSnapshot(doc)));
-    });
+  Widget MyDrawerList() {
+    return Container();
   }
-=======
-  // Widget MyDrawerList() {
-  //   return Container();
-  // }
->>>>>>> image
 }
