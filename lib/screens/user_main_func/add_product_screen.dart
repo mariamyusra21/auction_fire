@@ -2,10 +2,12 @@
 import 'dart:io';
 
 import 'package:auction_fire/models/add_product_model.dart';
+import 'package:auction_fire/services/storage_service.dart';
 import 'package:auction_fire/widgets/bidbutton.dart';
 import 'package:auction_fire/widgets/bidtextfield.dart';
 import 'package:auction_fire/widgets/styles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -45,8 +47,7 @@ class _AddProductState extends State<AddProduct> {
   ];
   final imagepicker =
       ImagePicker(); // image picker used to pic any image from storagr
-  List<XFile> images =
-      []; //XFile will catch all types of images e.g. jpg, pdf, png etc...
+  List<XFile> images = []; //XFile will catch all types of images e.g. jpg, pdf, png etc...
   List<String> imageUrls = [];
   bool isSaving = false; //for saving images in firestore
   bool isUploading = false; //for uplading whole data in firebase
@@ -62,16 +63,28 @@ class _AddProductState extends State<AddProduct> {
     });
   }
 
-  imagepick() async {
-    final List<XFile> imagepick = await imagepicker.pickMultiImage();
-    if (imagepick.isNotEmpty) {
+   final Storage storage= Storage();
+ 
+
+   imagepick() async {
+           final List results = await imagepicker.pickMultiImage();
+    if (results.isNotEmpty) {
       setState(() {
-        images.addAll(imagepick);
+        images.addAll(results as Iterable<XFile>);
+          final path = results.first.path;
+           final fileName = results.first.name;
+           
+                          storage.uploadFile(path!, fileName)
+                          .then((value) {
+                            print('done');
+                          });
       });
     } else {
       print('image not selected');
     }
-  }
+   }
+
+   
 
   // post to the firebase storage
   Future postImage(XFile imageFile) async {
@@ -151,6 +164,7 @@ class _AddProductState extends State<AddProduct> {
   var uuid = Uuid(); // generate everytime new
   @override
   Widget build(BuildContext context) {
+   
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -275,8 +289,8 @@ class _AddProductState extends State<AddProduct> {
                           ])),
                       child: BidButton(
                         buttonTitle: "Choose image",
-                        onPress: () {
-                          imagepick();
+                        onPress: () async {
+                           imagepick();
                         },
                         isLoading: isSaving,
                       ),
