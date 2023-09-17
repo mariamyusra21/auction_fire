@@ -1,18 +1,18 @@
-import 'package:flutter/material.dart';
+import 'package:auction_fire/models/add_product_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class BidPage extends StatefulWidget {
-  
+  // final String? productId;
+  final Uploadproduct product;
 
-  BidPage
-({super.key});
+  BidPage({super.key, required this.product});
 
   @override
   _ProductPageState createState() => _ProductPageState();
 }
 
 class _ProductPageState extends State<BidPage> {
-   String? productId;
   final TextEditingController bidController = TextEditingController();
   double? currentHighestBid;
 
@@ -26,10 +26,10 @@ class _ProductPageState extends State<BidPage> {
   void fetchCurrentHighestBid() async {
     // Fetch the current highest bid from Firestore
     final documentSnapshot = await FirebaseFirestore.instance
-        .collection('bids')
-        .doc()
+        .collection('Updateproduct')
+        .doc(widget.product.id)
         .get();
-    
+
     setState(() {
       currentHighestBid = documentSnapshot['currentHighestBid'];
     });
@@ -41,8 +41,8 @@ class _ProductPageState extends State<BidPage> {
     if (currentHighestBid == null || userBid >= currentHighestBid!) {
       // Update the current highest bid in Firestore
       await FirebaseFirestore.instance
-          .collection('bids')
-          .doc()
+          .collection('Updateproduct')
+          .doc(widget.product.id)
           .update({'currentHighestBid': userBid});
 
       // Store the user's bid in a separate bids collection if needed
@@ -63,7 +63,8 @@ class _ProductPageState extends State<BidPage> {
         builder: (context) {
           return AlertDialog(
             title: Text('Invalid Bid'),
-            content: Text('Your bid must be higher than the current highest bid.'),
+            content:
+                Text('Your bid must be higher than the current highest bid.'),
             actions: <Widget>[
               TextButton(
                 onPressed: () {

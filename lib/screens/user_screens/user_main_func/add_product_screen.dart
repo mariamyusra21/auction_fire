@@ -1,13 +1,17 @@
+//import 'dart:io';
 import 'dart:io';
 
 import 'package:auction_fire/models/add_product_model.dart';
+import 'package:auction_fire/services/storage_service.dart';
 import 'package:auction_fire/widgets/bidbutton.dart';
 import 'package:auction_fire/widgets/bidtextfield.dart';
 import 'package:auction_fire/widgets/styles.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:sizer/sizer.dart';
 import 'package:uuid/uuid.dart'; // used to generate unique id for anything you want
 
@@ -27,6 +31,8 @@ class _AddProductState extends State<AddProduct> {
   TextEditingController priceC = TextEditingController();
   TextEditingController discountPriceC = TextEditingController();
   TextEditingController serialNoC = TextEditingController();
+
+  User? user = FirebaseAuth.instance.currentUser;
 
   bool isOnSale = false;
   bool isPopular = false;
@@ -49,8 +55,6 @@ class _AddProductState extends State<AddProduct> {
   bool isSaving = false; //for saving images in firestore
   bool isUploading = false; //for uplading whole data in firebase
 
-  String? imageUrl;
-
   clearFields() {
     setState(() {
       selectedvlaue;
@@ -62,12 +66,19 @@ class _AddProductState extends State<AddProduct> {
     });
   }
 
+  final Storage storage = Storage();
+
   imagepick() async {
-    final List<XFile> imagepick = await imagepicker.pickMultiImage();
-    // final List<XFile> imagepick = await imagepicker.pickMedia();
-    if (imagepick.isNotEmpty) {
+    final List results = await imagepicker.pickMultiImage();
+    if (results.isNotEmpty) {
       setState(() {
-        images.addAll(imagepick);
+        images.addAll(results as Iterable<XFile>);
+        final path = results.first.path;
+        final fileName = results.first.name;
+
+        storage.uploadFile(path!, fileName).then((value) {
+          print('done');
+        });
       });
     } else {
       print('image not selected');
@@ -83,10 +94,11 @@ class _AddProductState extends State<AddProduct> {
     Reference ref = FirebaseStorage.instance.ref().child("Images").child(
         imageFile.name); // here we set the location of storing file of image
     //after creating instance child images folder will be created and then the path of image where it'll store image
-    if (imagepick == null) {
+    if (kIsWeb) {
       await ref.putData(
           await imageFile.readAsBytes()); //waiting data to fetch in bytes
-      SettableMetadata(contentType: "Images/png"); // store image in this format
+      SettableMetadata(
+          contentType: "Images/jpeg"); // store image in this format
       urls = await ref
           .getDownloadURL(); // won't upload image without this line the image is not in proper format of image
       setState(() {
@@ -97,39 +109,14 @@ class _AddProductState extends State<AddProduct> {
   }
 
   uploadImage() async {
-    // for (var image in images) {
-    //   await postImage(image).then((downloadUrls) => imageUrls.add(downloadUrls));
-    // }
-
-    final _firebaseStorage = FirebaseStorage.instance;
-    ImagePicker _imagePicker = ImagePicker();
-    PickedFile image;
-
-    //Check Permissions
-    await Permission.photos.request();
-
-    var permissionStatus = await Permission.photos.status;
-
-    if (permissionStatus.isGranted) {
-      //Select Image
-      XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
-      var file = File(image!.path);
-
-      if (image != null) {
-        //Upload to Firebase
-        var snapshot = await _firebaseStorage
-            .ref()
-            .child('images/imageName')
-            .putFile(file);
-        var downloadUrl = await snapshot.ref.getDownloadURL();
-        setState(() {
-          imageUrl = downloadUrl;
-        });
-      } else {
-        print('No Image Path Received');
+    try {
+      for (var image in images) {
+        await postImage(image)
+            .then((downloadUrls) => imageUrls.add(downloadUrls));
       }
-    } else {
-      print('Permission not granted. Try Again with permission access');
+    } catch (e) {
+      e.toString();
+      print(e);
     }
   }
 
@@ -140,18 +127,21 @@ class _AddProductState extends State<AddProduct> {
 
     await uploadImage();
     await Uploadproduct.addProduct(Uploadproduct(
-            category: selectedvlaue,
-            id: uuid.v4(),
-            productName: productNameC.text,
-            detail: detailC.text,
-            price: int.parse(priceC.text),
-            discountPrice: int.parse(discountPriceC.text),
-            serialNo: serialNoC.text,
-            imageUrls: imageUrls,
-            isOnSale: isOnSale,
-            isPopular: isPopular,
-            isFavorite: isFavorite))
-        .whenComplete(() {
+      category: selectedvlaue,
+      // id: uuid.v4(),
+      id: idC.text,
+      productName: productNameC.text,
+      detail: detailC.text,
+      price: int.tryParse(priceC.text),
+      uid: user!.uid,
+      discountPrice: int.tryParse(discountPriceC.text),
+      currentHighestBid: double.parse(priceC.text),
+      serialNo: serialNoC.text,
+      imageUrls: imageUrls,
+      isOnSale: isOnSale,
+      isPopular: isPopular,
+      isFavorite: isFavorite,
+    )).whenComplete(() {
       setState(() {
         imageUrls.clear();
         images.clear();
@@ -161,259 +151,225 @@ class _AddProductState extends State<AddProduct> {
             .showSnackBar(const SnackBar(content: Text('Uploaded Sucessfuly')));
       });
     });
+    await FirebaseFirestore.instance
+        .collection('Products')
+        .add({"images": imageUrls}).whenComplete(() {
+      // jub complete ho save prodicts tub setstate me loading band hojaye
+      setState(() {
+        isSaving = false;
+        images.clear();
+        imageUrls.clear();
+      });
+    });
   }
 
   var uuid = Uuid(); // generate everytime new
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Center(
-          //we will use this code in seller panel
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
-            child: Column(
-              children: <Widget>[
-                const Text(
-                  'add products',
-                  style: BidStyle.boldStyle,
-                ),
-                BidButton(
-                  buttonTitle: 'save',
-                  onPress: () {
-                    save();
-                  },
-                  isLoading: isSaving,
-                ),
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
-                  decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(
-                          0.5), // color of formfeild where we input information like email, password etc
-                      borderRadius: BorderRadius.circular(10)),
-                  child: DropdownButtonFormField(
-                      hint: const Text('Choose category'),
-                      decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(10)),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "category must be selected";
-                        }
-                        return null;
-                      },
-                      value: selectedvlaue,
-                      items: categories
-                          .map((e) => DropdownMenuItem<String>(
-                              value: e, child: Text(e)))
-                          .toList(),
-                      onChanged: (value) {
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            // borderRadius: BorderRadius.circular(50),
+            gradient: const LinearGradient(colors: [
+          Color(0xFFD45A2D),
+          Color(0xFFBD861C),
+          Color.fromARGB(67, 0, 130, 181)
+        ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
+        child: SingleChildScrollView(
+          child: Center(
+            //we will use this code in seller panel
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
+              child: Column(
+                children: [
+                  const Text(
+                    'add products',
+                    style: BidStyle.boldStyle,
+                  ),
+                  Container(
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
+                    decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(
+                            0.5), // color of formfeild where we input information like email, password etc
+                        borderRadius: BorderRadius.circular(10)),
+                    child: DropdownButtonFormField(
+                        hint: const Text('Choose category'),
+                        decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.all(10)),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "category must be selected";
+                          }
+                          return null;
+                        },
+                        value: selectedvlaue,
+                        items: categories
+                            .map((e) => DropdownMenuItem<String>(
+                                value: e, child: Text(e)))
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedvlaue = value.toString();
+                          });
+                        }),
+                  ),
+                  BidTextField(
+                    validate: (v) {
+                      if (v.isEmpty) {
+                        return 'should not be empty';
+                      }
+                      return null;
+                    },
+                    HintText: 'Product Name',
+                    controller: productNameC,
+                    icon: const Icon(Icons.production_quantity_limits_rounded),
+                    inputAction: TextInputAction.next,
+                  ),
+                  BidTextField(
+                    validate: (v) {
+                      if (v.isEmpty) {
+                        return 'should not be empty';
+                      }
+                      return null;
+                    },
+                    // maxLines: 5,
+                    HintText: 'detail of product',
+                    controller: detailC,
+                    icon: const Icon(Icons.details),
+                    inputAction: TextInputAction.next,
+                  ),
+                  BidTextField(
+                    validate: (v) {
+                      if (v.isEmpty) {
+                        return 'should not be empty';
+                      }
+                      return null;
+                    },
+                    HintText: 'Prouct Price',
+                    controller: priceC,
+                    icon: const Icon(Icons.money),
+                    inputAction: TextInputAction.next,
+                  ),
+                  BidTextField(
+                    validate: (v) {
+                      if (v.isEmpty) {
+                        return 'should not be empty';
+                      }
+                      return null;
+                    },
+                    HintText: 'Discount',
+                    controller: discountPriceC,
+                    icon: const Icon(Icons.money),
+                    inputAction: TextInputAction.next,
+                  ),
+                  BidTextField(
+                    validate: (v) {
+                      if (v.isEmpty) {
+                        return 'should not be empty';
+                      }
+                      return null;
+                    },
+                    HintText: 'Serial Code',
+                    controller: serialNoC,
+                    icon: const Icon(Icons.sell_rounded),
+                    inputAction: TextInputAction.next,
+                  ),
+                  GestureDetector(
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 250,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          gradient: const LinearGradient(colors: [
+                            Color(0xFFD45A2D),
+                            Color(0xFFBD861C),
+                            Color.fromARGB(67, 0, 130, 181)
+                          ])),
+                      child: BidButton(
+                        buttonTitle: "Choose image",
+                        onPress: () async {
+                          imagepick();
+                        },
+                        isLoading: isSaving,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 45.h,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.4),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount:
+                                    2 // this will show 2 image in one row in container if we want more than 2 we can increase number
+                                ),
+                        itemCount: images.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Stack(
+                            children: [
+                              Image.file(
+                                File(images[index].path),
+                                height: 200,
+                                width: 250, //for image size in container
+                                fit: BoxFit.cover,
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      images.removeAt(index);
+                                    });
+                                  },
+                                  icon: const Icon(Icons.cancel_outlined))
+                            ],
+                          );
+                        }),
+                  ),
+                  SwitchListTile(
+                      title: const Text('Is this on Sale?'),
+                      value: isOnSale,
+                      onChanged: (v) {
                         setState(() {
-                          selectedvlaue = value.toString();
+                          isOnSale = !isOnSale;
                         });
                       }),
-                ),
-
-                BidTextField(
-                  validate: (v) {
-                    if (v.isEmpty) {
-                      return 'should not be empty';
-                    }
-                    return null;
-                  },
-                  HintText: 'Product Name',
-                  controller: productNameC,
-                  icon: const Icon(Icons.production_quantity_limits_rounded),
-                  inputAction: TextInputAction.next,
-                ),
-                BidTextField(
-                  validate: (v) {
-                    if (v.isEmpty) {
-                      return 'should not be empty';
-                    }
-                    return null;
-                  },
-                  // maxLines: 5,
-                  HintText: 'detail of product',
-                  controller: detailC,
-                  icon: const Icon(Icons.details),
-                  inputAction: TextInputAction.next,
-                ),
-                BidTextField(
-                  validate: (v) {
-                    if (v.isEmpty) {
-                      return 'should not be empty';
-                    }
-                    return null;
-                  },
-                  HintText: 'Prouct Price',
-                  controller: priceC,
-                  icon: const Icon(Icons.money),
-                  inputAction: TextInputAction.next,
-                ),
-                BidTextField(
-                  validate: (v) {
-                    if (v.isEmpty) {
-                      return 'should not be empty';
-                    }
-                    return null;
-                  },
-                  HintText: 'Discount',
-                  controller: discountPriceC,
-                  icon: const Icon(Icons.money),
-                  inputAction: TextInputAction.next,
-                ),
-                BidTextField(
-                  validate: (v) {
-                    if (v.isEmpty) {
-                      return 'should not be empty';
-                    }
-                    return null;
-                  },
-                  HintText: 'Serial Code',
-                  controller: serialNoC,
-                  icon: const Icon(Icons.sell_rounded),
-                  inputAction: TextInputAction.next,
-                ),
-
-                BidButton(
-                  buttonTitle: "Choose image",
-                  onPress: () {
-                    imagepick();
-                  },
-                  isLoading: isSaving,
-                ),
-                Container(
-                  height: 45.h,
-                  decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.4),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount:
-                              2 // this will show 2 image in one row in container if we want more than 2 we can increase number
-                          ),
-                      itemCount: images.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        //(File(images[index].path).path)    this will fetch image file from network gives us link
-                        // in link first image index path is images path and second one is document path
-                        // if we want to access or pick images from memory we should use memory instead of network
-                        return Stack(
-                          children: [
-                            Image.network(
-                              File(images[index].path).path,
-                              height: double.infinity,
-                              width:
-                                  double.infinity, //for image size in container
-                              fit: BoxFit.cover,
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    images.removeAt(index);
-                                  });
-                                },
-                                icon: const Icon(Icons.cancel_outlined))
-                          ],
-                        );
+                  SwitchListTile(
+                      title: const Text('Is this popular'),
+                      value: isPopular,
+                      onChanged: (v) {
+                        setState(() {
+                          isPopular = !isPopular;
+                        });
                       }),
-                ),
-                //           Container(
-                //             height: 120,
-                //             width: 140,
-                //   color: Colors.white,
-                //   child: Column(
-                //     children: <Widget>[
-                //       Container(
-                //         margin: EdgeInsets.all(15),
-                //         padding: EdgeInsets.all(15),
-                //         decoration: BoxDecoration(
-                //           color: Colors.white,
-                //           borderRadius: BorderRadius.all(
-                //             Radius.circular(15),
-                //           ),
-                //           border: Border.all(color: Colors.white),
-                //           boxShadow: [
-                //             BoxShadow(
-                //               color: Colors.black12,
-                //               offset: Offset(2, 2),
-                //               spreadRadius: 2,
-                //               blurRadius: 1,
-                //             ),
-                //           ],
-                //         ),
-                //         child: Builder(
-
-                //           builder: (BuildContext context,) {
-                //             try {
-                //                return (imageUrl != null)
-                //               ? Image.file(File(images[index].path))
-                //               : Image.network("https://cdn.pixabay.com/photo/2016/11/19/11/33/footwear-1838767_1280.jpg");
-                //             } catch (e) {
-                //               print('Error: $e');
-                //             }  return Container();
-                //           }
-                //         )
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                // Container(
-                //   height: 45.h,
-                //   decoration: BoxDecoration(
-                //     color: Colors.grey.withOpacity(0.4),
-                //     borderRadius: BorderRadius.circular(20)
-                //   ),
-                //   child: GridView.builder(
-                //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                //       crossAxisCount: 2 // this will show 2 image in one row in container if we want more than 2 we can increase number
-                //       ),
-                //       itemCount: images.length,
-                //     itemBuilder: (BuildContext context, int index) {
-                //       //(File(images[index].path).path)    this will fetch image file from network gives us link
-                //       // in link first image index path is images path and second one is document path
-                //       // if we want to access or pick images from memory we should use memory instead of network
-                //       return Stack(
-                //         children: [
-                //           Image.network(File(images[index].path).path,
-                //           height: 200, width: 250, //for image size in container
-                //           fit: BoxFit.cover,
-                //           ),
-                //           IconButton(onPressed: (){
-                //            setState(() {
-                //               images.removeAt(index);
-                //            });
-                //           }, icon: const Icon(Icons.cancel_outlined))
-                //         ],
-                //       );
-                //     }),
-                // ),
-
-                SwitchListTile(
-                    title: const Text('Is this on Sale?'),
-                    value: isOnSale,
-                    onChanged: (v) {
-                      setState(() {
-                        isOnSale = !isOnSale;
-                      });
-                    }),
-                SwitchListTile(
-                    title: const Text('Is this popular'),
-                    value: isPopular,
-                    onChanged: (v) {
-                      setState(() {
-                        isPopular = !isPopular;
-                      });
-                    }),
-                // BidButton(buttonTitle: 'save',
-                // onPress: (){
-                //   save();
-
-                // }, isLoading: isSaving,
-
-                // ),
-              ],
+                  GestureDetector(
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 250,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          gradient: const LinearGradient(colors: [
+                            Color(0xFFD45A2D),
+                            Color(0xFFBD861C),
+                            Color.fromARGB(67, 0, 130, 181)
+                          ])),
+                      child: BidButton(
+                        buttonTitle: 'save',
+                        onPress: () {
+                          save();
+                        },
+                        isLoading: isSaving,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -1,6 +1,7 @@
 import 'package:auction_fire/models/add_product_model.dart';
-import 'package:auction_fire/screens/user_main_func/add_product_screen.dart';
-import 'package:auction_fire/screens/user_screens/login_page.dart';
+import 'package:auction_fire/screens/user_screens/guest_page.dart';
+import 'package:auction_fire/screens/user_screens/user_main_func/add_product_screen.dart';
+import 'package:auction_fire/screens/user_screens/user_main_func/product_detail_page.dart';
 import 'package:auction_fire/widgets/product_cards.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,29 +19,44 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget selectedScreen = HomeScreen();
 
   final FirebaseAuth auth = FirebaseAuth.instance;
+  User? user = FirebaseAuth.instance.currentUser;
 
   List<dynamic> productsList = [];
   Future getProductList() async {
-    var data =
-        await FirebaseFirestore.instance.collection('Updateproduct').get();
+    var data = await FirebaseFirestore.instance
+        .collection('Updateproduct')
+        .where('UserID', isEqualTo: user!.uid)
+        .get();
 
     setState(() {
       productsList =
           List.from(data.docs.map((doc) => Uploadproduct.fromSnapshot(doc)));
     });
+    // final String docID =
+    //     FirebaseFirestore.instance.collection('Updateproduct').doc().id;
   }
+
+  final String docID =
+      FirebaseFirestore.instance.collection('Updateproduct').doc().id;
 
   //signout function
   signOut() async {
     await auth.signOut();
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => LoginPage()));
+        context, MaterialPageRoute(builder: (context) => GuestPage()));
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getProductList();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
     getProductList();
   }
 
@@ -148,9 +164,17 @@ class _HomeScreenState extends State<HomeScreen> {
             itemCount: productsList.length,
             itemBuilder: (context, index) {
               return GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProductDetail(
+                                product: productsList[index] as Uploadproduct,
+                              )));
+                },
                 child: ProductCard(
                   product: productsList[index] as Uploadproduct,
+                  // productId: docID,
                 ),
               );
             }),

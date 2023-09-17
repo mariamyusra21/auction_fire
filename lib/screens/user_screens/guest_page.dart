@@ -13,19 +13,17 @@ class GuestPage extends StatefulWidget {
 }
 
 class _GuestPageState extends State<GuestPage> {
+  // User? user = FirebaseAuth.instance.currentUser;
   List<dynamic> productsList = [];
   Future getProductList() async {
-    try {
-      var data =
-          await FirebaseFirestore.instance.collection('Updateproduct').get();
-      setState(() {
-        productsList =
-            List.from(data.docs.map((doc) => Uploadproduct.fromSnapshot(doc)));
-      });
-    } on FirebaseException catch (e) {
-      e.toString();
-      print(e);
-    }
+    var data = await FirebaseFirestore.instance
+        .collection('Updateproduct')
+        // .where('UserID', isEqualTo: user!.uid)
+        .get();
+    setState(() {
+      productsList =
+          List.from(data.docs.map((doc) => Uploadproduct.fromSnapshot(doc)));
+    });
   }
 
   @override
@@ -57,14 +55,33 @@ class _GuestPageState extends State<GuestPage> {
         ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
         child: ListView.builder(
             scrollDirection: Axis.vertical,
+            shrinkWrap: true,
             itemCount: productsList.length,
             itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LoginPage())),
-                child: ProductCard(
-                  product: productsList[index] as Uploadproduct,
-                ),
+              return Row(
+                // mainAxisSize: MainAxisSize.min,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage())),
+                        child: ProductCard(
+                          product: productsList[index] as Uploadproduct,
+                          // productId: '',
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                ],
               );
             }),
       ),
