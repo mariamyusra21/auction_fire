@@ -94,7 +94,7 @@ class _AddProductState extends State<AddProduct> {
     Reference ref = FirebaseStorage.instance.ref().child("Images").child(
         imageFile.name); // here we set the location of storing file of image
     //after creating instance child images folder will be created and then the path of image where it'll store image
-    if (kIsWeb) {
+    if (kIsWeb == false) {
       await ref.putData(
           await imageFile.readAsBytes()); //waiting data to fetch in bytes
       SettableMetadata(
@@ -135,9 +135,10 @@ class _AddProductState extends State<AddProduct> {
       price: int.tryParse(priceC.text),
       uid: user!.uid,
       discountPrice: int.tryParse(discountPriceC.text),
-      currentHighestBid: double.parse(priceC.text),
+      currentHighestBid: int.tryParse(priceC.text),
       serialNo: serialNoC.text,
       imageUrls: imageUrls,
+      // imageUrls: imageUrls.toString(),
       isOnSale: isOnSale,
       isPopular: isPopular,
       isFavorite: isFavorite,
@@ -152,7 +153,7 @@ class _AddProductState extends State<AddProduct> {
       });
     });
     await FirebaseFirestore.instance
-        .collection('Products')
+        .collection('Updateproduct')
         .add({"images": imageUrls}).whenComplete(() {
       // jub complete ho save prodicts tub setstate me loading band hojaye
       setState(() {

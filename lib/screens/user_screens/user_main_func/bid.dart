@@ -14,7 +14,7 @@ class BidPage extends StatefulWidget {
 
 class _ProductPageState extends State<BidPage> {
   final TextEditingController bidController = TextEditingController();
-  double? currentHighestBid;
+  int? currentHighestBid;
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _ProductPageState extends State<BidPage> {
   }
 
   void placeBid() async {
-    final double userBid = double.parse(bidController.text);
+    final int userBid = int.parse(bidController.text);
 
     if (currentHighestBid == null || userBid >= currentHighestBid!) {
       // Update the current highest bid in Firestore

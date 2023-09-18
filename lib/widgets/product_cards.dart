@@ -32,22 +32,33 @@ class ProductCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.shopping_cart,
-                size: 20,
+              Container(
+                height: 200,
+                width: double.infinity,
+                child: Image.network(
+                  product.imageUrls as String,
+                  fit: BoxFit.cover,
+                ),
               ),
               Text(
                 'Product Name: ${product.productName}',
                 style:
                     TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
               ),
-              Text(
-                // 'Product ID: ${productId}',
-                'Product ID: ${product.id}',
+              // Text(
+              //   // 'Product ID: ${productId}',
+              //   'Product ID: ${product.id}',
 
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-              ),
+              //   style:
+              //       TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+              // ),
+              // Text(
+              //   // 'Product ID: ${productId}',
+              //   'Product ID: ${product.uid}',
+
+              //   style:
+              //       TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+              // ),
               Text(
                 'Price: ${product.price}',
                 style:
@@ -58,10 +69,6 @@ class ProductCard extends StatelessWidget {
                 style:
                     TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
               ),
-              // Text(
-              //   'price: ${product.uid}',
-              //   style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
-              // ),
             ],
           ),
         ),

@@ -8,7 +8,7 @@ class Uploadproduct {
   String? detail;
   int? price;
   int? discountPrice;
-  double? currentHighestBid;
+  int? currentHighestBid;
   String? serialNo;
   List<String>? imageUrls;
   bool? isOnSale;
