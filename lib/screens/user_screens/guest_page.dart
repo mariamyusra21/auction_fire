@@ -58,25 +58,23 @@ class _GuestPageState extends State<GuestPage> {
             shrinkWrap: true,
             itemCount: productsList.length,
             itemBuilder: (context, index) {
-              return Row(
+              return Column(
+                
                 // mainAxisSize: MainAxisSize.min,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // mainAxisSize: MainAxisSize.min,
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage())),
-                        child: ProductCard(
-                          product: productsList[index] as Uploadproduct,
-                          // productId: '',
-                        ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: GestureDetector(
+                      
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginPage())),
+                      child: ProductCard(
+                        product: productsList[index] as Uploadproduct,
+                        // productId: '',
                       ),
-                    ],
+                    ),
                   ),
                   SizedBox(
                     width: 10,

@@ -1,4 +1,5 @@
 import 'package:auction_fire/models/add_product_model.dart';
+import 'package:auction_fire/widgets/bidbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -83,23 +84,57 @@ class _ProductPageState extends State<BidPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+           backgroundColor: Color(0xFFD45A2D),centerTitle: true,
         title: Text('Product Page'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text('Current Highest Bid: ${currentHighestBid ?? 'N/A'}'),
-            TextField(
-              controller: bidController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Enter Your Bid'),
+      body: Container(
+         height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+         decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              Color(0xFFD45A2D),
+              Color(0xFFBD861C),
+              Color.fromARGB(67, 0, 130, 181)
+            ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Text('Current Highest Bid: ${currentHighestBid ?? 'N/A'}'),
+                TextField(
+                  controller: bidController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(labelText: 'Enter Your Bid'),
+                ), 
+                SizedBox(
+                  height: 30,
+                ),
+                GestureDetector(
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 200,
+                      height: 50,
+                      decoration: BoxDecoration(
+                         border: Border.all(
+                color: Colors.black, style: BorderStyle.solid, width: 2),
+                          borderRadius: BorderRadius.circular(50),
+                          gradient: const LinearGradient(colors: [
+                            Color(0xFFD45A2D),
+                            Color(0xFFBD861C),
+                            Color.fromARGB(67, 0, 130, 181)
+                          ])),
+                      child: BidButton(
+                        buttonTitle: "Place bid",
+                        onPress: () async {
+                          placeBid;
+                        },
+                      ),
+                    ),
+                  ),
+              ],
             ),
-            ElevatedButton(
-              onPressed: placeBid,
-              child: Text('Place Bid'),
-            ),
-          ],
+          ),
         ),
       ),
     );

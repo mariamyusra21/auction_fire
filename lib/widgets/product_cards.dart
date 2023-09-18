@@ -32,14 +32,14 @@ class ProductCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                height: 200,
-                width: double.infinity,
-                child: Image.network(
-                  product.imageUrls as String,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              // Container(
+              //   height: 200,
+              //   width: double.infinity,
+              //   child: Image.network(
+              //     product.imageUrls as String,
+              //     fit: BoxFit.cover,
+              //   ),
+              // ),
               Text(
                 'Product Name: ${product.productName}',
                 style:
