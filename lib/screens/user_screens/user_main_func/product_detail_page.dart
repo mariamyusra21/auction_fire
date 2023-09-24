@@ -1,25 +1,33 @@
 import 'package:auction_fire/models/add_product_model.dart';
 import 'package:auction_fire/screens/user_screens/user_main_func/bid.dart';
 import 'package:auction_fire/widgets/bidbutton.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'add_product_screen.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetail extends StatefulWidget {
   final Uploadproduct product;
+  
   const ProductDetail({super.key, required this.product});
 
   @override
   State<ProductDetail> createState() => _Product_DetailState();
 }
 
+
 class _Product_DetailState extends State<ProductDetail> {
+
+   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          backgroundColor: Color(0xFFD45A2D),centerTitle: true,
-        title: Text('${widget.product.productName} Details'),
-      ),
-      body: Container(
+    return 
+    //Scaffold(
+      // appBar: AppBar(
+      //     backgroundColor: Color(0xFFD45A2D),centerTitle: true,
+      //   title: Text('${widget.product.productName} Details'),
+      // ),
+       Container(
          height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
          decoration: BoxDecoration(
@@ -40,6 +48,7 @@ class _Product_DetailState extends State<ProductDetail> {
                   style:
                       TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
                 ),
+               
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child:GestureDetector(
@@ -79,7 +88,7 @@ class _Product_DetailState extends State<ProductDetail> {
             ),
           ),
         ),
-      ),
-    );
+      );
+   // );
   }
 }

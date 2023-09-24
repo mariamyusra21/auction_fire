@@ -1,3 +1,4 @@
+import 'package:auction_fire/widgets/styles.dart';
 import 'package:flutter/material.dart';
 
 import '../models/add_product_model.dart';
@@ -6,9 +7,10 @@ class ProductCard extends StatelessWidget {
   const ProductCard({
     super.key,
     required this.product,
-    // required this.productId,
+    required this.title,
   });
   final Uploadproduct product;
+    final String title;
   // final String productId;
 
   @override
@@ -40,11 +42,31 @@ class ProductCard extends StatelessWidget {
               //     fit: BoxFit.cover,
               //   ),
               // ),
-              Text(
-                'Product Name: ${product.productName}',
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-              ),
+                Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+       decoration: BoxDecoration( 
+                               borderRadius: BorderRadius.circular(10),
+                               gradient: LinearGradient(colors: [
+                Colors.redAccent.withOpacity(0.4),
+                Colors.blueAccent.withOpacity(0.4)
+                               ])
+                             ),width: double.infinity,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            title?? 'Product Name: ${product.productName}', style: BidStyle.boldStyle.copyWith(     // we use copywith when we want to change any property of class in only that widget
+              color: Colors.white
+              )
+          ),
+        ),
+      ),
+    ),
+              // Text(
+              //   'Product Name: ${product.productName}',
+              //   style:
+              //       TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+              // ),
               // Text(
               //   // 'Product ID: ${productId}',
               //   'Product ID: ${product.id}',

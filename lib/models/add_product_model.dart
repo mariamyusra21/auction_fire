@@ -10,7 +10,7 @@ class Uploadproduct {
   int? discountPrice;
   int? currentHighestBid;
   String? serialNo;
-  List<String>? imageUrls;
+ dynamic imageUrls;
   bool? isOnSale;
   bool? isPopular;
   bool? isFavorite;
@@ -71,7 +71,7 @@ class Uploadproduct {
         discountPrice = snapshot.data()["discountPrice"],
         serialNo = snapshot.data()["serial Code"],
         currentHighestBid = snapshot.data()['currentHighestBid'],
-        // imageUrls = snapshot.data()["ImageUrls"],
+        imageUrls = snapshot.data()["ImageUrls"],
         isOnSale = snapshot.data()["isOnSale"],
         isPopular = snapshot.data()["isPopular"],
         isFavorite = snapshot.data()["isFavorite"];

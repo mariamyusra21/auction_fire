@@ -47,11 +47,9 @@ class _AddProductState extends State<AddProduct> {
     "Cosmatics",
     "Stationary"
   ];
-  final imagepicker =
-      ImagePicker(); // image picker used to pic any image from storagr
-  List<XFile> images =
-      []; //XFile will catch all types of images e.g. jpg, pdf, png etc...
-  List<String> imageUrls = [];
+  // final imagepicker = ImagePicker(); // image picker used to pic any image from storagr
+  // List<XFile> images = []; //XFile will catch all types of images e.g. jpg, pdf, png etc...
+  // List<String> imageUrls = [];
   bool isSaving = false; //for saving images in firestore
   bool isUploading = false; //for uplading whole data in firebase
 
@@ -63,62 +61,66 @@ class _AddProductState extends State<AddProduct> {
       priceC.clear();
       discountPriceC.clear();
       serialNoC.clear();
+     
+      
     });
   }
 
-  final Storage storage = Storage();
+ 
 
-  imagepick() async {
-    final List results = await imagepicker.pickMultiImage();
-    if (results.isNotEmpty) {
-      setState(() {
-        images.addAll(results as Iterable<XFile>);
-        final path = results.first.path;
-        final fileName = results.first.name;
+  // final Storage storage = Storage();
 
-        storage.uploadFile(path!, fileName).then((value) {
-          print('done');
-        });
-      });
-    } else {
-      print('image not selected');
-    }
-  }
+  // imagepick() async {
+  //   final List results = await imagepicker.pickMultiImage();
+  //   if (results.isNotEmpty) {
+  //     setState(() {
+  //       images.addAll(results as Iterable<XFile>);
+  //       final path = results.first.path;
+  //       final fileName = results.first.name;
 
-  // post to the firebase storage
-  Future postImage(XFile imageFile) async {
-    setState(() {
-      isUploading = true;
-    });
-    String urls;
-    Reference ref = FirebaseStorage.instance.ref().child("Images").child(
-        imageFile.name); // here we set the location of storing file of image
-    //after creating instance child images folder will be created and then the path of image where it'll store image
-    if (kIsWeb == false) {
-      await ref.putData(
-          await imageFile.readAsBytes()); //waiting data to fetch in bytes
-      SettableMetadata(
-          contentType: "Images/jpeg"); // store image in this format
-      urls = await ref
-          .getDownloadURL(); // won't upload image without this line the image is not in proper format of image
-      setState(() {
-        isUploading = false;
-      });
-      return urls;
-    }
-  }
+  //       storage.uploadFile(path!, fileName).then((value) {
+  //         print('done');
+  //       });
+  //     });
+  //   } else {
+  //     print('image not selected');
+  //   }
+  // }
 
-  uploadImage() async {
-    try {
-      for (var image in images) {
-        await postImage(image)
-            .then((downloadUrls) => imageUrls.add(downloadUrls));
-      }
-    } catch (e) {
-      e.toString();
-      print(e);
-    }
-  }
+  // // post to the firebase storage
+  // Future postImage(XFile imageFile) async {
+  //   setState(() {
+  //     isUploading = true;
+  //   });
+  //   String urls;
+  //   Reference ref = FirebaseStorage.instance.ref().child("Images").child(
+  //       imageFile.name); // here we set the location of storing file of image
+  //   //after creating instance child images folder will be created and then the path of image where it'll store image
+  //   if (kIsWeb == false) {
+  //     await ref.putData(
+  //         await imageFile.readAsBytes()); //waiting data to fetch in bytes
+  //     SettableMetadata(
+  //         contentType: "Images/jpeg"); // store image in this format
+  //     urls = await ref
+  //         .getDownloadURL(); // won't upload image without this line the image is not in proper format of image
+  //     setState(() {
+  //       isUploading = false;
+  //     });
+  //     return urls;
+  //   }
+  // }
+
+  // uploadImage() async {
+  //   try {
+  //     for (var image in images) {
+  //       await postImage(image)
+  //           .then((downloadUrls) => imageUrls.add(downloadUrls));
+  //     }
+  //   } catch (e) {
+  //     e.toString();
+  //     print(e);
+  //   }
+  // }
 
   save() async {
     setState(() {
@@ -138,30 +140,35 @@ class _AddProductState extends State<AddProduct> {
       currentHighestBid: int.tryParse(priceC.text),
       serialNo: serialNoC.text,
       imageUrls: imageUrls,
-      // imageUrls: imageUrls.toString(),
+     
       isOnSale: isOnSale,
       isPopular: isPopular,
-      isFavorite: isFavorite,
+      isFavorite: isFavorite, 
+    
     )).whenComplete(() {
       setState(() {
-        imageUrls.clear();
-        images.clear();
+       // imageUrls.clear();
+       // image!.clear();
         clearFields();
         isSaving = false;
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Uploaded Sucessfuly')));
       });
     });
-    await FirebaseFirestore.instance
-        .collection('Updateproduct')
-        .add({"images": imageUrls}).whenComplete(() {
-      // jub complete ho save prodicts tub setstate me loading band hojaye
-      setState(() {
-        isSaving = false;
-        images.clear();
-        imageUrls.clear();
-      });
-    });
+    
+    // await FirebaseFirestore.instance
+    //     .collection('Updateproduct')
+    //     .add({"imageUrls": imageUrls});
+  //.whenComplete(() {
+
+  //     // jub complete ho save prodicts tub setstate me loading band hojaye
+  //     setState(() {
+  //       isSaving = false;
+         
+  //      // image.clear();
+  //      // imageUrls.clear(  );
+  //     });
+  //  });
   }
 
   var uuid = Uuid(); // generate everytime new
@@ -193,8 +200,8 @@ class _AddProductState extends State<AddProduct> {
                     margin:
                         const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
                     decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(
-                            0.5), // color of formfeild where we input information like email, password etc
+                        color: Colors.white.withOpacity(
+                            0.4), // color of formfeild where we input information like email, password etc
                         borderRadius: BorderRadius.circular(10)),
                     child: DropdownButtonFormField(
                         hint: const Text('Choose category'),
@@ -294,7 +301,8 @@ class _AddProductState extends State<AddProduct> {
                       child: BidButton(
                         buttonTitle: "Choose image",
                         onPress: () async {
-                          imagepick();
+                         // imagepick();
+                         ImagePickerMethod();
                         },
                         isLoading: isSaving,
                       ),
@@ -303,32 +311,37 @@ class _AddProductState extends State<AddProduct> {
                   Container(
                     height: 45.h,
                     decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.4),
+                        color: Colors.white.withOpacity(0.4),
                         borderRadius: BorderRadius.circular(20)),
                     child: GridView.builder(
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount:
-                                    2 // this will show 2 image in one row in container if we want more than 2 we can increase number
+                                crossAxisCount:1 // this will show 2 image in one row in container if we want more than 2 we can increase number
                                 ),
-                        itemCount: images.length,
+                       itemCount: 1,
                         itemBuilder: (BuildContext context, int index) {
-                          return Stack(
-                            children: [
-                              Image.file(
-                                File(images[index].path),
-                                height: 200,
-                                width: 250, //for image size in container
-                                fit: BoxFit.cover,
-                              ),
-                              IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      images.removeAt(index);
-                                    });
-                                  },
-                                  icon: const Icon(Icons.cancel_outlined))
-                            ],
+                          return Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Stack(
+                              children: [
+                                image == null 
+                                ? const Text('No Image Selected') 
+                                : Image.file(image!),
+                                // Image.file(
+                                //   File(images[index].path),
+                                //   height: 200,
+                                //   width: 250, //for image size in container
+                                //   fit: BoxFit.cover,
+                                // ),
+                                // IconButton(
+                                //     onPressed: () {
+                                //       setState(() {
+                                //         image?.removeAt();
+                                //       });
+                                //     },
+                                //     icon: const Icon(Icons.cancel_outlined))
+                              ],
+                            ),
                           );
                         }),
                   ),
@@ -364,6 +377,7 @@ class _AddProductState extends State<AddProduct> {
                         buttonTitle: 'save',
                         onPress: () {
                           save();
+                         // uploadImage();
                         },
                         isLoading: isSaving,
                       ),
@@ -377,4 +391,52 @@ class _AddProductState extends State<AddProduct> {
       ),
     );
   }
+  File? image;
+  final imagePicker = ImagePicker();
+  dynamic imageUrls;
+  final firebaseStorageRef = FirebaseStorage.instance; 
+
+
+  Future ImagePickerMethod() async {
+    // image pick from gallery 
+     final pick = await imagePicker.pickImage(source: ImageSource.gallery);
+
+     setState(() {
+       if (pick != null){
+        image = File(pick.path);
+       }
+       else{
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('No Image Selected'))); 
+       }
+     });
+  }
+
+ // upload image to firebase storage 
+  Future uploadImage() async{
+     if (image != null) {
+      try {
+        
+       var snapshot=
+         await firebaseStorageRef.ref().child('images/${DateTime.now()}.jpg').putFile(image!);
+       // UploadTask uploadTask = firebaseStorageRef.putFile(image!);
+        // await uploadTask.whenComplete(() => print('Image uploaded'));
+        var downlodurl = await snapshot.ref.getDownloadURL();
+        setState(() {
+        imageUrls = downlodurl;
+      imageUrls.add(downlodurl);
+       print( imageUrls);
+        });
+      } catch (e) {
+        print(e.toString());
+      }
+    } else {
+      print('No image to upload.');
+    }
+    // Reference ref = FirebaseStorage.instance.ref().child('Updateproduct');
+    // await ref.putFile(image!); 
+    // imageUrls= await ref.getDownloadURL();
+    // print(imageUrls);
+  }
+
+
 }
