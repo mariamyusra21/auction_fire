@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/styles.dart';
-import 'user_screens/home_screen.dart';
+import 'user_screens/seller_pages/seller_home_screen.dart';
 
 // ignore: must_be_immutable
 class LandiingScreen extends StatelessWidget {
@@ -54,7 +54,7 @@ class LandiingScreen extends StatelessWidget {
                   if (user == null) {
                     return GuestPage();
                   } else {
-                    return HomeScreen();
+                    return SellerHomeScreen();
                   }
                 }
                 return Scaffold(

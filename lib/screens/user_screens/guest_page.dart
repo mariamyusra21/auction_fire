@@ -2,7 +2,7 @@ import 'package:auction_fire/screens/user_screens/login_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:auction_fire/screens/user_screens/user_main_func/add_product_screen.dart';
+import 'package:auction_fire/screens/user_screens/seller_pages/add_product_screen.dart';
 import '../../models/add_product_model.dart';
 import '../../widgets/product_cards.dart';
 

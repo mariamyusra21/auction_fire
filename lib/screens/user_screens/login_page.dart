@@ -1,10 +1,10 @@
+import 'package:auction_fire/screens/user_screens/buyer_pages/buyer_home_screen.dart';
+import 'package:auction_fire/screens/user_screens/seller_pages/seller_home_screen.dart';
 import 'package:auction_fire/services/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'home_screen.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -24,6 +24,21 @@ class _LoginPageState extends State<LoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool loading = false;
+
+  late int selectedRadioTile;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    selectedRadioTile = 0;
+  }
+
+  setSelectedRadioTile(int value) {
+    setState(() {
+      selectedRadioTile = value;
+    });
+  }
 
   void dispose() {
     emailController.dispose();
@@ -48,8 +63,8 @@ class _LoginPageState extends State<LoginPage> {
       }).then((_) {
         Utilities().toastMessage('New Password Updated!');
       });
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      // Navigator.push(
+      //     context, MaterialPageRoute(builder: (context) => SellerHomeScreen()));
       setState(() {
         loading = false;
       });
@@ -96,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 35,
             ),
-            
+
             Text(
               "Auction Fire",
               style: TextStyle(
@@ -261,8 +276,69 @@ class _LoginPageState extends State<LoginPage> {
                             child: TextButton(
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                  login(emailController.text,
-                                      passwordController.text);
+                                   // Alert Dialog to choose as a buyer or seller to login
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                              "Please Identify Yourself as Buyer or Seller"),
+                                          content: Text(
+                                              'Kindly select an option to Login to our App'),
+                                          actions: [
+                                            // Radio ListTile for seller
+                                            RadioListTile(
+                                              title: Text(
+                                                'Login as Seller',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              value: 1,
+                                              groupValue: selectedRadioTile,
+                                              onChanged: ((value) {
+                                                setState(() {
+                                                  selectedRadioTile = value!;
+                                                });
+                                                if (selectedRadioTile == 1) {
+                                                  login(emailController.text,
+                                                      passwordController.text);
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              SellerHomeScreen()));
+                                                }
+                                              }),
+                                              // selected: true,
+                                            ),
+                                            // Radio ListTile for buyer
+                                            RadioListTile(
+                                              title: Text(
+                                                'Login as Buyer',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              value: 1,
+                                              groupValue: selectedRadioTile,
+                                              onChanged: ((value) {
+                                                setState(() {
+                                                  selectedRadioTile = value!;
+                                                });
+                                                if (selectedRadioTile == 1) {
+                                                  login(emailController.text,
+                                                      passwordController.text);
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              BuyerHomeScreen()));
+                                                }
+                                              }),
+                                              // selected: true,
+                                            ),
+                                          ],
+                                        );
+                                      });
                                 }
                               },
                               child: Text(
