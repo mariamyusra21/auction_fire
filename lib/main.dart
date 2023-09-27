@@ -11,12 +11,12 @@ void main() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: FirebaseOptions(
-            apiKey: "AIzaSyB4Jz2bdb6MMaVksxaJdYafTX9RBpDk06k",
-            authDomain: "fyp-auction-fire.firebaseapp.com",
-            projectId: "fyp-auction-fire",
-            storageBucket: "fyp-auction-fire.appspot.com",
-            messagingSenderId: "812678785636",
-            appId: "1:812678785636:web:d9f89cd19564b1e3d90d71"));
+            apiKey: "AIzaSyAysr0wEPpjqoiVcmHAluoZ_-KT_bjod_A",
+            authDomain: "fyp-auction-fire-4c1ea.firebaseapp.com",
+            projectId: "fyp-auction-fire-4c1ea",
+            storageBucket: "fyp-auction-fire-4c1ea.appspot.com",
+            messagingSenderId: "1010301042124",
+            appId: "1:1010301042124:web:c778f85322ce4ff6a6b169"));
   } else {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
