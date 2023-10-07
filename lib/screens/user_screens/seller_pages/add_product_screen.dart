@@ -47,9 +47,10 @@ class _AddProductState extends State<AddProduct> {
     "Cosmatics",
     "Stationary"
   ];
-  // final imagepicker = ImagePicker(); // image picker used to pic any image from storagr
-  // List<XFile> images = []; //XFile will catch all types of images e.g. jpg, pdf, png etc...
-  // List<String> imageUrls = [];
+  // veriables for deatil images 
+   final imagepicker = ImagePicker(); // image picker used to pic any image from storagr
+   List<XFile> detailimages = []; //XFile will catch all types of images e.g. jpg, pdf, png etc...
+   List<String> detailimageUrls = [];
   bool isSaving = false; //for saving images in firestore
   bool isUploading = false; //for uplading whole data in firebase
 
@@ -67,66 +68,61 @@ class _AddProductState extends State<AddProduct> {
   }
 
  
-
+// chose images for deatil pages methods 
   // final Storage storage = Storage();
 
-  // imagepick() async {
-  //   final List results = await imagepicker.pickMultiImage();
-  //   if (results.isNotEmpty) {
-  //     setState(() {
-  //       images.addAll(results as Iterable<XFile>);
-  //       final path = results.first.path;
-  //       final fileName = results.first.name;
+ imagepick() async{
+    final List<XFile> imagepick = await imagepicker.pickMultiImage();
+    if(imagepick.isNotEmpty){
+      setState(() {
+        detailimages.addAll(imagepick);
+      });
+    }else{
+      print('image not selected');
+    }
+   }
+   
 
-  //       storage.uploadFile(path!, fileName).then((value) {
-  //         print('done');
-  //       });
-  //     });
-  //   } else {
-  //     print('image not selected');
-  //   }
-  // }
+//   // post to the firebase storage
+  Future postImage(XFile imageFile) async {
+    setState(() {
+      isUploading = true;
+    });
+    String urls;
+    Reference ref = FirebaseStorage.instance.ref().child("images").child(
+        imageFile.name); // here we set the location of storing file of image
+    //after creating instance child images folder will be created and then the path of image where it'll store image
+    if (kIsWeb == false) {
+      await ref.putData(
+          await imageFile.readAsBytes()); //waiting data to fetch in bytes
+      SettableMetadata(
+          contentType: "image/jpeg"); // store image in this format
+      urls = await ref
+          .getDownloadURL(); // won't upload image without this line the image is not in proper format of image
+      setState(() {
+        isUploading = false;
+      });
+      return urls;
+    }
+  }
 
-  // // post to the firebase storage
-  // Future postImage(XFile imageFile) async {
-  //   setState(() {
-  //     isUploading = true;
-  //   });
-  //   String urls;
-  //   Reference ref = FirebaseStorage.instance.ref().child("Images").child(
-  //       imageFile.name); // here we set the location of storing file of image
-  //   //after creating instance child images folder will be created and then the path of image where it'll store image
-  //   if (kIsWeb == false) {
-  //     await ref.putData(
-  //         await imageFile.readAsBytes()); //waiting data to fetch in bytes
-  //     SettableMetadata(
-  //         contentType: "Images/jpeg"); // store image in this format
-  //     urls = await ref
-  //         .getDownloadURL(); // won't upload image without this line the image is not in proper format of image
-  //     setState(() {
-  //       isUploading = false;
-  //     });
-  //     return urls;
-  //   }
-  // }
-
-  // uploadImage() async {
-  //   try {
-  //     for (var image in images) {
-  //       await postImage(image)
-  //           .then((downloadUrls) => imageUrls.add(downloadUrls));
-  //     }
-  //   } catch (e) {
-  //     e.toString();
-  //     print(e);
-  //   }
-  // }
-
+  uploadDetailImages() async {
+    try {
+      for (var image in detailimages) {
+        await postImage(image)
+            .then((downloadUrls) => detailimageUrls.add(downloadUrls));
+      }
+    } catch (e) {
+      e.toString();
+      print(e);
+    }
+  }
+  // save all feilds in firebasefirestore
   save() async {
     setState(() {
       isSaving = true; //for loading the products saving
     });
-
+     await uploadDetailImages();
     await uploadImage();
     await Uploadproduct.addProduct(Uploadproduct(
       category: selectedvlaue,
@@ -140,7 +136,7 @@ class _AddProductState extends State<AddProduct> {
       currentHighestBid: int.tryParse(priceC.text),
       serialNo: serialNoC.text,
       imageUrls: imageUrls,
-     
+      detailimageUrls: detailimageUrls,
       isOnSale: isOnSale,
       isPopular: isPopular,
       isFavorite: isFavorite, 
@@ -156,19 +152,6 @@ class _AddProductState extends State<AddProduct> {
       });
     });
     
-    // await FirebaseFirestore.instance
-    //     .collection('Updateproduct')
-    //     .add({"imageUrls": imageUrls});
-  //.whenComplete(() {
-
-  //     // jub complete ho save prodicts tub setstate me loading band hojaye
-  //     setState(() {
-  //       isSaving = false;
-         
-  //      // image.clear();
-  //      // imageUrls.clear(  );
-  //     });
-  //  });
   }
 
   var uuid = Uuid(); // generate everytime new
@@ -301,19 +284,63 @@ class _AddProductState extends State<AddProduct> {
                       child: BidButton(
                         buttonTitle: "Choose image",
                         onPress: () async {
-                         // imagepick();
-                         ImagePickerMethod();
+                        imagepick();
+                        
                         },
                         isLoading: isSaving,
                       ),
                     ),
                   ),
-                  Container(
+                  // //choose images for detail page
+                   Container(
                     height: 45.h,
                     decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.4),
                         borderRadius: BorderRadius.circular(20)),
-                    child: GridView.builder(
+                    child: 
+                    GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2 // this will show 2 image in one row in container if we want more than 2 we can increase number
+                                ),
+                       itemCount: detailimages.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: 
+                            Stack(
+                              children: [
+                               Image.file(File(detailimages[index].path),
+                        height: 200, width: 250, //for image size in container
+                        fit: BoxFit.cover,
+                        ),
+                        IconButton(onPressed: (){
+                         setState(() {
+                            detailimages.removeAt(index);
+                         });
+                        }, icon: const Icon(Icons.cancel_outlined))
+                              ],
+                            ),
+                         
+                          );
+                        }),
+                        
+                  ),
+                
+                // choose image for thumbnail 
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Container(
+                      height: 40.h,
+                      width: 110.w,
+                      decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: InkWell(
+                        onTap: (){
+                           ImagePickerMethod();
+                        },
+                        child:  GridView.builder(
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount:1 // this will show 2 image in one row in container if we want more than 2 we can increase number
@@ -322,29 +349,38 @@ class _AddProductState extends State<AddProduct> {
                         itemBuilder: (BuildContext context, int index) {
                           return Padding(
                             padding: const EdgeInsets.all(10.0),
-                            child: Stack(
+                            child: 
+                            Stack(
                               children: [
                                 image == null 
-                                ? const Text('No Image Selected') 
+                                ?  const Padding(
+                                  padding:  EdgeInsets.all(60.0),
+                                  child: Center(
+                                    child: Column(
+                                      children: [
+                                         Text('choose image for showcase of product'), 
+                                         Icon(Icons.add),
+                                      ], 
+                                    ),
+                                  ),
+                                )
                                 : Image.file(image!),
-                                // Image.file(
-                                //   File(images[index].path),
-                                //   height: 200,
-                                //   width: 250, //for image size in container
-                                //   fit: BoxFit.cover,
-                                // ),
-                                // IconButton(
-                                //     onPressed: () {
-                                //       setState(() {
-                                //         image?.removeAt();
-                                //       });
-                                //     },
-                                //     icon: const Icon(Icons.cancel_outlined))
+                            //      IconButton(onPressed: (){
+                            //  setState(() {
+                            // detailimages.removeAt(index);
+                            // });
+                            // }, icon: const Icon(Icons.cancel_outlined))
                               ],
                             ),
+                         
                           );
                         }),
+                        
+                      ),
+                          
+                    ),
                   ),
+                 
                   SwitchListTile(
                       title: const Text('Is this on Sale?'),
                       value: isOnSale,
@@ -391,6 +427,8 @@ class _AddProductState extends State<AddProduct> {
       ),
     );
   }
+
+  // use for thumbnail of product 
   File? image;
   final imagePicker = ImagePicker();
   dynamic imageUrls;
@@ -432,10 +470,6 @@ class _AddProductState extends State<AddProduct> {
     } else {
       print('No image to upload.');
     }
-    // Reference ref = FirebaseStorage.instance.ref().child('Updateproduct');
-    // await ref.putFile(image!); 
-    // imageUrls= await ref.getDownloadURL();
-    // print(imageUrls);
   }
 
 

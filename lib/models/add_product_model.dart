@@ -14,6 +14,7 @@ class Uploadproduct {
   bool? isOnSale;
   bool? isPopular;
   bool? isFavorite;
+  List<String>? detailimageUrls;
 
   Uploadproduct(
       {required this.category,
@@ -28,7 +29,8 @@ class Uploadproduct {
       required this.imageUrls,
       required this.isOnSale,
       required this.isPopular,
-      required this.isFavorite});
+      required this.isFavorite, 
+      required this.detailimageUrls});
 
   static Future<void> addProduct(Uploadproduct addproduct) async {
     //function to add data in firestore database
@@ -48,6 +50,7 @@ class Uploadproduct {
       "discountPrice": addproduct.discountPrice,
       "serial Code": addproduct.serialNo,
       "ImageUrls": addproduct.imageUrls,
+      "detailimageUrls": addproduct.detailimageUrls,
       'UserID': addproduct.uid,
       'currentHighestBid': addproduct.currentHighestBid,
       "isOnSale": addproduct.isOnSale,
@@ -72,6 +75,7 @@ class Uploadproduct {
         serialNo = snapshot.data()["serial Code"],
         currentHighestBid = snapshot.data()['currentHighestBid'],
         imageUrls = snapshot.data()["ImageUrls"],
+        detailimageUrls = snapshot.data()["detailimageUrls"],
         isOnSale = snapshot.data()["isOnSale"],
         isPopular = snapshot.data()["isPopular"],
         isFavorite = snapshot.data()["isFavorite"];
