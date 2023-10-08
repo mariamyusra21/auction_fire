@@ -1,6 +1,5 @@
 import 'package:auction_fire/screens/user_screens/guest_page.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/add_product_screen.dart';
-import 'package:auction_fire/screens/user_screens/seller_pages/seller_product_detail_page.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/seller_products.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,7 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SellerHomeScreen extends StatefulWidget {
-  const SellerHomeScreen({super.key});
+  final User? user;
+  const SellerHomeScreen({super.key, this.user});
 
   @override
   State<SellerHomeScreen> createState() => _SellerHomeScreenState();
@@ -19,10 +19,19 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
   Widget selectedScreen = SellerHomeScreen();
 
   final FirebaseAuth auth = FirebaseAuth.instance;
-  User? user = FirebaseAuth.instance.currentUser;
+  // User? user = FirebaseAuth.instance.currentUser;
+  // late var uid = widget.user.uid;
 
   final String docID =
       FirebaseFirestore.instance.collection('Updateproduct').doc().id;
+
+  // Exclude user's products stream
+  Stream<QuerySnapshot<Map<String, dynamic>>> getProductStream(String userId) {
+    return FirebaseFirestore.instance
+        .collection('Updateproduct')
+        .where('UserID', isNotEqualTo: userId) // Exclude user's products
+        .snapshots();
+  }
 
   //signout function
   signOut() async {
@@ -215,11 +224,13 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                 ),
                 Expanded(
                   child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                    stream: FirebaseFirestore.instance
-                        .collection('Updateproduct')
-                        // where condition is used here so that seller can see other products except his own.
-                        // .where('UserID' != user!.uid)
-                        .snapshots(),
+                    stream:
+                        //  getProductStream(widget.user!.uid),
+                        FirebaseFirestore.instance
+                            .collection('Updateproduct')
+                            // where condition is used here so that seller can see other products except his own.
+                            // .where('UserID' != user!.uid)
+                            .snapshots(),
                     builder: (BuildContext context, snapshot) {
                       if (snapshot.data == null) {
                         return Center(child: CircularProgressIndicator());
@@ -236,37 +247,45 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                             dynamic Linkimage = doc.data()['ImageUrls'] ?? '';
                             // final docID = doc.id;
 
-                            return ListTile(
-                              title: Stack(
-                                children: [
-                                  // Text('$productName '),
-                                  Image(image: NetworkImage(Linkimage)),
-                                  Positioned(
-                                    top: 20,
-                                    left: 20,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.black.withOpacity(0.7)),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Text(
-                                          '$productName ',
-                                          style: TextStyle(color: Colors.white),
+                            if (doc.data()['UserID'] == widget.user?.uid) {
+                              Center(
+                                  child: Text(
+                                      'User\'s Products are not shown in dashboard'));
+                            } else {
+                              return ListTile(
+                                title: Stack(
+                                  children: [
+                                    // Text('$productName '),
+                                    Image(image: NetworkImage(Linkimage)),
+                                    Positioned(
+                                      top: 20,
+                                      left: 20,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.7)),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text(
+                                            '$productName ',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  // FadeInImage.assetNetwork(placeholder: 'assets/placeholder.png', image: snapshot.data)
-                                ],
-                              ),
-                              subtitle: Text('$detail'),
-                              // onTap Navigation is not required in seller page...
-                              // onTap: () => Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) =>
-                              //             SellerProductDetail(doc: doc))),
-                            );
+                                    // FadeInImage.assetNetwork(placeholder: 'assets/placeholder.png', image: snapshot.data)
+                                  ],
+                                ),
+                                subtitle: Text('$detail'),
+                                // onTap Navigation is not required in seller page...
+                                // onTap: () => Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) =>
+                                //             SellerProductDetail(doc: doc))),
+                              );
+                            }
                           },
                         );
                       }

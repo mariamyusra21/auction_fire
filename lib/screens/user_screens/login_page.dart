@@ -1,7 +1,6 @@
 import 'package:auction_fire/screens/user_screens/buyer_pages/buyer_home_screen.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/seller_home_screen.dart';
 import 'package:auction_fire/services/utilities.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -47,34 +46,31 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void login(email, password) {
+  Future<User?> login(email, password) async {
     setState(() {
       loading = true;
     });
-    _auth
-        .signInWithEmailAndPassword(email: email, password: password)
-        .then((value) {
-      Utilities().toastMessage(value.user!.email.toString());
-      FirebaseFirestore.instance
-          .collection('Users')
-          .doc(_auth.currentUser!.uid)
-          .update({
-        "password": password,
-      }).then((_) {
-        Utilities().toastMessage('New Password Updated!');
-      });
-      // Navigator.push(
-      //     context, MaterialPageRoute(builder: (context) => SellerHomeScreen()));
+
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      // FirebaseFirestore.instance
+      //     .collection('Users')
+      //     .doc(_auth.currentUser!.uid)
+      //     .update({
+      //   "password": password,
+      // }).then((_) {
+      //   Utilities().toastMessage('New Password Updated!');
+      // });
+      Utilities().toastMessage(userCredential.user!.email.toString());
+      return userCredential.user;
+    } catch (e) {
+      Utilities().toastMessage(e.toString());
       setState(() {
         loading = false;
       });
-    }).onError((error, stackTrace) {
-      debugPrint(error.toString());
-      Utilities().toastMessage(error.toString());
-      setState(() {
-        loading = false;
-      });
-    });
+      return null;
+    }
   }
 
   void resetPasswordEmail(email) async {
@@ -276,7 +272,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: TextButton(
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                   // Alert Dialog to choose as a buyer or seller to login
+                                  // Alert Dialog to choose as a buyer or seller to login
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -295,18 +291,23 @@ class _LoginPageState extends State<LoginPage> {
                                               ),
                                               value: 1,
                                               groupValue: selectedRadioTile,
-                                              onChanged: ((value) {
+                                              onChanged: ((value) async {
                                                 setState(() {
                                                   selectedRadioTile = value!;
                                                 });
                                                 if (selectedRadioTile == 1) {
-                                                  login(emailController.text,
+                                                  User? user = await login(
+                                                      emailController.text,
                                                       passwordController.text);
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              SellerHomeScreen()));
+                                                  if (user != null) {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                SellerHomeScreen(
+                                                                    user:
+                                                                        user)));
+                                                  }
                                                 }
                                               }),
                                               // selected: true,
