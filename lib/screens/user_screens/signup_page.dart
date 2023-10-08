@@ -1,4 +1,5 @@
 import 'package:auction_fire/screens/user_screens/signup_verification/verify_sms_code.dart';
+import 'package:auction_fire/screens/user_screens/user_profile.dart';
 import 'package:auction_fire/services/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -80,6 +81,7 @@ class _SignUpState extends State<SignUp> {
     setState(() {
       loading = true;
     });
+
     auth
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
@@ -332,11 +334,15 @@ class _SignUpState extends State<SignUp> {
 
                                     signup(emailController.text,
                                         passwordController.text);
-                                    Navigator.pushNamed(context, 'LoginPage');
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                UserProfile()));
                                   }
                                 },
                                 child: Text(
-                                  "Sign Up",
+                                  "Next",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
