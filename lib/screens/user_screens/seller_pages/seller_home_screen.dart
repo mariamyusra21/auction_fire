@@ -1,3 +1,4 @@
+import 'package:auction_fire/screens/profile/viewprofile.dart';
 import 'package:auction_fire/screens/user_screens/guest_page.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/add_product_screen.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/seller_products.dart';
@@ -64,11 +65,29 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
             Color.fromARGB(67, 0, 130, 181)
           ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
           child: ListView(
+            
             children: [
-              const DrawerHeader(
-                child: Text('Seller Options',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+               DrawerHeader(
+                child: 
+                Column(
+                  children: [
+                    //profile retrieval image display in drawer 
+                    GestureDetector(
+                      onTap: () => const ProfileDetailScreen(),
+                      child: CircleAvatar(
+                        radius: 40,
+                        backgroundImage: imageUrls==null 
+                        ?  Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThlTauvFuw7q1xluWrxtf2uFBYgaa_a2GQfg&usqp=CAU').image
+                      :NetworkImage(imageUrls) 
+                      ),
+                    ),
+                    Text('$displayName')
+                  ],
+                )
+                // Text('Seller Options',
+                //     style:
+                //         TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                        
               ),
               ListTile(
                 title: const Text(
@@ -302,5 +321,36 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
 
   Widget MyDrawerList() {
     return Container();
+  }
+
+  // get profile image from firebase firestore to show in Avator in drawer
+
+   dynamic imageUrls;
+   String? displayName;
+  @override
+  void initState() {
+    getProfileImage().then((url){
+      setState(() {
+        imageUrls= url;
+      });
+    });
+    getDisplayName().then((name){
+      setState(() {
+        displayName= name;
+      });
+    });
+    super.initState();
+  }
+
+  Future getProfileImage() async{
+  final profileimage= FirebaseFirestore.instance;
+  final doc = await profileimage.collection("Users").doc(widget.user?.uid).get();
+  return doc.data()?["photoURL"];
+  }
+
+  Future getDisplayName() async{
+  final profileimage= FirebaseFirestore.instance;
+  final doc = await profileimage.collection("Users").doc(widget.user?.uid).get();
+  return doc.data()?["displayName"];
   }
 }

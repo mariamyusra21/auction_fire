@@ -14,7 +14,7 @@ class Uploadproduct {
   bool? isOnSale;
   bool? isPopular;
   bool? isFavorite;
-  List<String>? detailimageUrls;
+  List<dynamic>? detailimageUrls;
 
   Uploadproduct(
       {required this.category,

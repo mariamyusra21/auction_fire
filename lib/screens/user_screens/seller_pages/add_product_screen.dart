@@ -50,7 +50,7 @@ class _AddProductState extends State<AddProduct> {
   // veriables for deatil images 
    final imagepicker = ImagePicker(); // image picker used to pic any image from storagr
    List<XFile> detailimages = []; //XFile will catch all types of images e.g. jpg, pdf, png etc...
-   List<String> detailimageUrls = [];
+   List<dynamic> detailimageUrls = [];
   bool isSaving = false; //for saving images in firestore
   bool isUploading = false; //for uplading whole data in firebase
 
