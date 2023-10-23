@@ -1,4 +1,3 @@
-import 'package:auction_fire/screens/user_screens/buyer_pages/buyer_home_screen.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/seller_home_screen.dart';
 import 'package:auction_fire/services/utilities.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -270,76 +269,17 @@ class _LoginPageState extends State<LoginPage> {
                           child: Padding(
                             padding: EdgeInsets.all(12.0),
                             child: TextButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  // Alert Dialog to choose as a buyer or seller to login
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text(
-                                              "Please Identify Yourself as Buyer or Seller"),
-                                          content: Text(
-                                              'Kindly select an option to Login to our App'),
-                                          actions: [
-                                            // Radio ListTile for seller
-                                            RadioListTile(
-                                              title: Text(
-                                                'Login as Seller',
-                                                style: TextStyle(
-                                                    color: Colors.black),
-                                              ),
-                                              value: 1,
-                                              groupValue: selectedRadioTile,
-                                              onChanged: ((value) async {
-                                                setState(() {
-                                                  selectedRadioTile = value!;
-                                                });
-                                                if (selectedRadioTile == 1) {
-                                                  User? user = await login(
-                                                      emailController.text,
-                                                      passwordController.text);
-                                                  if (user != null) {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                SellerHomeScreen(
-                                                                    user:
-                                                                        user)));
-                                                  }
-                                                }
-                                              }),
-                                              // selected: true,
-                                            ),
-                                            // Radio ListTile for buyer
-                                            RadioListTile(
-                                              title: Text(
-                                                'Login as Buyer',
-                                                style: TextStyle(
-                                                    color: Colors.black),
-                                              ),
-                                              value: 1,
-                                              groupValue: selectedRadioTile,
-                                              onChanged: ((value) {
-                                                setState(() {
-                                                  selectedRadioTile = value!;
-                                                });
-                                                if (selectedRadioTile == 1) {
-                                                  login(emailController.text,
-                                                      passwordController.text);
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              BuyerHomeScreen()));
-                                                }
-                                              }),
-                                              // selected: true,
-                                            ),
-                                          ],
-                                        );
-                                      });
+                                  User? user = await login(emailController.text,
+                                      passwordController.text);
+                                  if (user != null) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SellerHomeScreen(user: user)));
+                                  }
                                 }
                               },
                               child: Text(

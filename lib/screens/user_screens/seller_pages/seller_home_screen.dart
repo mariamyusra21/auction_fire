@@ -1,4 +1,6 @@
+// import 'package:auction_fire/screens/profile/viewprofile.dart';
 import 'package:auction_fire/screens/profile/viewprofile.dart';
+import 'package:auction_fire/screens/user_screens/buyer_pages/buyer_product_detail_page.dart';
 import 'package:auction_fire/screens/user_screens/guest_page.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/add_product_screen.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/seller_products.dart';
@@ -65,30 +67,29 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
             Color.fromARGB(67, 0, 130, 181)
           ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
           child: ListView(
-            
             children: [
-               DrawerHeader(
-                child: 
-                Column(
-                  children: [
-                    //profile retrieval image display in drawer 
-                    GestureDetector(
-                      onTap: () => const ProfileDetailScreen(),
-                      child: CircleAvatar(
+              DrawerHeader(
+                  child: Column(
+                children: [
+                  //profile retrieval image display in drawer
+                  GestureDetector(
+                    // onTap: () => const ProfileDetailScreen(),
+                    child: CircleAvatar(
                         radius: 40,
-                        backgroundImage: imageUrls==null 
-                        ?  Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThlTauvFuw7q1xluWrxtf2uFBYgaa_a2GQfg&usqp=CAU').image
-                      :NetworkImage(imageUrls) 
-                      ),
-                    ),
-                    Text('$displayName')
-                  ],
-                )
-                // Text('Seller Options',
-                //     style:
-                //         TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                        
-              ),
+                        backgroundImage: imageUrls == null
+                            ? Image.network(
+                                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThlTauvFuw7q1xluWrxtf2uFBYgaa_a2GQfg&usqp=CAU')
+                                .image
+                            : NetworkImage(imageUrls)),
+                  ),
+                  Text('$displayName')
+                ],
+              )
+                  // Text('Seller Options',
+                  //     style:
+                  //         TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+
+                  ),
               ListTile(
                 title: const Text(
                   'Add Product',
@@ -113,6 +114,19 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                     MaterialPageRoute(
                       builder: (context) =>
                           SellerProducts(), // Replace with your actual screen widget
+                    ),
+                  );
+                },
+              ),
+                ListTile(
+                title: const Text('My Profile',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ProfileData(), // Replace with your actual screen widget
                     ),
                   );
                 },
@@ -241,6 +255,80 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                       .toList(),
                   options: CarouselOptions(height: 220, autoPlay: true),
                 ),
+
+                // Stream builder to display carouselSlider to get products....
+                // StreamBuilder<QuerySnapshot<Map<String,dynamic>>>(
+                //   stream: FirebaseFirestore.instance
+                //       .collection('Updateproduct')
+                //       .snapshots(),
+                //   builder: (context, snapshot) {
+                //     if (!snapshot.hasData) {
+                //       return CircularProgressIndicator();
+                //     } else {
+                //       // Assuming 'detailImageUrls' is the field in Firestore where you store the image URLs.
+                //       List<String> imageUrls =
+                //           List<String>.from(snapshot.data);
+
+                //       // Slider of products...
+
+                //       return CarouselSlider(
+                //         items: imageUrls
+                //             .map(
+                //               (e) => Stack(
+                //                 children: [
+                //                   Padding(
+                //                     padding: const EdgeInsets.all(8.0),
+                //                     child: ClipRRect(
+                //                         borderRadius: BorderRadius.circular(20),
+                //                         child: Image.network(
+                //                           e,
+                //                           fit: BoxFit.cover,
+                //                           width: double.infinity,
+                //                           height: 200,
+                //                         )),
+                //                   ),
+                //                   //using colors as above the pictures to blur them or in starting view just show color when the app will loading
+                //                   Padding(
+                //                     padding: const EdgeInsets.all(8.0),
+                //                     child: Container(
+                //                       height: 200,
+                //                       decoration: BoxDecoration(
+                //                           borderRadius:
+                //                               BorderRadius.circular(20),
+                //                           gradient: LinearGradient(colors: [
+                //                             Colors.redAccent.withOpacity(0.3),
+                //                             Colors.blueAccent.withOpacity(0.3)
+                //                           ])),
+                //                     ),
+                //                   ),
+                //                   // container of title of the product
+                //                   Positioned(
+                //                     bottom: 20,
+                //                     left: 20,
+                //                     child: Container(
+                //                       decoration: BoxDecoration(
+                //                           color: Colors.black.withOpacity(0.5)),
+                //                       child: Padding(
+                //                         padding: EdgeInsets.all(8.0),
+                //                         child: Text(
+                //                             "Price: ${widget.doc['price']}"
+                //                             // style: TextStyle(
+                //                             //     fontSize: 20, color: Colors.white
+                //                             //),
+                //                             ),
+                //                       ),
+                //                     ),
+                //                   ),
+                //                 ],
+                //               ),
+                //             )
+                //             .toList(),
+                //         options: CarouselOptions(height: 220, autoPlay: true),
+                //       );
+                //     }
+                //   },
+                // ),
+
                 Expanded(
                   child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                     stream:
@@ -298,11 +386,11 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                                 ),
                                 subtitle: Text('$detail'),
                                 // onTap Navigation is not required in seller page...
-                                // onTap: () => Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             SellerProductDetail(doc: doc))),
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BuyerProductDetail(doc: doc))),
                               );
                             }
                           },
@@ -325,32 +413,34 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
 
   // get profile image from firebase firestore to show in Avator in drawer
 
-   dynamic imageUrls;
-   String? displayName;
+  dynamic imageUrls;
+  String? displayName;
   @override
   void initState() {
-    getProfileImage().then((url){
-      setState(() {
-        imageUrls= url;
-      });
-    });
-    getDisplayName().then((name){
-      setState(() {
-        displayName= name;
-      });
-    });
     super.initState();
+    getProfileImage().then((url) {
+      setState(() {
+        imageUrls = url;
+      });
+    });
+    getDisplayName().then((name) {
+      setState(() {
+        displayName = name;
+      });
+    });
   }
 
-  Future getProfileImage() async{
-  final profileimage= FirebaseFirestore.instance;
-  final doc = await profileimage.collection("Users").doc(widget.user?.uid).get();
-  return doc.data()?["photoURL"];
+  Future getProfileImage() async {
+    final profileimage = FirebaseFirestore.instance;
+    final doc =
+        await profileimage.collection("Users").doc(widget.user?.uid).get();
+    return doc.data()?["photoURL"];
   }
 
-  Future getDisplayName() async{
-  final profileimage= FirebaseFirestore.instance;
-  final doc = await profileimage.collection("Users").doc(widget.user?.uid).get();
-  return doc.data()?["displayName"];
+  Future getDisplayName() async {
+    final profileimage = FirebaseFirestore.instance;
+    final doc =
+        await profileimage.collection("Users").doc(widget.user?.uid).get();
+    return doc.data()?["displayName"];
   }
 }
