@@ -1,12 +1,14 @@
 import 'package:auction_fire/models/user_data_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
 
+
 class ProfileData extends StatefulWidget {
-  UserData? userdata;
-  ProfileData({super.key, this.userdata});
+  final User? user;
+  ProfileData({super.key, required this.user});
 
   @override
   State<ProfileData> createState() => _ProfileDataState();
@@ -20,19 +22,35 @@ class _ProfileDataState extends State<ProfileData> {
   TextEditingController usernameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
-
+  dynamic profilePic;
   FirebaseAuth auth = FirebaseAuth.instance;
+ 
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      // if (FirebaseAuth.instance.currentUser!.displayName == null) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //       SnackBar(content: Text('please complete profile firstly')));
+      // } else {
+        FirebaseFirestore.instance
+            .collection('Users')
+            .doc(widget.user!.uid)
+            .get()
+            .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
+          usernameController.text = snapshot['username'];
+          emailController.text = snapshot['email'];
+          phoneNumController.text = snapshot['phoneNumber'];
+          displayNameC.text = snapshot['displayName'];
+          addressController.text = snapshot['address'];
+         
+          profilePic = snapshot['photoURL'];
+        }
+        );
+      //}
+    });
     // TODO: implement initState
     super.initState();
-
-    emailController.text = widget.userdata!.email.toString();
-    displayNameC.text = widget.userdata!.displayName.toString();
-    addressController.text = widget.userdata!.address.toString();
-    usernameController.text = widget.userdata!.username.toString();
-    phoneNumController.text = widget.userdata!.phoneNum.toString();
   }
 
   @override
@@ -72,12 +90,13 @@ class _ProfileDataState extends State<ProfileData> {
                   height: 15,
                 ),
                 Text(
-                  "Auction Fire",
+                  "PROFILE",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 30,
                   ),
                 ),
+                
                 SizedBox(
                   height: 30,
                 ),
@@ -93,29 +112,41 @@ class _ProfileDataState extends State<ProfileData> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 30,
                           ),
-                          Text(
-                            'Sign Up',
-                            style: TextStyle(
-                              fontSize: 35,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
+                          
+                          CircleAvatar(
+                          radius: 64,
+
+                             backgroundImage: 
+                            // NetworkImage(profilePic)
+                            profilePic == null
+                            ? Image.network(
+                                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThlTauvFuw7q1xluWrxtf2uFBYgaa_a2GQfg&usqp=CAU').image
+                            : NetworkImage(profilePic)
+                            
+                          ),const Text("Profile Picture"),
+                        // const  Text(
+                        //     'Profile',
+                        //     style: TextStyle(
+                        //       fontSize: 35,
+                        //       fontWeight: FontWeight.bold,
+                        //     ),
+                        //   ),
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text(
-                            "Please create your Acoount",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
+                          // Text(
+                          //   "Please create your Acoount",
+                          //   style: TextStyle(
+                          //     fontSize: 15,
+                          //     color: Colors.grey,
+                          //   ),
+                          // ),
+                          // SizedBox(
+                          //   height: 20,
+                          // ),
                           Container(
                             width: 250,
                             child: TextFormField(
@@ -129,6 +160,25 @@ class _ProfileDataState extends State<ProfileData> {
                                   )),
                             ),
                           ),
+                             Container(
+                            width: 250,
+                            child: TextFormField(
+                                controller: displayNameC,
+                                keyboardType: TextInputType.text,
+                                decoration: InputDecoration(
+                                    labelText: "Display Name",
+                                    suffixIcon: Icon(
+                                      FontAwesomeIcons.user,
+                                      size: 15,
+                                    )),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Enter a valid password';
+                                  }
+                                  return null;
+                                }),
+                          ),
+                        
                           Container(
                             width: 250,
                             child: TextFormField(
@@ -136,8 +186,6 @@ class _ProfileDataState extends State<ProfileData> {
                               keyboardType: TextInputType.emailAddress,
                               decoration: InputDecoration(
                                   labelText: "Email Address",
-                                  helperText:
-                                      'Enter a valid email e.g john@gmail.com',
                                   suffixIcon: Icon(
                                     FontAwesomeIcons.envelope,
                                     size: 15,
@@ -167,35 +215,15 @@ class _ProfileDataState extends State<ProfileData> {
                                   )),
                             ),
                           ),
-                          Container(
-                            width: 250,
-                            child: TextFormField(
-                                controller: displayNameC,
-                                keyboardType: TextInputType.text,
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                    labelText: "Display Name",
-                                    suffixIcon: Icon(
-                                      FontAwesomeIcons.eyeSlash,
-                                      size: 15,
-                                    )),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Enter a valid password';
-                                  }
-                                  return null;
-                                }),
-                          ),
-                          Container(
+                         Container(
                             width: 250,
                             child: TextFormField(
                               controller: addressController,
                               keyboardType: TextInputType.text,
-                              obscureText: true,
                               decoration: InputDecoration(
                                   labelText: "Address",
                                   suffixIcon: Icon(
-                                    FontAwesomeIcons.eyeSlash,
+                                    FontAwesomeIcons.addressBook,
                                     size: 15,
                                   )),
                             ),
@@ -221,7 +249,7 @@ class _ProfileDataState extends State<ProfileData> {
                                   }
                                 },
                                 child: Text(
-                                  "Next",
+                                  "Update & Save",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -232,6 +260,7 @@ class _ProfileDataState extends State<ProfileData> {
                           ),
                           TextButton(
                             onPressed: () {
+                              Navigator.pop(context);
                               // Navigator.pushNamed(context, 'LoginPage');
                             },
                             child: Text(
@@ -251,4 +280,8 @@ class _ProfileDataState extends State<ProfileData> {
       ),
     );
   }
+
+  // save updated data 
+
+
 }

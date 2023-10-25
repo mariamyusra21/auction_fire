@@ -126,7 +126,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          ProfileData(), // Replace with your actual screen widget
+                          ProfileData(user: widget.user,), // Replace with your actual screen widget
                     ),
                   );
                 },

@@ -1,5 +1,5 @@
 import 'package:auction_fire/screens/user_screens/signup_verification/verify_sms_code.dart';
-import 'package:auction_fire/screens/user_screens/user_profile.dart';
+import 'package:auction_fire/screens/profile/user_profile.dart';
 import 'package:auction_fire/services/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

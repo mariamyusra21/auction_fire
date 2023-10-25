@@ -86,7 +86,7 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
       appBar: AppBar(
         backgroundColor: Color(0xFFD45A2D),
         centerTitle: true,
-        title: Text('Bidding Page'),
+        title: Text('Bid Time'),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
