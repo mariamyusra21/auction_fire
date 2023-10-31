@@ -35,7 +35,7 @@ class _ProfileDataState extends State<ProfileData> {
       // } else {
         FirebaseFirestore.instance
             .collection('Users')
-            .doc(widget.user!.uid)
+            .doc(widget.user?.uid)
             .get()
             .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
           usernameController.text = snapshot['username'];

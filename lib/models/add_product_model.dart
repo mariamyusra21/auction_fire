@@ -5,6 +5,7 @@ class Uploadproduct {
   String? id;
   String? uid;
   String? productName;
+  String? proBrand;
   String? detail;
   int? price;
   int? discountPrice;
@@ -17,20 +18,21 @@ class Uploadproduct {
   List<dynamic>? detailimageUrls;
 
   Uploadproduct(
-      {required this.category,
-      required this.id,
-      required this.uid,
-      required this.productName,
-      required this.detail,
-      required this.price,
-      required this.discountPrice,
-      required this.currentHighestBid,
-      required this.serialNo,
-      required this.imageUrls,
-      required this.isOnSale,
-      required this.isPopular,
-      required this.isFavorite, 
-      required this.detailimageUrls});
+      { this.category,
+       this.id,
+       this.uid,
+       this.productName,
+       this.proBrand,
+       this.detail,
+       this.price,
+       this.discountPrice,
+       this.currentHighestBid,
+       this.serialNo,
+       this.imageUrls,
+       this.isOnSale,
+       this.isPopular,
+       this.isFavorite, 
+       this.detailimageUrls});
 
   static Future<void> addProduct(Uploadproduct addproduct) async {
     //function to add data in firestore database
@@ -45,6 +47,7 @@ class Uploadproduct {
       // 'id': docId,
       "category": addproduct.category,
       "productName": addproduct.productName,
+      "brandName": addproduct.proBrand,
       "detail": addproduct.detail,
       "price": addproduct.price,
       "discountPrice": addproduct.discountPrice,
@@ -68,6 +71,7 @@ class Uploadproduct {
       : category = snapshot.data()["category"],
         id = snapshot.data()['id'],
         productName = snapshot.data()["productName"],
+        proBrand = snapshot.data()["brandName"],
         detail = snapshot.data()["detail"],
         price = snapshot.data()["price"],
         uid = snapshot.data()['UserID'],

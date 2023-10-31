@@ -1,3 +1,4 @@
+import 'package:auction_fire/screens/user_screens/bottom_tab_screens/bottom_page.dart';
 import 'package:auction_fire/screens/user_screens/guest_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -54,7 +55,7 @@ class LandiingScreen extends StatelessWidget {
                   if (user == null) {
                     return GuestPage();
                   } else {
-                    return SellerHomeScreen();
+                    return bottomPageScreen();
                   }
                 }
                 return Scaffold(
@@ -62,11 +63,34 @@ class LandiingScreen extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Authentication Checking',
-                          style: BidStyle.boldStyle,
-                          textAlign: TextAlign.center,
+                        // Text(
+                        //   'Authentication Checking',
+                        //   style: BidStyle.boldStyle,
+                        //   textAlign: TextAlign.center,
+                        // ),
+                             RichText(
+                          text: const TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Auction ",
+                        style: TextStyle(
+                          fontSize: 27,
+                          color: Colors.orange,
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      TextSpan(
+                        text: "FIRE",
+                        style: TextStyle(
+                          fontSize: 27,
+                          color: Colors.black,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  )),
+           
                         CircularProgressIndicator(),
                       ],
                     ),

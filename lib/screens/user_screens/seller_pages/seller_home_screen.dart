@@ -158,38 +158,39 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.favorite_outline_sharp,
-                size: 30,
-              ),
-              alignment: Alignment.bottomRight,
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.add_circle_outline,
-                size: 30,
-              ),
-              alignment: Alignment.bottomCenter,
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.search,
-                size: 30,
-              ),
-              alignment: Alignment.bottomLeft,
-            )
-          ],
-        ),
-      ),
+      // bottomNavigationBar: BottomAppBar(
+      //   height: 60,
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: [
+      //       IconButton(
+      //         onPressed: () {},
+      //         icon: Icon(
+      //           Icons.favorite_outline_sharp,
+      //           size: 30,
+      //         ),
+      //         alignment: Alignment.bottomRight,
+      //       ),
+      //       IconButton(
+      //         onPressed: () {},
+      //         icon: Icon(
+      //           Icons.add_circle_outline,
+      //           size: 30,
+      //         ),
+      //         alignment: Alignment.bottomCenter,
+      //       ),
+      //       IconButton(
+      //         onPressed: () {},
+      //         icon: Icon(
+      //           Icons.search,
+      //           size: 30,
+      //         ),
+      //         alignment: Alignment.bottomLeft,
+      //       )
+      //     ],
+      //   ),
+      // ),
+      
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(

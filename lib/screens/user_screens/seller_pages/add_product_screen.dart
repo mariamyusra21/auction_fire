@@ -27,6 +27,7 @@ class _AddProductState extends State<AddProduct> {
   TextEditingController categoryC = TextEditingController();
   TextEditingController idC = TextEditingController();
   TextEditingController productNameC = TextEditingController();
+  TextEditingController brandNameC = TextEditingController();
   TextEditingController detailC = TextEditingController();
   TextEditingController priceC = TextEditingController();
   TextEditingController discountPriceC = TextEditingController();
@@ -124,11 +125,13 @@ class _AddProductState extends State<AddProduct> {
     });
      await uploadDetailImages();
     await uploadImage();
-    await Uploadproduct.addProduct(Uploadproduct(
+    if(imageUrls!=null && detailimageUrls == true){
+await Uploadproduct.addProduct(Uploadproduct(
       category: selectedvlaue,
       // id: uuid.v4(),
       id: idC.text,
       productName: productNameC.text,
+      proBrand: brandNameC.text,
       detail: detailC.text,
       price: int.tryParse(priceC.text),
       uid: user!.uid,
@@ -145,12 +148,17 @@ class _AddProductState extends State<AddProduct> {
       setState(() {
        // imageUrls.clear();
        // image!.clear();
-        clearFields();
+       // clearFields();
         isSaving = false;
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Uploaded Sucessfuly')));
       });
     });
+    
+    } else {
+      ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('must be all fields filled')));
+    }
     
   }
 
@@ -218,6 +226,18 @@ class _AddProductState extends State<AddProduct> {
                     HintText: 'Product Name',
                     controller: productNameC,
                     icon: const Icon(Icons.production_quantity_limits_rounded),
+                    inputAction: TextInputAction.next,
+                  ),
+                   BidTextField(
+                    validate: (v) {
+                      if (v.isEmpty) {
+                        return 'should not be empty';
+                      }
+                      return null;
+                    },
+                    HintText: 'Brand Name',
+                    controller: brandNameC,
+                    icon: const Icon(Icons.branding_watermark_outlined),
                     inputAction: TextInputAction.next,
                   ),
                   BidTextField(
