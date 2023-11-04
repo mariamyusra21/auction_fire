@@ -9,7 +9,7 @@ class BidTextField extends StatefulWidget {
 bool check;  //used to check whether the textfeild is password if yes then visibility should turn on and off
 Widget icon;
 int? maxLines;
-final TextInputAction inputAction;  // use to change one action button in keyboard can go through that button to next textfeild
+final TextInputAction? inputAction;  // use to change one action button in keyboard can go through that button to next textfeild
 // late FocusNode focusNode;
    BidTextField( {super.key , 
    required this.HintText, 
@@ -19,8 +19,8 @@ final TextInputAction inputAction;  // use to change one action button in keyboa
    this.isPassword=false,
    this.check=false,
    required this.icon,
-   required this.inputAction, 
-   required String? Function(String v) validate, 
+   this.inputAction, 
+    String? Function(String v)? validate, 
    //required this.focusNode
    });
  

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:auction_fire/screens/user_screens/login_page.dart';
+import 'package:auction_fire/screens/user_screens/user_creation_welcome_screen/login_page.dart';
 import 'package:auction_fire/screens/user_screens/product_filter_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,8 +8,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/add_product_screen.dart';
 import 'package:sizer/sizer.dart';
-import '../../models/add_product_model.dart';
-import '../../widgets/product_cards.dart';
+import '../../../models/add_product_model.dart';
+import '../../../widgets/product_cards.dart';
 
 class GuestPage extends StatefulWidget {
   const GuestPage({super.key});
@@ -38,14 +38,14 @@ class _GuestPageState extends State<GuestPage> {
   //   super.initState();
   //   getProductList();
   // }
-    final List imageCarouseSlider= [
-    "https://cdn.pixabay.com/photo/2016/11/19/11/33/footwear-1838767_1280.jpg",
-    "https://cdn.pixabay.com/photo/2016/01/27/04/32/books-1163695_1280.jpg",
-    "https://cdn.pixabay.com/photo/2016/11/22/19/08/hangers-1850082_1280.jpg",
-    "https://cdn.pixabay.com/photo/2016/11/19/11/33/footwear-1838767_1280.jpg",
-    "https://cdn.pixabay.com/photo/2016/01/27/04/32/books-1163695_1280.jpg",
-    "https://cdn.pixabay.com/photo/2016/11/22/19/08/hangers-1850082_1280.jpg"
-    ];
+    // final List imageCarouseSlider= [
+    // "https://cdn.pixabay.com/photo/2016/11/19/11/33/footwear-1838767_1280.jpg",
+    // "https://cdn.pixabay.com/photo/2016/01/27/04/32/books-1163695_1280.jpg",
+    // "https://cdn.pixabay.com/photo/2016/11/22/19/08/hangers-1850082_1280.jpg",
+    // "https://cdn.pixabay.com/photo/2016/11/19/11/33/footwear-1838767_1280.jpg",
+    // "https://cdn.pixabay.com/photo/2016/01/27/04/32/books-1163695_1280.jpg",
+    // "https://cdn.pixabay.com/photo/2016/11/22/19/08/hangers-1850082_1280.jpg"
+    // ];
 
      List categories = [
     "Garments",
@@ -123,7 +123,7 @@ class _GuestPageState extends State<GuestPage> {
                         child: InkWell(
                           onTap: (){
                             Navigator.push(context, MaterialPageRoute(
-                              builder: (_)=>  ProductScreen()));
+                              builder: (_)=>  ProductScreen(category: categories[index],)));
                           },
                           child: Container(
                             height: 5.h, width: 18.w,
@@ -205,4 +205,4 @@ class _GuestPageState extends State<GuestPage> {
       ),
     );
   }
-}
+  }

@@ -1,12 +1,12 @@
 import 'package:auction_fire/screens/user_screens/bottom_tab_screens/bottom_page.dart';
-import 'package:auction_fire/screens/user_screens/guest_page.dart';
+import 'package:auction_fire/screens/user_screens/user_creation_welcome_screen/guest_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/styles.dart';
-import 'user_screens/seller_pages/seller_home_screen.dart';
+import '../../../widgets/styles.dart';
+import '../seller_pages/seller_home_screen.dart';
 
 // ignore: must_be_immutable
 class LandiingScreen extends StatelessWidget {

@@ -1,9 +1,10 @@
 // import 'package:auction_fire/screens/profile/viewprofile.dart';
 import 'package:auction_fire/screens/profile/viewprofile.dart';
 import 'package:auction_fire/screens/user_screens/buyer_pages/buyer_product_detail_page.dart';
-import 'package:auction_fire/screens/user_screens/guest_page.dart';
+import 'package:auction_fire/screens/user_screens/user_creation_welcome_screen/guest_page.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/add_product_screen.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/seller_products.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -213,11 +214,13 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
-                                  child: Image.network(
-                                    e,
+                                  child: CachedNetworkImage(
+                                    // chached network is used to maintain image and will not show error or any exception
+                                    imageUrl: e,
+                                    placeholder: (c,i)=> CircularProgressIndicator(),
                                     fit: BoxFit.cover,
                                     width: double.infinity,
-                                    height: 200,
+                                    height: 200, 
                                   )),
                             ),
                             //using colors as above the pictures to blur them or in starting view just show color when the app will loading
@@ -399,6 +402,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                       }
                     },
                   ),
+               
                 ),
               ],
             ),

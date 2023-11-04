@@ -1,5 +1,5 @@
 import 'package:auction_fire/screens/user_screens/buyer_pages/buyer_product_detail_page.dart';
-import 'package:auction_fire/screens/user_screens/guest_page.dart';
+import 'package:auction_fire/screens/user_screens/user_creation_welcome_screen/guest_page.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

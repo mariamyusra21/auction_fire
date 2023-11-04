@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:auction_fire/screens/user_screens/login_page.dart';
+import 'package:auction_fire/screens/user_screens/user_creation_welcome_screen/login_page.dart';
 import 'package:auction_fire/services/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -67,7 +67,7 @@ class Uploadproduct {
     });
   }
 
-  Uploadproduct.fromSnapshot(snapshot)
+  Uploadproduct.fromSnapshot(snapshot,)
       : category = snapshot.data()["category"],
         id = snapshot.data()['id'],
         productName = snapshot.data()["productName"],

@@ -2,7 +2,7 @@ import 'package:auction_fire/screens/user_screens/bottom_tab_screens/cart_screen
 import 'package:auction_fire/screens/user_screens/bottom_tab_screens/favourite_screen.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/seller_home_screen.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 
 class bottomPageScreen extends StatefulWidget {
