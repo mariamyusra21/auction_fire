@@ -21,6 +21,7 @@ final TextInputAction? inputAction;  // use to change one action button in keybo
    required this.icon,
    this.inputAction, 
     String? Function(String v)? validate, 
+     TextInputType? keyboardType, 
    //required this.focusNode
    });
  
@@ -64,7 +65,7 @@ class _BidTextFieldState extends State<BidTextField> {
           // focusNode: focusNode,
           textInputAction: inputAction,
           decoration: InputDecoration(
-            border: InputBorder.none,
+            border: UnderlineInputBorder(),
             labelText: widget.HintText,
             suffixIcon: widget.icon,
             // suffixIcon: IconButton(onPressed: (){

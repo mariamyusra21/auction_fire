@@ -25,7 +25,7 @@ class AddProduct extends StatefulWidget {
 
 class _AddProductState extends State<AddProduct> {
   TextEditingController categoryC = TextEditingController();
-  TextEditingController idC = TextEditingController();
+ // TextEditingController idC = TextEditingController();
   TextEditingController productNameC = TextEditingController();
   TextEditingController brandNameC = TextEditingController();
   TextEditingController detailC = TextEditingController();
@@ -125,11 +125,11 @@ class _AddProductState extends State<AddProduct> {
     });
      await uploadDetailImages();
     await uploadImage();
-    if(imageUrls!=null && detailimageUrls == true){
+    if(imageUrls!=null ){  //&& detailimageUrls == true
 await Uploadproduct.addProduct(Uploadproduct(
       category: selectedvlaue,
       // id: uuid.v4(),
-      id: idC.text,
+     // id: idC.text,
       productName: productNameC.text,
       proBrand: brandNameC.text,
       detail: detailC.text,

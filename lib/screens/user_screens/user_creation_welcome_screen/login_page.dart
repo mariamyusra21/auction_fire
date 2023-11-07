@@ -1,5 +1,6 @@
 import 'package:auction_fire/screens/user_screens/seller_pages/seller_home_screen.dart';
 import 'package:auction_fire/services/utilities.dart';
+import 'package:auction_fire/widgets/bidtextfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,6 +13,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+   bool isPassword = true;
   final emailController = TextEditingController();
   final resetEmailController = TextEditingController();
 
@@ -172,23 +175,27 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Container(
-                        width: 250,
-                        child: TextFormField(
+                        width: 260,
+                        child: BidTextField(
                             controller: passwordController,
                             keyboardType: TextInputType.text,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                                labelText: "Password",
-                                suffixIcon: Icon(
-                                  FontAwesomeIcons.eyeSlash,
-                                  size: 15,
-                                )),
-                            validator: (value) {
-                              if (value!.isEmpty) {
+                           // obscureText: true,
+                           
+                            HintText: "Password",
+                            isPassword: isPassword,
+                             icon: IconButton(onPressed: (){
+                         setState(() {
+                            isPassword =! isPassword;
+                         });
+                        },
+                         icon: isPassword? const Icon(Icons.visibility)
+                         : const Icon(Icons.visibility_off)),   validate: (value) {
+                              if (value.isEmpty) {
                                 return 'Enter a valid password';
                               }
                               return null;
-                            }),
+                            }, 
+                            ),
                       ),
                       Padding(
                         padding: EdgeInsets.fromLTRB(20, 20, 40, 20),

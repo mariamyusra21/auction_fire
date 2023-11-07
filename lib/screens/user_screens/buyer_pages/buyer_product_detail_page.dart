@@ -1,7 +1,9 @@
+import 'package:auction_fire/models/add_product_model.dart';
 import 'package:auction_fire/screens/user_screens/buyer_pages/bid.dart';
 import 'package:auction_fire/widgets/bidbutton.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class BuyerProductDetail extends StatefulWidget {
@@ -16,6 +18,17 @@ class BuyerProductDetail extends StatefulWidget {
 }
 
 class _BuyerProductDetailState extends State<BuyerProductDetail> {
+  bool isfav = false;
+
+  addToFavProdduct() async {
+   CollectionReference collectionReference=  FirebaseFirestore.instance
+        .collection("favorite");
+   await collectionReference.doc(FirebaseAuth.instance.currentUser!.uid)
+   .collection("items").add({
+    // "proId": 
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,7 +127,9 @@ class _BuyerProductDetailState extends State<BuyerProductDetail> {
                 ),
 
                 // product details using document and bid button....
-
+                SizedBox(
+                  height: 250,
+                ),
                 Text(
                   'Product details: ${widget.doc['detail']}',
                   style: TextStyle(
@@ -152,6 +167,19 @@ class _BuyerProductDetailState extends State<BuyerProductDetail> {
                     ),
                   ),
                 ),
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      if (isfav) {
+                        isfav = true;
+                      } else {
+                        isfav = false;
+                      }
+                    });
+                  },
+                  icon: Icon(Icons.favorite_border),
+                  color: isfav == false ? Colors.grey[500] : Colors.red,
+                )
               ],
             ),
           ),

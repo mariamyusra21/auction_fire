@@ -1,4 +1,9 @@
+import 'dart:html';
+
 import 'package:auction_fire/models/add_product_model.dart';
+import 'package:auction_fire/screens/user_screens/buyer_pages/buyer_home_screen.dart';
+import 'package:auction_fire/screens/user_screens/buyer_pages/buyer_product_detail_page.dart';
+import 'package:auction_fire/screens/user_screens/seller_pages/seller_product_detail_page.dart';
 import 'package:auction_fire/screens/user_screens/user_creation_welcome_screen/login_page.dart';
 import 'package:auction_fire/widgets/bidtextfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,46 +25,9 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenStateState extends State<ProductScreen> {
-  List<Uploadproduct> allProducts = [];
+ 
   TextEditingController searchC = TextEditingController();
-  List<Uploadproduct> searchedItems = [];
-
-  @override
-  void initState() {
-    searchedItems.addAll(allProducts);
-    // TODO: implement initState
-    // getProductCategory();
-    super.initState();
-  }
-
-  filterproduct(String query) {
-    List<Uploadproduct> dumysearch =
-        []; // jub search ho rha ho to show karwata jaye
-    dumysearch.addAll(allProducts); //dumysearch add karwata jaye items me
-    if (query.isNotEmpty) {
-      List<Uploadproduct> dumydata =
-          []; // foreach ke way se one by one relate karke show data karega
-      dumysearch.forEach((element) {
-        if (element.productName!
-            .toLowerCase() //condition to show result in lower case eother user search in upper or lower
-            .contains(query.toLowerCase())) {
-          dumydata.add(element);
-        }
-      });
-      setState(() {
-        allProducts.clear();
-        allProducts.addAll(searchedItems);
-        print(" okk ${searchedItems}");
-      });
-      return;
-    } else {
-      setState(() {
-        allProducts.clear();
-        allProducts.addAll(searchedItems);
-      });
-    }
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,13 +35,6 @@ class _ProductScreenStateState extends State<ProductScreen> {
         backgroundColor: Color(0xFFD45A2D),
         title: Text("${widget.category}"),
         centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () {
-                showSearch(context: context, delegate: CustomSearch());
-              },
-              icon: Icon(Icons.search))
-        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -87,17 +48,6 @@ class _ProductScreenStateState extends State<ProductScreen> {
           ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
           child: Column(
             children: [
-              // TextFormField(
-              //   controller: searchC,
-              //   onChanged: (v) {
-              //     filterproduct(searchC.text);
-              //   },
-              //   decoration: InputDecoration(
-              //     hintText: "Search item...",
-              //     icon: Icon(Icons.search),
-              //     border: OutlineInputBorder(),
-              //   ),
-              // ),
               StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 //  stream:  FirebaseFirestore.instance.collection('Updateproduct').snapshots(),
                 stream: FirebaseFirestore.instance
@@ -156,7 +106,7 @@ class _ProductScreenStateState extends State<ProductScreen> {
 }
 
 class CustomSearch extends SearchDelegate {
-  List<Uploadproduct> searchedItem = [];
+  List<String> searchedItem = [];
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -184,39 +134,55 @@ class CustomSearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    List<Uploadproduct> matchQuery = [];
-    for (var element in searchedItem) {
-      if (element.productName!.contains(query.toLowerCase())) {
-        matchQuery.add(element);
-      }
-    }
-    return ListView.builder(
-        itemCount: matchQuery.length,
-        itemBuilder: (context, index) {
-          var result = matchQuery[index];
-          return ListTile(
-            title: Text(result.toString()),
-          );
-        });
+ return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('Updateproduct').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData) return new Text('loading...');
+        
+        final results =
+            snapshot.data?.docs.where((a) => a['productName'].contains(query));
+         
+        return ListView(
+          
+          children: results!.map<Widget>((a) => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: InkWell(
+         
+                // onTap: ()=>  Navigator.push(
+                //                   context,
+                //                   MaterialPageRoute(
+                //                       builder: (context) =>
+                //                           BuyerProductDetail(doc: ))),
+                child: Text(a['productName'])),
+            ),
+          )).toList(),
+        );
+      },
+    );
+     
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-    List<Uploadproduct> matchQuery = [];
-    for (var element in searchedItem) {
-      if (element.productName!.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(element);
-      }
-    }
-    return ListView.builder(
-        itemCount: matchQuery.length,
-        itemBuilder: (context, index) {
-          var result = matchQuery[index];
-          return ListTile(
-            title: Text(result as String),
-          );
-        });
+    
+
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('Updateproduct').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData) return new Text('loading...');
+
+        final results =
+            snapshot.data?.docs.where((a) => a['productName'].contains(query));
+
+        return ListView(
+          children: results!.map<Widget>((a) => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(a['productName']),
+          )).toList(),
+        );
+      },
+    );
   }
 }
