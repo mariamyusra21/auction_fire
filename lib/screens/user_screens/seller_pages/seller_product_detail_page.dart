@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -37,30 +38,120 @@ class _Product_DetailState extends State<SellerProductDetail> {
             child: Center(
               child: Column(
                 children: [
-                  Text(
-                    'Product details: ${widget.doc['detail']}',
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w600),
+                  // Stream builder to display detail images of product using document from homescreen...
+                  StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('Updateproduct')
+                        .doc(widget.doc.id)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return CircularProgressIndicator();
+                      } else {
+                        // Assuming 'detailImageUrls' is the field in Firestore where you store the image URLs.
+                        List<String> imageUrls = List<String>.from(
+                            snapshot.data?['detailimageUrls']);
+
+                        // Slider of products...
+
+                        return CarouselSlider(
+                          items: imageUrls
+                              .map(
+                                (e) => Stack(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: Image.network(
+                                            e,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: 200,
+                                          )),
+                                    ),
+                                    //using colors as above the pictures to blur them or in starting view just show color when the app will loading
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        height: 200,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            gradient: LinearGradient(colors: [
+                                              Colors.redAccent.withOpacity(0.3),
+                                              Colors.blueAccent.withOpacity(0.3)
+                                            ])),
+                                      ),
+                                    ),
+                                    // container of title of the product
+                                    Positioned(
+                                      bottom: 20,
+                                      left: 20,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.5)),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text(
+                                              "Price: ${widget.doc['price']}"
+                                              // style: TextStyle(
+                                              //     fontSize: 20, color: Colors.white
+                                              //),
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                              .toList(),
+                          options: CarouselOptions(height: 220, autoPlay: true),
+                        );
+                      }
+                    },
                   ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Product Details: ${widget.doc['detail']}',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 22),
+                  ),
+                  SizedBox(height: 10),
                   Text(
                     'Current Highest Bid: ${widget.doc['currentHighestBid']}',
                     style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w600),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 22),
                   ),
+                  SizedBox(height: 10),
                   Text(
                     'Price: ${widget.doc['price']}',
                     style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w600),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 22),
                   ),
+                  SizedBox(height: 10),
                   Text(
                     'Discount Price: ${widget.doc['discountPrice']}',
                     style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w600),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 22),
                   ),
+                  SizedBox(height: 10),
                   Text(
                     'Serial Code: ${widget.doc['serial Code']}',
                     style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w600),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 22),
                   ),
 
                   // Padding(

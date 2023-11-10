@@ -8,15 +8,16 @@ class bidDialogue extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  AlertDialog(     
-          title:  Text(title ),
-          actions: [
-            BidButton(buttonTitle: "close",
-            onPress: (){ 
-              Navigator.pop(context);
-            },
-            )
-          ],
-        );;
+    return AlertDialog(
+      title: Text(title),
+      actions: [
+        BidButton(
+          buttonTitle: "close",
+          onPress: () {
+            Navigator.pop(context);
+          },
+        )
+      ],
+    );
   }
 }

@@ -1,14 +1,5 @@
-import 'dart:html';
-
-import 'package:auction_fire/models/add_product_model.dart';
-import 'package:auction_fire/screens/user_screens/buyer_pages/buyer_home_screen.dart';
-import 'package:auction_fire/screens/user_screens/buyer_pages/buyer_product_detail_page.dart';
-import 'package:auction_fire/screens/user_screens/seller_pages/seller_product_detail_page.dart';
 import 'package:auction_fire/screens/user_screens/user_creation_welcome_screen/login_page.dart';
-import 'package:auction_fire/widgets/bidtextfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -25,9 +16,8 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenStateState extends State<ProductScreen> {
- 
   TextEditingController searchC = TextEditingController();
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,42 +124,42 @@ class CustomSearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
- return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('Updateproduct').snapshots(),
+    return StreamBuilder(
+      stream:
+          FirebaseFirestore.instance.collection('Updateproduct').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) return new Text('loading...');
-        
+
         final results =
             snapshot.data?.docs.where((a) => a['productName'].contains(query));
-         
+
         return ListView(
-          
-          children: results!.map<Widget>((a) => Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: InkWell(
-         
-                // onTap: ()=>  Navigator.push(
-                //                   context,
-                //                   MaterialPageRoute(
-                //                       builder: (context) =>
-                //                           BuyerProductDetail(doc: ))),
-                child: Text(a['productName'])),
-            ),
-          )).toList(),
+          children: results!
+              .map<Widget>((a) => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: InkWell(
+
+                          // onTap: ()=>  Navigator.push(
+                          //                   context,
+                          //                   MaterialPageRoute(
+                          //                       builder: (context) =>
+                          //                           BuyerProductDetail(doc: ))),
+                          child: Text(a['productName'])),
+                    ),
+                  ))
+              .toList(),
         );
       },
     );
-     
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    
-
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('Updateproduct').snapshots(),
+      stream:
+          FirebaseFirestore.instance.collection('Updateproduct').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) return new Text('loading...');
 
@@ -177,10 +167,12 @@ class CustomSearch extends SearchDelegate {
             snapshot.data?.docs.where((a) => a['productName'].contains(query));
 
         return ListView(
-          children: results!.map<Widget>((a) => Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(a['productName']),
-          )).toList(),
+          children: results!
+              .map<Widget>((a) => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(a['productName']),
+                  ))
+              .toList(),
         );
       },
     );

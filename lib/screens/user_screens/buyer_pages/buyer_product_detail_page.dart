@@ -1,4 +1,3 @@
-import 'package:auction_fire/models/add_product_model.dart';
 import 'package:auction_fire/screens/user_screens/buyer_pages/bid.dart';
 import 'package:auction_fire/widgets/bidbutton.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -21,11 +20,13 @@ class _BuyerProductDetailState extends State<BuyerProductDetail> {
   bool isfav = false;
 
   addToFavProdduct() async {
-   CollectionReference collectionReference=  FirebaseFirestore.instance
-        .collection("favorite");
-   await collectionReference.doc(FirebaseAuth.instance.currentUser!.uid)
-   .collection("items").add({
-    // "proId": 
+    CollectionReference collectionReference =
+        FirebaseFirestore.instance.collection("favorite");
+    await collectionReference
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("items")
+        .add({
+      // "proId":
     });
   }
 
@@ -178,7 +179,7 @@ class _BuyerProductDetailState extends State<BuyerProductDetail> {
                     });
                   },
                   icon: Icon(Icons.favorite_border),
-                  color: isfav == false ? Colors.grey[500] : Colors.red,
+                  color: isfav == false ? Colors.pink[500] : Colors.white,
                 )
               ],
             ),

@@ -11,28 +11,28 @@ class Uploadproduct {
   int? discountPrice;
   int? currentHighestBid;
   String? serialNo;
- dynamic imageUrls;
+  dynamic imageUrls;
   bool? isOnSale;
   bool? isPopular;
   bool? isFavorite;
   List<dynamic>? detailimageUrls;
 
   Uploadproduct(
-      { this.category,
-       this.id,
-       this.uid,
-       this.productName,
-       this.proBrand,
-       this.detail,
-       this.price,
-       this.discountPrice,
-       this.currentHighestBid,
-       this.serialNo,
-       this.imageUrls,
-       this.isOnSale,
-       this.isPopular,
-       this.isFavorite, 
-       this.detailimageUrls});
+      {this.category,
+      this.id,
+      this.uid,
+      this.productName,
+      this.proBrand,
+      this.detail,
+      this.price,
+      this.discountPrice,
+      this.currentHighestBid,
+      this.serialNo,
+      this.imageUrls,
+      this.isOnSale,
+      this.isPopular,
+      this.isFavorite,
+      this.detailimageUrls});
 
   static Future<void> addProduct(Uploadproduct addproduct) async {
     //function to add data in firestore database
@@ -67,8 +67,16 @@ class Uploadproduct {
     });
   }
 
-  Uploadproduct.fromSnapshot(snapshot,)
-      : category = snapshot.data()["category"],
+  // delete product function...
+  static Future<void> deleteProduct(String id) async {
+    CollectionReference db =
+        FirebaseFirestore.instance.collection('Updateproduct');
+    await db.doc(id).delete();
+  }
+
+  Uploadproduct.fromSnapshot(
+    snapshot,
+  )   : category = snapshot.data()["category"],
         id = snapshot.data()['id'],
         productName = snapshot.data()["productName"],
         proBrand = snapshot.data()["brandName"],
