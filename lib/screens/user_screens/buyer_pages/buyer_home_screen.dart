@@ -40,96 +40,96 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      // drawer: Drawer(
-      //   child: Container(
-      //     height: MediaQuery.of(context).size.height,
-      //     width: MediaQuery.of(context).size.width,
-      //     decoration: BoxDecoration(
-      //         gradient: LinearGradient(colors: [
-      //       Color(0xFFD45A2D),
-      //       Color(0xFFBD861C),
-      //       Color.fromARGB(67, 0, 130, 181)
-      //     ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
-      //     child: ListView(
-      //       children: [
-      //         const DrawerHeader(
-      //           child: Text('Drawer Header'),
-      //         ),
-      //         ListTile(
-      //           title: const Text('Add Product'),
-      //           onTap: () {
-      //             Navigator.push(
-      //               context,
-      //               MaterialPageRoute(
-      //                 builder: (context) =>
-      //                     AddProduct(), // Replace with your actual screen widget
-      //               ),
-      //             );
-      //           },
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
-      appBar: AppBar(
-        backgroundColor: Color(0xFFD45A2D),
-        title: Text(
-          'Dashboard',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        // leading: IconButton(onPressed: () {}, icon: Icon(Icons.menu)), this is like a drawer in appbar
-        actions: <Widget>[
-          //notice bell button
-          IconButton(
-            icon: Icon(Icons.notifications),
-            onPressed: () {},
+    return SingleChildScrollView(
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        // drawer: Drawer(
+        //   child: Container(
+        //     height: MediaQuery.of(context).size.height,
+        //     width: MediaQuery.of(context).size.width,
+        //     decoration: BoxDecoration(
+        //         gradient: LinearGradient(colors: [
+        //       Color(0xFFD45A2D),
+        //       Color(0xFFBD861C),
+        //       Color.fromARGB(67, 0, 130, 181)
+        //     ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
+        //     child: ListView(
+        //       children: [
+        //         const DrawerHeader(
+        //           child: Text('Drawer Header'),
+        //         ),
+        //         ListTile(
+        //           title: const Text('Add Product'),
+        //           onTap: () {
+        //             Navigator.push(
+        //               context,
+        //               MaterialPageRoute(
+        //                 builder: (context) =>
+        //                     AddProduct(), // Replace with your actual screen widget
+        //               ),
+        //             );
+        //           },
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
+        appBar: AppBar(
+          backgroundColor: Color(0xFFD45A2D),
+          title: Text(
+            'Dashboard',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
-          //profile button
-          IconButton(
-            onPressed: () {
-              signOut();
-            },
-            icon: Icon(Icons.logout),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+          centerTitle: true,
+          // leading: IconButton(onPressed: () {}, icon: Icon(Icons.menu)), this is like a drawer in appbar
+          actions: <Widget>[
+            //notice bell button
             IconButton(
+              icon: Icon(Icons.notifications),
               onPressed: () {},
-              icon: Icon(
-                Icons.favorite_outline_sharp,
-                size: 30,
-              ),
-              alignment: Alignment.bottomRight,
             ),
+            //profile button
             IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.add_circle_outline,
-                size: 30,
-              ),
-              alignment: Alignment.bottomCenter,
+              onPressed: () {
+                signOut();
+              },
+              icon: Icon(Icons.logout),
             ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.search,
-                size: 30,
-              ),
-              alignment: Alignment.bottomLeft,
-            )
           ],
         ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
+        bottomNavigationBar: BottomAppBar(
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.favorite_outline_sharp,
+                  size: 30,
+                ),
+                alignment: Alignment.bottomRight,
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.add_circle_outline,
+                  size: 30,
+                ),
+                alignment: Alignment.bottomCenter,
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.search,
+                  size: 30,
+                ),
+                alignment: Alignment.bottomLeft,
+              )
+            ],
+          ),
+        ),
+        body: SafeArea(
           child: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -204,7 +204,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                       } else {
                         final List<QueryDocumentSnapshot<Map<String, dynamic>>>
                             docs = snapshot.data!.docs;
-
+    
                         return ListView.builder(
                           itemCount: docs.length,
                           itemBuilder: (_, index) {
@@ -213,7 +213,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                             final detail = doc.data()['detail'];
                             dynamic Linkimage = doc.data()['ImageUrls'] ?? '';
                             // final docID = doc.id;
-
+    
                             return         ListTile(
                               title: Stack(
                                 children: [

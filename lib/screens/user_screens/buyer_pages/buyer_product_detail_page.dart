@@ -19,15 +19,27 @@ class BuyerProductDetail extends StatefulWidget {
 class _BuyerProductDetailState extends State<BuyerProductDetail> {
   bool isfav = false;
 
-  addToFavProdduct() async {
+  addToFavProduct() async {
+    CollectionReference collectionReference =
+        FirebaseFirestore.instance.collection("favorite");
+    // all users have there own fav items
+    // that is why there another subcollection items present in fav database
+    await collectionReference
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("items")
+        .add({
+      'prodId': widget.doc.id,
+    });
+  }
+
+  RemoveFromFavProduct(String id) async {
     CollectionReference collectionReference =
         FirebaseFirestore.instance.collection("favorite");
     await collectionReference
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection("items")
-        .add({
-      // "proId":
-    });
+        .doc(id)
+        .delete();
   }
 
   @override
@@ -38,6 +50,43 @@ class _BuyerProductDetailState extends State<BuyerProductDetail> {
         backgroundColor: Color(0xFFD45A2D),
         centerTitle: true,
         title: Text('${widget.doc['productName']} Details'),
+        actions: [
+          StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("favorite")
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  //herre we use where to filter that if the field is added or not
+                  .collection("items")
+                  .where('prodId', isEqualTo: widget.doc.id)
+                  .snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.data == null) {
+                  // if data is not present
+                  return Text(" there is nothing favorite");
+                }
+                return IconButton(
+                  onPressed: () {
+                    snapshot.data!.docs.length == 0 
+                    ? addToFavProduct() 
+                    : RemoveFromFavProduct(snapshot.data!.docs.first.id);
+                    // if the id's we stored and the current product is not matched
+                    // then add the prod to fav
+                    // setState(() {
+                      
+                    //   if (!isfav) {
+                    //     isfav = true;
+                    //   } else {
+                    //     isfav = false;
+                    //   }
+                    // });
+                  },
+                  icon:  snapshot.data!.docs.length == 0 
+                      ? Icon(Icons.favorite_border)
+                      : Icon(Icons.favorite),
+                  color:  snapshot.data!.docs.length == 0  ? Colors.black : Colors.black,
+                );
+              })
+        ],
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -168,19 +217,6 @@ class _BuyerProductDetailState extends State<BuyerProductDetail> {
                     ),
                   ),
                 ),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (isfav) {
-                        isfav = true;
-                      } else {
-                        isfav = false;
-                      }
-                    });
-                  },
-                  icon: Icon(Icons.favorite_border),
-                  color: isfav == false ? Colors.pink[500] : Colors.white,
-                )
               ],
             ),
           ),

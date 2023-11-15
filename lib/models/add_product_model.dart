@@ -92,3 +92,5 @@ class Uploadproduct {
         isPopular = snapshot.data()["isPopular"],
         isFavorite = snapshot.data()["isFavorite"];
 }
+    
+
