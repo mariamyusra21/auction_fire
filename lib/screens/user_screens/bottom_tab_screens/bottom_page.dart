@@ -1,12 +1,13 @@
 import 'package:auction_fire/screens/user_screens/bottom_tab_screens/cart_screen.dart';
 import 'package:auction_fire/screens/user_screens/bottom_tab_screens/favourite_screen.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/seller_home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 
 class bottomPageScreen extends StatefulWidget {
-  const bottomPageScreen({super.key});
+  final User? user;
+  const bottomPageScreen({super.key, this.user});
 
   @override
   State<bottomPageScreen> createState() => _bottomPageScreenState();
@@ -16,40 +17,42 @@ class _bottomPageScreenState extends State<bottomPageScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
-    tabBar: CupertinoTabBar(items: [
-        BottomNavigationBarItem(icon: Icon(Icons.home)),
+        tabBar: CupertinoTabBar(items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home)),
           BottomNavigationBarItem(icon: Icon(Icons.favorite)),
-            BottomNavigationBarItem(icon: Icon(Icons.add_shopping_cart_rounded)),
-    ]), 
-    tabBuilder: (context, index){
-      switch (index) {
-        case 0:
-          return CupertinoTabView(
-            builder: (context) {
-              return CupertinoPageScaffold(
-                child: SellerHomeScreen(),
+          BottomNavigationBarItem(icon: Icon(Icons.add_shopping_cart_rounded)),
+        ]),
+        tabBuilder: (context, index) {
+          switch (index) {
+            case 0:
+              return CupertinoTabView(
+                builder: (context) {
+                  return CupertinoPageScaffold(
+                    child: SellerHomeScreen(
+                      user: widget.user,
+                    ),
+                  );
+                },
               );
-            },
-          );
-          case 1:
-          return CupertinoTabView(
-            builder: (context) {
-              return CupertinoPageScaffold(
-                child: FavoriteScreen(),
+            case 1:
+              return CupertinoTabView(
+                builder: (context) {
+                  return CupertinoPageScaffold(
+                    child: FavoriteScreen(),
+                  );
+                },
               );
-            },
-          );
-          case 2:
-          return CupertinoTabView(
-            builder: (context) {
-              return CupertinoPageScaffold(
-                child: CartScreen(),
+            case 2:
+              return CupertinoTabView(
+                builder: (context) {
+                  return CupertinoPageScaffold(
+                    child: CartScreen(),
+                  );
+                },
               );
-            },
-          );
-        default:
-      }
-      return SellerHomeScreen();
-    });
+            default:
+          }
+          return SellerHomeScreen(user: widget.user);
+        });
   }
 }

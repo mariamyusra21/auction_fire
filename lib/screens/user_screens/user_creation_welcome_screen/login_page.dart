@@ -1,6 +1,7 @@
 import 'package:auction_fire/screens/user_screens/seller_pages/seller_home_screen.dart';
 import 'package:auction_fire/services/utilities.dart';
 import 'package:auction_fire/widgets/bidtextfield.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -23,21 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool loading = false;
-   bool isPassword = true;
-  late int selectedRadioTile;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    selectedRadioTile = 0;
-  }
-
-  setSelectedRadioTile(int value) {
-    setState(() {
-      selectedRadioTile = value;
-    });
-  }
+  bool isPassword = true;
 
   void dispose() {
     emailController.dispose();
@@ -54,12 +41,13 @@ class _LoginPageState extends State<LoginPage> {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      // FirebaseFirestore.instance
-      //     .collection('Users')
-      //     .doc(_auth.currentUser!.uid)
-      //     .update({
-      //   "password": password,
-      // }).then((_) {
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(_auth.currentUser!.uid)
+          .update({
+        "password": password,
+      });
+      //.then((_) {
       //   Utilities().toastMessage('New Password Updated!');
       // });
       // Utilities().toastMessage(userCredential.user!.email.toString());
@@ -153,23 +141,21 @@ class _LoginPageState extends State<LoginPage> {
                         height: 20,
                       ),
                       Container(
-                        width: 250,
-                        child: TextFormField(
+                        width: 280,
+                        child: BidTextField(
                           controller: emailController,
                           keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                            labelText: "Email Address",
-                            suffixIcon: Icon(
-                              FontAwesomeIcons.envelope,
-                              size: 15,
-                            ),
-                          ),
-                          validator: (value) {
+                          validate: (value) {
                             if (value!.isEmpty) {
                               return 'Enter a valid email';
                             }
                             return null;
                           },
+                          HintText: 'Email Address',
+                          icon: Icon(
+                            FontAwesomeIcons.envelope,
+                            size: 15,
+                          ),
                         ),
                       ),
                       Container(
@@ -177,18 +163,19 @@ class _LoginPageState extends State<LoginPage> {
                         child: BidTextField(
                             controller: passwordController,
                             keyboardType: TextInputType.text,
-                             //obscureText: true,
-                             inputAction: TextInputAction.done,
-                        HintText: 'enter password',
-                        
-                        isPassword: isPassword,
-                        icon: IconButton(onPressed: (){
-                         setState(() {
-                            isPassword =! isPassword;
-                         });
-                        },
-                         icon: isPassword? const Icon(Icons.visibility): const Icon(Icons.visibility_off)), 
-                       
+                            //obscureText: true,
+                            inputAction: TextInputAction.done,
+                            HintText: 'Enter Password',
+                            isPassword: isPassword,
+                            icon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isPassword = !isPassword;
+                                  });
+                                },
+                                icon: isPassword
+                                    ? const Icon(Icons.visibility)
+                                    : const Icon(Icons.visibility_off)),
                             validate: (value) {
                               if (value!.isEmpty) {
                                 return 'Enter a valid password';

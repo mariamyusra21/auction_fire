@@ -1,3 +1,4 @@
+import 'package:auction_fire/screens/user_screens/buyer_pages/buyer_product_detail_page.dart';
 import 'package:auction_fire/screens/user_screens/user_creation_welcome_screen/login_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -140,12 +141,11 @@ class CustomSearch extends SearchDelegate {
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: InkWell(
-
-                          // onTap: ()=>  Navigator.push(
-                          //                   context,
-                          //                   MaterialPageRoute(
-                          //                       builder: (context) =>
-                          //                           BuyerProductDetail(doc: ))),
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      BuyerProductDetail(doc: a))),
                           child: Text(a['productName'])),
                     ),
                   ))

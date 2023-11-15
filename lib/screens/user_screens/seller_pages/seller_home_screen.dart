@@ -1,10 +1,11 @@
 // import 'package:auction_fire/screens/profile/viewprofile.dart';
 import 'package:auction_fire/screens/profile/viewprofile.dart';
+import 'package:auction_fire/screens/user_screens/bid_history/product_bid_list.dart';
 import 'package:auction_fire/screens/user_screens/buyer_pages/buyer_product_detail_page.dart';
 import 'package:auction_fire/screens/user_screens/product_filter_screen.dart';
-import 'package:auction_fire/screens/user_screens/user_creation_welcome_screen/guest_page.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/add_product_screen.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/seller_products.dart';
+import 'package:auction_fire/screens/user_screens/user_creation_welcome_screen/guest_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -90,7 +91,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                   // Text('Seller Options',
                   //     style:
                   //         TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-    
+
                   ),
               ListTile(
                 title: const Text(
@@ -135,6 +136,17 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                 },
               ),
               ListTile(
+                title: const Text('Products Bids',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                onTap: () {
+                  // ontap function
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProductsBidList()),
+                  );
+                },
+              ),
+              ListTile(
                 title: const Text('Logout',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
@@ -159,13 +171,12 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
             icon: Icon(Icons.notifications),
             onPressed: () {},
           ),
-    
+
           IconButton(
               onPressed: () {
                 showSearch(context: context, delegate: CustomSearch());
               },
               icon: Icon(Icons.search)),
-    
         ],
       ),
       // bottomNavigationBar: BottomAppBar(
@@ -200,7 +211,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
       //     ],
       //   ),
       // ),
-    
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -269,7 +280,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                       .toList(),
                   options: CarouselOptions(height: 220, autoPlay: true),
                 ),
-    
+
                 // Stream builder to display carouselSlider to get products....
                 // StreamBuilder<QuerySnapshot<Map<String,dynamic>>>(
                 //   stream: FirebaseFirestore.instance
@@ -282,9 +293,9 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                 //       // Assuming 'detailImageUrls' is the field in Firestore where you store the image URLs.
                 //       List<String> imageUrls =
                 //           List<String>.from(snapshot.data);
-    
+
                 //       // Slider of products...
-    
+
                 //       return CarouselSlider(
                 //         items: imageUrls
                 //             .map(
@@ -342,7 +353,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                 //     }
                 //   },
                 // ),
-    
+
                 Expanded(
                   child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                     stream:
@@ -358,7 +369,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                       } else {
                         final List<QueryDocumentSnapshot<Map<String, dynamic>>>
                             docs = snapshot.data!.docs;
-    
+
                         return ListView.builder(
                           itemCount: docs.length,
                           itemBuilder: (_, index) {
@@ -367,7 +378,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                             final detail = doc.data()['detail'];
                             dynamic Linkimage = doc.data()['ImageUrls'] ?? '';
                             // final docID = doc.id;
-    
+
                             if (doc.data()['UserID'] == widget.user?.uid) {
                               Center(
                                   child: Text(

@@ -66,13 +66,13 @@ class _BuyerProductDetailState extends State<BuyerProductDetail> {
                 }
                 return IconButton(
                   onPressed: () {
-                    snapshot.data!.docs.length == 0 
-                    ? addToFavProduct() 
-                    : RemoveFromFavProduct(snapshot.data!.docs.first.id);
+                    snapshot.data!.docs.length == 0
+                        ? addToFavProduct()
+                        : RemoveFromFavProduct(snapshot.data!.docs.first.id);
                     // if the id's we stored and the current product is not matched
                     // then add the prod to fav
                     // setState(() {
-                      
+
                     //   if (!isfav) {
                     //     isfav = true;
                     //   } else {
@@ -80,10 +80,12 @@ class _BuyerProductDetailState extends State<BuyerProductDetail> {
                     //   }
                     // });
                   },
-                  icon:  snapshot.data!.docs.length == 0 
+                  icon: snapshot.data!.docs.length == 0
                       ? Icon(Icons.favorite_border)
                       : Icon(Icons.favorite),
-                  color:  snapshot.data!.docs.length == 0  ? Colors.black : Colors.black,
+                  color: snapshot.data!.docs.length == 0
+                      ? Colors.black
+                      : Colors.black,
                 );
               })
         ],
@@ -209,8 +211,10 @@ class _BuyerProductDetailState extends State<BuyerProductDetail> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    BuyerBidPage(documentSnapshot: widget.doc)),
+                                builder: (context) => BuyerBidPage(
+                                      prodDoc: widget.doc,
+                                      user: FirebaseAuth.instance.currentUser,
+                                    )),
                           );
                         },
                       ),

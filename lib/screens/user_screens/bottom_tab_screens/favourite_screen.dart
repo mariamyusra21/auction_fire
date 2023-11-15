@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:auction_fire/screens/user_screens/buyer_pages/buyer_product_detail_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -42,16 +41,16 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-        backgroundColor: Color(0xFFD45A2D),
-        title: Text(
-          'My Favorites',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          backgroundColor: Color(0xFFD45A2D),
+          title: Text(
+            'My Favorites',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
         body: SingleChildScrollView(
           child: Container(
-             height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [
@@ -87,7 +86,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           child: Text('No Favourite Items found'),
                         );
                       }
-                      List<QueryDocumentSnapshot<Object?>> favPro=snapshot.data!.docs.where((element) => ids.contains(element['id'])).toList();
+                      List<QueryDocumentSnapshot<Object?>> favPro = snapshot
+                          .data!.docs
+                          .where((element) => ids.contains(element['id']))
+                          .toList();
                       return ListView.builder(
                           itemCount: favPro.length,
                           itemBuilder: (BuildContext context, index) {
@@ -99,14 +101,18 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: ListTile(
-                                    title: Text(
-                                        favPro[index]['productName']),
+                                    title: Text(favPro[index]['productName']),
                                     trailing: IconButton(
                                         onPressed: () {
-                                          // Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                          //       BuyerProductDetail(doc: )) );
-                                                         },
-                                        icon: Icon(Icons.navigate_next_rounded)),
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BuyerProductDetail(
+                                                          doc: favPro[index])));
+                                        },
+                                        icon:
+                                            Icon(Icons.navigate_next_rounded)),
                                   ),
                                 ),
                               ),

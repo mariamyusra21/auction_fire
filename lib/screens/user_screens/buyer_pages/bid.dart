@@ -1,13 +1,13 @@
 import 'package:auction_fire/widgets/bidbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class BuyerBidPage extends StatefulWidget {
-  // final String? productId;
-  // final Uploadproduct product;
-  final DocumentSnapshot documentSnapshot;
+  final DocumentSnapshot prodDoc;
+  final User? user;
 
-  BuyerBidPage({super.key, required this.documentSnapshot});
+  BuyerBidPage({super.key, required this.prodDoc, this.user});
 
   @override
   _BuyerBidPageState createState() => _BuyerBidPageState();
@@ -24,34 +24,100 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
     fetchCurrentHighestBid();
   }
 
-  void fetchCurrentHighestBid() async {
-    // Fetch the current highest bid from Firestore
-    final documentSnapshot = await FirebaseFirestore.instance
-        .collection('Updateproduct')
-        .doc(widget.documentSnapshot.id)
-        .get();
+  Future<BidData?> fetchCurrentHighestBid() async {
+    try {
+      // Fetch the current bid document from Firestore
+      var documentSnapshot = await FirebaseFirestore.instance
+          .collection('bids')
+          .doc(widget.prodDoc.id)
+          .get();
 
-    setState(() {
-      currentHighestBid = documentSnapshot['currentHighestBid'];
-    });
+      // Check if the document exists
+      if (documentSnapshot.exists) {
+        // Extract bidHistory array from the document
+        List<Map<String, dynamic>> bidHistory = List<Map<String, dynamic>>.from(
+          documentSnapshot['bidHistory'] ?? [],
+        );
+
+        // Find the highest bid value
+        int highestBid = 0; // Initialize with a default value
+        String userId = '';
+
+        bidHistory.forEach((bid) {
+          final int userBid = bid['userBid'];
+          final String currentUserId = bid['userID'];
+
+          if (userBid > highestBid) {
+            highestBid = userBid;
+            userId = currentUserId;
+          }
+        });
+
+        setState(() {
+          // Set currentHighestBid to highestBid
+          currentHighestBid = highestBid;
+        });
+
+        return BidData(userId, highestBid);
+      } else {
+        // Handle the case where the document doesn't exist
+        print('Document does not exist');
+        documentSnapshot = await FirebaseFirestore.instance
+            .collection('Updateproduct')
+            .doc(widget.prodDoc.id)
+            .get();
+
+        setState(() {
+          currentHighestBid = documentSnapshot['currentHighestBid'];
+        });
+        return null;
+      }
+    } catch (e) {
+      // Handle any errors that may occur during the fetch operation
+      print('Error fetching bid document: $e');
+      return null;
+    }
   }
 
   void placeBid() async {
     final int userBid = int.parse(bidController.text);
 
     if (currentHighestBid == null || userBid >= currentHighestBid!) {
-      // Update the current highest bid in Firestore
-      await FirebaseFirestore.instance
-          .collection('Updateproduct')
-          .doc(widget.documentSnapshot.id)
-          .update({'currentHighestBid': userBid});
+      var documentSnapshot = await FirebaseFirestore.instance
+          .collection('bids')
+          .doc(widget.prodDoc.id)
+          .get();
 
-      // Store the user's bid in a separate bids collection if needed
-      // FirebaseFirestore.instance.collection('bids').add({
-      //   'productId': widget.productId,
-      //   'userId': 'user_id_here', // Replace with user's ID
-      //   'bidAmount': userBid,
-      // });
+      // Check if the document exists
+      if (documentSnapshot.exists) {
+        // update the bidDocument for bidHistory
+        FirebaseFirestore.instance
+            .collection('bids')
+            .doc(widget.prodDoc.id)
+            .update({
+          'productName': '${widget.prodDoc.get('productName')}',
+          'bidHistory': FieldValue.arrayUnion([
+            {
+              'userID': '${widget.user?.uid}',
+              'userBid': userBid,
+            }
+          ]),
+        });
+      } else {
+        // create the bidDocument for bidHistory
+        FirebaseFirestore.instance
+            .collection('bids')
+            .doc(widget.prodDoc.id)
+            .set({
+          'productName': '${widget.prodDoc.get('productName')}',
+          'bidHistory': FieldValue.arrayUnion([
+            {
+              'userID': '${widget.user?.uid}',
+              'userBid': userBid,
+            }
+          ]),
+        });
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -92,11 +158,16 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Color(0xFFD45A2D),
-          Color(0xFFBD861C),
-          Color.fromARGB(67, 0, 130, 181)
-        ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFFD45A2D),
+              Color(0xFFBD861C),
+              Color.fromARGB(67, 0, 130, 181)
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -117,16 +188,20 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
                     width: 200,
                     height: 50,
                     decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Colors.black,
-                            style: BorderStyle.solid,
-                            width: 2),
-                        borderRadius: BorderRadius.circular(50),
-                        gradient: const LinearGradient(colors: [
+                      border: Border.all(
+                        color: Colors.black,
+                        style: BorderStyle.solid,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(50),
+                      gradient: const LinearGradient(
+                        colors: [
                           Color(0xFFD45A2D),
                           Color(0xFFBD861C),
                           Color.fromARGB(67, 0, 130, 181)
-                        ])),
+                        ],
+                      ),
+                    ),
                     child: BidButton(
                       buttonTitle: "Place bid",
                       onPress: () async {
@@ -142,4 +217,11 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
       ),
     );
   }
+}
+
+class BidData {
+  final String userId;
+  final int userBid;
+
+  BidData(this.userId, this.userBid);
 }
