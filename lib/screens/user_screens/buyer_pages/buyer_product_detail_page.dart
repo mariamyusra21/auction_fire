@@ -48,7 +48,6 @@ class _BuyerProductDetailState extends State<BuyerProductDetail> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -123,7 +122,8 @@ class _BuyerProductDetailState extends State<BuyerProductDetail> {
                         // Assuming 'detailImageUrls' is the field in Firestore where you store the image URLs.
                         List<String> imageUrls = List<String>.from(
                             snapshot.data?['detailimageUrls']);
-                        var currentbidOrder = snapshot.data?['currentHighestBid'];
+                        // var currentbidOrder =
+                        //     snapshot.data?['currentHighestBid'];
                         // Slider of products...
 
                         return CarouselSlider(
@@ -237,101 +237,97 @@ class _BuyerProductDetailState extends State<BuyerProductDetail> {
                   ),
                   Padding(padding: EdgeInsets.all(8.0)),
                   // Expanded(
-                  //   child: 
+                  //   child:
                   Column(
                     children: [
                       Row(
-                          children: [
-                            Text(
-                              "NO of Products you want to buy: ",
-                              style: TextStyle(
-                                  color: Colors.black, fontWeight: FontWeight.w600),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  if (count > 1) {
-                                    count--;
-                                  }
-                                });
-                              },
-                              icon: Icon(Icons.exposure_minus_1),
-                            ),
-                               Container(
-                                height: 20,
-                                width: 20,
-                                decoration: BoxDecoration(color: Colors.grey[600]),
-                                 child: Center(
-                                   child: Text(
-                                    "$count",
-                                    style: TextStyle(fontSize: 16.sp),
-                                                           ),
-                                 ),
-                               ),
-                         IconButton(
-                              onPressed: () {
-                                setState(() {
-                                    count++;
-                                });
-                              },
-                              icon: Icon(Icons.exposure_plus_1),
-                            ),
-                      //   Text("${widget.doc['currentHighestBid']}")
-                          ],
-                        ),
-                         Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: double.infinity,
-                        height: 50,
-                        decoration: BoxDecoration(
-                            border: Border.all(
+                        children: [
+                          Text(
+                            "NO of Products you want to buy: ",
+                            style: TextStyle(
                                 color: Colors.black,
-                                style: BorderStyle.solid,
-                                width: 2),
-                            borderRadius: BorderRadius.circular(50),
-                            gradient: const LinearGradient(colors: [
-                              Color(0xFFD45A2D),
-                              Color(0xFFBD861C),
-                              Color.fromARGB(67, 0, 130, 181)
-                            ])),
-                        child: BidButton(
-                          isLoading: isLoading,
-                          buttonTitle: "Add to Cart",
-                          onPress: () {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            Cart.AddtoCart(Cart(
-                              id: widget.doc.id,
-                              name: widget.doc['productName'],
-                              quantity: count,
-                              price: widget.doc['currentHighestBid'],
-                              image: widget.doc['ImageUrls'],
-
-                            )).whenComplete(() {
+                                fontWeight: FontWeight.w600),
+                          ),
+                          IconButton(
+                            onPressed: () {
                               setState(() {
-                                isLoading = false;
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content:
-                                            Text("Added to cart sucssesfully")));
+                                if (count > 1) {
+                                  count--;
+                                }
                               });
-                            });
-                          },
+                            },
+                            icon: Icon(Icons.exposure_minus_1),
+                          ),
+                          Container(
+                            height: 20,
+                            width: 20,
+                            decoration: BoxDecoration(color: Colors.grey[600]),
+                            child: Center(
+                              child: Text(
+                                "$count",
+                                style: TextStyle(fontSize: 16.sp),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                count++;
+                              });
+                            },
+                            icon: Icon(Icons.exposure_plus_1),
+                          ),
+                          //   Text("${widget.doc['currentHighestBid']}")
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: double.infinity,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.black,
+                                    style: BorderStyle.solid,
+                                    width: 2),
+                                borderRadius: BorderRadius.circular(50),
+                                gradient: const LinearGradient(colors: [
+                                  Color(0xFFD45A2D),
+                                  Color(0xFFBD861C),
+                                  Color.fromARGB(67, 0, 130, 181)
+                                ])),
+                            child: BidButton(
+                              isLoading: isLoading,
+                              buttonTitle: "Add to Cart",
+                              onPress: () {
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                Cart.AddtoCart(Cart(
+                                  id: widget.doc.id,
+                                  name: widget.doc['productName'],
+                                  quantity: count,
+                                  price: widget.doc['currentHighestBid'],
+                                  image: widget.doc['ImageUrls'],
+                                )).whenComplete(() {
+                                  setState(() {
+                                    isLoading = false;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                "Added to cart sucssesfully")));
+                                  });
+                                });
+                              },
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-               
                     ],
-
                   ),
                   // ),
-                
-                 
                 ],
               ),
             ),

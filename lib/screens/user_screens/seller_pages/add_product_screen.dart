@@ -2,11 +2,9 @@
 import 'dart:io';
 
 import 'package:auction_fire/models/add_product_model.dart';
-import 'package:auction_fire/services/storage_service.dart';
 import 'package:auction_fire/widgets/bidbutton.dart';
 import 'package:auction_fire/widgets/bidtextfield.dart';
 import 'package:auction_fire/widgets/styles.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -25,7 +23,7 @@ class AddProduct extends StatefulWidget {
 
 class _AddProductState extends State<AddProduct> {
   TextEditingController categoryC = TextEditingController();
- // TextEditingController idC = TextEditingController();
+  // TextEditingController idC = TextEditingController();
   TextEditingController productNameC = TextEditingController();
   TextEditingController brandNameC = TextEditingController();
   TextEditingController detailC = TextEditingController();
@@ -48,10 +46,12 @@ class _AddProductState extends State<AddProduct> {
     "Cosmatics",
     "Stationary"
   ];
-  // veriables for deatil images 
-   final imagepicker = ImagePicker(); // image picker used to pic any image from storagr
-   List<XFile> detailimages = []; //XFile will catch all types of images e.g. jpg, pdf, png etc...
-   List<dynamic> detailimageUrls = [];
+  // veriables for deatil images
+  final imagepicker =
+      ImagePicker(); // image picker used to pic any image from storagr
+  List<XFile> detailimages =
+      []; //XFile will catch all types of images e.g. jpg, pdf, png etc...
+  List<dynamic> detailimageUrls = [];
   bool isSaving = false; //for saving images in firestore
   bool isUploading = false; //for uplading whole data in firebase
 
@@ -63,26 +63,22 @@ class _AddProductState extends State<AddProduct> {
       priceC.clear();
       discountPriceC.clear();
       serialNoC.clear();
-     
-      
     });
   }
 
- 
-// chose images for deatil pages methods 
+// chose images for deatil pages methods
   // final Storage storage = Storage();
 
- imagepick() async{
+  imagepick() async {
     final List<XFile> imagepick = await imagepicker.pickMultiImage();
-    if(imagepick.isNotEmpty){
+    if (imagepick.isNotEmpty) {
       setState(() {
         detailimages.addAll(imagepick);
       });
-    }else{
+    } else {
       print('image not selected');
     }
-   }
-   
+  }
 
 //   // post to the firebase storage
   Future postImage(XFile imageFile) async {
@@ -96,8 +92,7 @@ class _AddProductState extends State<AddProduct> {
     if (kIsWeb == false) {
       await ref.putData(
           await imageFile.readAsBytes()); //waiting data to fetch in bytes
-      SettableMetadata(
-          contentType: "image/jpeg"); // store image in this format
+      SettableMetadata(contentType: "image/jpeg"); // store image in this format
       urls = await ref
           .getDownloadURL(); // won't upload image without this line the image is not in proper format of image
       setState(() {
@@ -118,48 +113,47 @@ class _AddProductState extends State<AddProduct> {
       print(e);
     }
   }
+
   // save all feilds in firebasefirestore
   save() async {
     setState(() {
       isSaving = true; //for loading the products saving
     });
-     await uploadDetailImages();
+    await uploadDetailImages();
     await uploadImage();
-    if(imageUrls!=null ){  //&& detailimageUrls == true
-await Uploadproduct.addProduct(Uploadproduct(
-      category: selectedvlaue,
-      // id: uuid.v4(),
-     // id: idC.text,
-      productName: productNameC.text,
-      proBrand: brandNameC.text,
-      detail: detailC.text,
-      price: int.tryParse(priceC.text),
-      uid: user!.uid,
-      discountPrice: int.tryParse(discountPriceC.text),
-      currentHighestBid: int.tryParse(priceC.text),
-      serialNo: serialNoC.text,
-      imageUrls: imageUrls,
-      detailimageUrls: detailimageUrls,
-      isOnSale: isOnSale,
-      isPopular: isPopular,
-      isFavorite: isFavorite, 
-    
-    )).whenComplete(() {
-      setState(() {
-       // imageUrls.clear();
-       // image!.clear();
-       // clearFields();
-        isSaving = false;
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Uploaded Sucessfuly')));
+    if (imageUrls != null) {
+      //&& detailimageUrls == true
+      await Uploadproduct.addProduct(Uploadproduct(
+        category: selectedvlaue,
+        // id: uuid.v4(),
+        // id: idC.text,
+        productName: productNameC.text,
+        proBrand: brandNameC.text,
+        detail: detailC.text,
+        price: int.tryParse(priceC.text),
+        uid: user!.uid,
+        discountPrice: int.tryParse(discountPriceC.text),
+        currentHighestBid: int.tryParse(priceC.text),
+        serialNo: serialNoC.text,
+        imageUrls: imageUrls,
+        detailimageUrls: detailimageUrls,
+        isOnSale: isOnSale,
+        isPopular: isPopular,
+        isFavorite: isFavorite,
+      )).whenComplete(() {
+        setState(() {
+          // imageUrls.clear();
+          // image!.clear();
+          // clearFields();
+          isSaving = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Uploaded Sucessfuly')));
+        });
       });
-    });
-    
     } else {
-      ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('must be all fields filled')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('must be all fields filled')));
     }
-    
   }
 
   var uuid = Uuid(); // generate everytime new
@@ -228,7 +222,7 @@ await Uploadproduct.addProduct(Uploadproduct(
                     icon: const Icon(Icons.production_quantity_limits_rounded),
                     inputAction: TextInputAction.next,
                   ),
-                   BidTextField(
+                  BidTextField(
                     validate: (v) {
                       if (v.isEmpty) {
                         return 'should not be empty';
@@ -304,50 +298,50 @@ await Uploadproduct.addProduct(Uploadproduct(
                       child: BidButton(
                         buttonTitle: "Choose image",
                         onPress: () async {
-                        imagepick();
-                        
+                          imagepick();
                         },
                         isLoading: isSaving,
                       ),
                     ),
                   ),
                   // //choose images for detail page
-                   Container(
+                  Container(
                     height: 45.h,
                     decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.4),
                         borderRadius: BorderRadius.circular(20)),
-                    child: 
-                    GridView.builder(
+                    child: GridView.builder(
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2 // this will show 2 image in one row in container if we want more than 2 we can increase number
+                                crossAxisCount:
+                                    2 // this will show 2 image in one row in container if we want more than 2 we can increase number
                                 ),
-                       itemCount: detailimages.length,
+                        itemCount: detailimages.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Padding(
                             padding: const EdgeInsets.all(10.0),
-                            child: 
-                            Stack(
+                            child: Stack(
                               children: [
-                               Image.file(File(detailimages[index].path),
-                        height: 200, width: 250, //for image size in container
-                        fit: BoxFit.cover,
-                        ),
-                        IconButton(onPressed: (){
-                         setState(() {
-                            detailimages.removeAt(index);
-                         });
-                        }, icon: const Icon(Icons.cancel_outlined))
+                                Image.file(
+                                  File(detailimages[index].path),
+                                  height: 200,
+                                  width: 250, //for image size in container
+                                  fit: BoxFit.cover,
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        detailimages.removeAt(index);
+                                      });
+                                    },
+                                    icon: const Icon(Icons.cancel_outlined))
                               ],
                             ),
-                         
                           );
                         }),
-                        
                   ),
-                
-                // choose image for thumbnail 
+
+                  // choose image for thumbnail
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Container(
@@ -357,50 +351,48 @@ await Uploadproduct.addProduct(Uploadproduct(
                           color: Colors.white.withOpacity(0.4),
                           borderRadius: BorderRadius.circular(20)),
                       child: InkWell(
-                        onTap: (){
-                           ImagePickerMethod();
+                        onTap: () {
+                          ImagePickerMethod();
                         },
-                        child:  GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount:1 // this will show 2 image in one row in container if we want more than 2 we can increase number
-                                ),
-                       itemCount: 1,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: 
-                            Stack(
-                              children: [
-                                image == null 
-                                ?  const Padding(
-                                  padding:  EdgeInsets.all(60.0),
-                                  child: Center(
-                                    child: Column(
-                                      children: [
-                                         Text('choose image for showcase of product'), 
-                                         Icon(Icons.add),
-                                      ], 
+                        child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount:
+                                        1 // this will show 2 image in one row in container if we want more than 2 we can increase number
                                     ),
-                                  ),
-                                )
-                                : Image.file(image!),
-                            //      IconButton(onPressed: (){
-                            //  setState(() {
-                            // detailimages.removeAt(index);
-                            // });
-                            // }, icon: const Icon(Icons.cancel_outlined))
-                              ],
-                            ),
-                         
-                          );
-                        }),
-                        
+                            itemCount: 1,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Stack(
+                                  children: [
+                                    image == null
+                                        ? const Padding(
+                                            padding: EdgeInsets.all(60.0),
+                                            child: Center(
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                      'choose image for showcase of product'),
+                                                  Icon(Icons.add),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        : Image.file(image!),
+                                    //      IconButton(onPressed: (){
+                                    //  setState(() {
+                                    // detailimages.removeAt(index);
+                                    // });
+                                    // }, icon: const Icon(Icons.cancel_outlined))
+                                  ],
+                                ),
+                              );
+                            }),
                       ),
-                          
                     ),
                   ),
-                 
+
                   SwitchListTile(
                       title: const Text('Is this on Sale?'),
                       value: isOnSale,
@@ -433,7 +425,7 @@ await Uploadproduct.addProduct(Uploadproduct(
                         buttonTitle: 'save',
                         onPress: () {
                           save();
-                         // uploadImage();
+                          // uploadImage();
                         },
                         isLoading: isSaving,
                       ),
@@ -448,41 +440,41 @@ await Uploadproduct.addProduct(Uploadproduct(
     );
   }
 
-  // use for thumbnail of product 
+  // use for thumbnail of product
   File? image;
   final imagePicker = ImagePicker();
   dynamic imageUrls;
-  final firebaseStorageRef = FirebaseStorage.instance; 
-
+  final firebaseStorageRef = FirebaseStorage.instance;
 
   Future ImagePickerMethod() async {
-    // image pick from gallery 
-     final pick = await imagePicker.pickImage(source: ImageSource.gallery);
+    // image pick from gallery
+    final pick = await imagePicker.pickImage(source: ImageSource.gallery);
 
-     setState(() {
-       if (pick != null){
+    setState(() {
+      if (pick != null) {
         image = File(pick.path);
-       }
-       else{
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('No Image Selected'))); 
-       }
-     });
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('No Image Selected')));
+      }
+    });
   }
 
- // upload image to firebase storage 
-  Future uploadImage() async{
-     if (image != null) {
+  // upload image to firebase storage
+  Future uploadImage() async {
+    if (image != null) {
       try {
-        
-       var snapshot=
-         await firebaseStorageRef.ref().child('images/${DateTime.now()}.jpg').putFile(image!);
-       // UploadTask uploadTask = firebaseStorageRef.putFile(image!);
+        var snapshot = await firebaseStorageRef
+            .ref()
+            .child('images/${DateTime.now()}.jpg')
+            .putFile(image!);
+        // UploadTask uploadTask = firebaseStorageRef.putFile(image!);
         // await uploadTask.whenComplete(() => print('Image uploaded'));
         var downlodurl = await snapshot.ref.getDownloadURL();
         setState(() {
-        imageUrls = downlodurl;
-      imageUrls.add(downlodurl);
-       print( imageUrls);
+          imageUrls = downlodurl;
+          imageUrls.add(downlodurl);
+          print(imageUrls);
         });
       } catch (e) {
         print(e.toString());
@@ -491,6 +483,4 @@ await Uploadproduct.addProduct(Uploadproduct(
       print('No image to upload.');
     }
   }
-
-
 }

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:auction_fire/screens/user_screens/bid_history/bid_history.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -55,37 +53,49 @@ class _ProductsBidListState extends State<ProductsBidList> {
                           itemBuilder: (_, index) {
                             final doc = docs[index];
                             final productName = doc.data()["productName"];
+                            dynamic Linkimage = doc.data()['ImageUrls'] ?? '';
 
                             return Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 10),
-                              child: Container(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Card(
                                 // color: Colors.white,
-                                color: Colors.primaries[Random().nextInt(5)],
-                                child: ListTile(
-                                  title: Text('${index + 1}. $productName',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 22)),
+                                elevation: 10.0,
+                                color: Colors.white,
 
-                                  trailing: TextButton(
-                                    child: Text('View Bids',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 18)),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BidHistory(prodDoc: doc)));
-                                    },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ListTile(
+                                    leading: Image.network(
+                                      Linkimage,
+                                      height: 90,
+                                      width: 70,
+                                      fit: BoxFit.fill,
+                                    ),
+                                    title: Text('${index + 1}. $productName',
+                                        style: TextStyle(fontSize: 16)),
+
+                                    trailing: TextButton(
+                                      child: Text('View Bids',
+                                          style: TextStyle(
+                                            color: Color(0xFFD45A2D),
+                                            fontSize: 15,
+                                          )),
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BidHistory(prodDoc: doc)));
+                                      },
+                                    ),
+
+                                    // onTap Navigation is not required in seller page...
+                                    // onTap: () => Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) =>
+                                    //             BidHistory(prodDoc: doc))),
                                   ),
-
-                                  // onTap Navigation is not required in seller page...
-                                  // onTap: () => Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) =>
-                                  //             BidHistory(prodDoc: doc))),
                                 ),
                               ),
                             );

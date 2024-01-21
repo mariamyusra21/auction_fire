@@ -182,6 +182,9 @@ class _UserProfileState extends State<UserProfile> {
   // Update Profile to store the data in user document
   Future updateProfile(String displayName, String address) async {
     imageUrls = await uploadImage();
+    await user
+        ?.updateDisplayName(displayName); // update the displayName of user...
+    await user?.updatePhotoURL(imageUrls); // update the photo of user...
     await firestoreRef
         .collection('Users')
         .doc(user!.uid)

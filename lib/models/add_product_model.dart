@@ -67,6 +67,28 @@ class Uploadproduct {
     });
   }
 
+  // edit/update product function...
+  static Future<void> UpdateProduct(
+      String id, Uploadproduct Updateproduct) async {
+    //function to add data in firestore database
+    //to point out collections we use collectionreference
+    CollectionReference db =
+        FirebaseFirestore.instance.collection('Updateproduct'); //<= OBJECT
+    Map<String, dynamic> data = {
+      "category": Updateproduct.category,
+      "id": Updateproduct.id,
+      "productName": Updateproduct.productName,
+      "price": Updateproduct.price,
+      "discountPrice": Updateproduct.discountPrice,
+      "serial Code": Updateproduct.serialNo,
+      "ImageUrls": Updateproduct.imageUrls,
+      "isOnSale": Updateproduct.isOnSale,
+      "isPopular": Updateproduct.isPopular,
+      "isFavorite": Updateproduct.isFavorite,
+    };
+    await db.doc(id).update(data);
+  }
+
   // delete product function...
   static Future<void> deleteProduct(String id) async {
     CollectionReference db =
@@ -92,5 +114,3 @@ class Uploadproduct {
         isPopular = snapshot.data()["isPopular"],
         isFavorite = snapshot.data()["isFavorite"];
 }
-    
-

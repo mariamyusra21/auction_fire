@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:auction_fire/models/add_product_model.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/seller_product_detail_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -57,99 +55,108 @@ class _SellerProductsState extends State<SellerProducts> {
                           itemBuilder: (_, index) {
                             final doc = docs[index];
                             final productName = doc.data()["productName"];
-                            final price = doc.data()['price'];
-                            // dynamic Linkimage = doc.data()['ImageUrls'] ?? '';
+                            // final price = doc.data()['price'];
+                            dynamic Linkimage = doc.data()['ImageUrls'] ?? '';
                             // final docID = doc.id;
 
                             return Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 10),
-                              child: Container(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Card(
                                 // color: Colors.white,
-                                color: Colors.primaries[Random().nextInt(10)],
-                                child: ListTile(
-                                  title: Text('Title:  $productName',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 22)),
-                                  // Stack(
-                                  //   children: [
-                                  //     // Text('$productName '),
-                                  //     Image(image: NetworkImage(Linkimage)),
-                                  //     Positioned(
-                                  //       top: 20,
-                                  //       left: 20,
-                                  //       child: Container(
-                                  //         decoration: BoxDecoration(
-                                  //             color: Colors.black.withOpacity(0.7)),
-                                  //         child: Padding(
-                                  //           padding: EdgeInsets.all(8.0),
-                                  //           child: Text(
-                                  //             '$productName ',
-                                  //             style: TextStyle(color: Colors.white),
-                                  //           ),
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //     // FadeInImage.assetNetwork(placeholder: 'assets/placeholder.png', image: snapshot.data)
-                                  //   ],
-                                  // ),
-                                  subtitle: Text('Price:  $price',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 18)),
-                                  trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        // Edit the product...
-                                        onPressed: () {},
-                                        icon: Icon(Icons.edit),
-                                        color: Colors.white,
-                                        iconSize: 29,
-                                      ),
-                                      IconButton(
-                                        // Delete Product Pop-up function...
-                                        onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  // title: Text(
-                                                  //     'Are you sure to delete?'),
-                                                  title: Text(
-                                                      'Delete the Product?'),
-                                                  content: Text(
-                                                      'Do you want to delete this product permanently.'),
-                                                  actions: [
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          Uploadproduct
-                                                              .deleteProduct(
-                                                                  doc.id);
-                                                        },
-                                                        child: Text('Yes')),
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Text('No')),
-                                                  ],
-                                                );
-                                              });
-                                        },
-                                        icon: Icon(Icons.delete),
-                                        color: Colors.white,
-                                        iconSize: 29,
-                                      ),
-                                    ],
-                                  ),
+                                elevation: 10.0,
+                                color: Colors.white,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ListTile(
+                                    leading: Image.network(
+                                      Linkimage,
+                                      height: 90,
+                                      width: 70,
+                                      fit: BoxFit.fill,
+                                    ),
+                                    title: Text('$productName',
+                                        style: TextStyle(fontSize: 15)),
 
-                                  // onTap Navigation is not required in seller page...
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              SellerProductDetail(doc: doc))),
+                                    subtitle: Text(
+                                        'Highest Bid: ${doc.get('currentHighestBid')}',
+                                        style: TextStyle(fontSize: 15)),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          // Edit the product...
+                                          onPressed: () {
+                                            // Navigator.push(context,
+                                            //     MaterialPageRoute(builder: (_) {
+                                            //   return EditProdDetailScr(
+                                            //     id: doc.id,
+                                            //     products: Uploadproduct(
+                                            //       category: doc["category"],
+                                            //       productName:
+                                            //           doc["productName"],
+                                            //       detail: doc["detail"],
+                                            //       price: doc["price"],
+                                            //       discountPrice:
+                                            //           doc["discountPrice"],
+                                            //       serialNo: doc["serial Code"],
+                                            //       imageUrls: doc["ImageUrls"],
+                                            //       isOnSale: doc["isOnSale"],
+                                            //       isPopular: doc["isPopular"],
+                                            //       isFavorite: doc["isFavorite"],
+                                            //     ),
+                                            //   );
+                                            // }));
+                                          },
+                                          icon: Icon(Icons.edit),
+                                          color: Colors.grey,
+                                          iconSize: 20,
+                                        ),
+                                        IconButton(
+                                          // Delete Product Pop-up function...
+                                          onPressed: () {
+                                            showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    // title: Text(
+                                                    //     'Are you sure to delete?'),
+                                                    title: Text(
+                                                        'Delete the Product?'),
+                                                    content: Text(
+                                                        'Do you want to delete this product permanently.'),
+                                                    actions: [
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            Uploadproduct
+                                                                .deleteProduct(
+                                                                    doc.id);
+                                                          },
+                                                          child: Text('Yes')),
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: Text('No')),
+                                                    ],
+                                                  );
+                                                });
+                                          },
+                                          icon: Icon(Icons.delete),
+                                          color: Colors.grey,
+                                          iconSize: 20,
+                                        ),
+                                      ],
+                                    ),
+
+                                    // onTap Navigation is not required in seller page...
+                                    onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SellerProductDetail(doc: doc))),
+                                  ),
                                 ),
                               ),
                             );

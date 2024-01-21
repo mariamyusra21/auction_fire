@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserData {
-   late String username;
+  late String username;
   String? phoneNum;
   String? email;
   String? password;
@@ -15,6 +15,12 @@ class UserData {
     CollectionReference db = FirebaseFirestore.instance.collection('Users');
     Map<String, dynamic> data = {'username': username, 'phoneNumber': phoneNum};
     await db.add(data);
+  }
+
+  // delete product function...
+  static Future<void> deleteUser(String id) async {
+    CollectionReference db = FirebaseFirestore.instance.collection('Users');
+    await db.doc(id).delete();
   }
 
   Map<String, dynamic> toJson() => {

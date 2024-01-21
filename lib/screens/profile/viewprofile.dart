@@ -1,10 +1,13 @@
-import 'package:auction_fire/models/user_data_model.dart';
+import 'dart:io';
+
+import 'package:auction_fire/services/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
-
 
 class ProfileData extends StatefulWidget {
   final User? user;
@@ -24,7 +27,6 @@ class _ProfileDataState extends State<ProfileData> {
   bool loading = false;
   dynamic profilePic;
   FirebaseAuth auth = FirebaseAuth.instance;
- 
 
   @override
   void initState() {
@@ -33,20 +35,19 @@ class _ProfileDataState extends State<ProfileData> {
       //   ScaffoldMessenger.of(context).showSnackBar(
       //       SnackBar(content: Text('please complete profile firstly')));
       // } else {
-        FirebaseFirestore.instance
-            .collection('Users')
-            .doc(widget.user?.uid)
-            .get()
-            .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
-          usernameController.text = snapshot['username'];
-          emailController.text = snapshot['email'];
-          phoneNumController.text = snapshot['phoneNumber'];
-          displayNameC.text = snapshot['displayName'];
-          addressController.text = snapshot['address'];
-         
-          profilePic = snapshot['photoURL'];
-        }
-        );
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(widget.user?.uid)
+          .get()
+          .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
+        usernameController.text = snapshot['username'];
+        emailController.text = snapshot['email'];
+        phoneNumController.text = snapshot['phoneNumber'];
+        displayNameC.text = snapshot['displayName'];
+        addressController.text = snapshot['address'];
+
+        profilePic = snapshot['photoURL'];
+      });
       //}
     });
     // TODO: implement initState
@@ -96,7 +97,7 @@ class _ProfileDataState extends State<ProfileData> {
                     fontSize: 30,
                   ),
                 ),
-                
+
                 SizedBox(
                   height: 30,
                 ),
@@ -115,25 +116,36 @@ class _ProfileDataState extends State<ProfileData> {
                           const SizedBox(
                             height: 30,
                           ),
-                          
-                          CircleAvatar(
-                          radius: 64,
 
-                             backgroundImage: 
-                            // NetworkImage(profilePic)
-                            profilePic == null
-                            ? Image.network(
-                                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThlTauvFuw7q1xluWrxtf2uFBYgaa_a2GQfg&usqp=CAU').image
-                            : NetworkImage(profilePic)
-                            
-                          ),const Text("Profile Picture"),
-                        // const  Text(
-                        //     'Profile',
-                        //     style: TextStyle(
-                        //       fontSize: 35,
-                        //       fontWeight: FontWeight.bold,
-                        //     ),
-                        //   ),
+                          Stack(
+                            children: [
+                              CircleAvatar(
+                                  radius: 64,
+                                  backgroundImage:
+                                      // NetworkImage(profilePic)
+                                      profilePic == null
+                                          ? Image.network(
+                                                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThlTauvFuw7q1xluWrxtf2uFBYgaa_a2GQfg&usqp=CAU')
+                                              .image
+                                          : NetworkImage(profilePic)),
+                              Positioned(
+                                child: IconButton(
+                                    onPressed: () => imagePickerMethod(),
+                                    icon: Icon(Icons.add_a_photo_outlined)),
+                                bottom: -10,
+                                left: 80,
+                              ),
+                            ],
+                          ),
+
+                          const Text("Profile Picture"),
+                          // const  Text(
+                          //     'Profile',
+                          //     style: TextStyle(
+                          //       fontSize: 35,
+                          //       fontWeight: FontWeight.bold,
+                          //     ),
+                          //   ),
                           const SizedBox(
                             height: 10,
                           ),
@@ -160,7 +172,7 @@ class _ProfileDataState extends State<ProfileData> {
                                   )),
                             ),
                           ),
-                             Container(
+                          Container(
                             width: 250,
                             child: TextFormField(
                                 controller: displayNameC,
@@ -178,12 +190,13 @@ class _ProfileDataState extends State<ProfileData> {
                                   return null;
                                 }),
                           ),
-                        
+
                           Container(
                             width: 250,
                             child: TextFormField(
                               controller: emailController,
                               keyboardType: TextInputType.emailAddress,
+                              readOnly: true,
                               decoration: InputDecoration(
                                   labelText: "Email Address",
                                   suffixIcon: Icon(
@@ -215,7 +228,7 @@ class _ProfileDataState extends State<ProfileData> {
                                   )),
                             ),
                           ),
-                         Container(
+                          Container(
                             width: 250,
                             child: TextFormField(
                               controller: addressController,
@@ -246,6 +259,11 @@ class _ProfileDataState extends State<ProfileData> {
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
                                     // form validation
+                                    saveProfile(
+                                        displayNameC.text,
+                                        addressController.text,
+                                        phoneNumController.text,
+                                        usernameController.text);
                                   }
                                 },
                                 child: Text(
@@ -281,7 +299,69 @@ class _ProfileDataState extends State<ProfileData> {
     );
   }
 
-  // save updated data 
+  File? image;
+  final imagePicker = ImagePicker();
+  dynamic imageUrls;
+  final firebaseStorageRef = FirebaseStorage.instance;
+  final FirebaseFirestore firestoreRef = FirebaseFirestore.instance;
 
+  // save updated data
+  Future saveProfile(String displayName, String address, String phoneNum,
+      String userName) async {
+    imageUrls = await uploadImage();
+    await widget.user?.updateDisplayName(displayName);
+    await widget.user?.updatePhoneNumber(phoneNum as PhoneAuthCredential);
+    await widget.user?.updatePhotoURL(imageUrls);
+    await firestoreRef
+        .collection('Users')
+        .doc(widget.user?.uid)
+        .update({
+          'displayName': displayName,
+          'photoURL': imageUrls,
+          'address': address
+        })
+        .then((value) => Utilities().toastMessage('Profile has been updated'))
+        .onError(
+            (error, stackTrace) => Utilities().toastMessage(error.toString()));
+  }
 
+  // Image pick method to select image from storage
+  Future imagePickerMethod() async {
+    // image pick from gallery
+    final pick = await imagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pick != null) {
+        image = File(pick.path);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('No Image Selected')));
+      }
+    });
+  }
+
+  // upload image to firebase storage
+  Future<String> uploadImage() async {
+    if (image != null) {
+      try {
+        var snapshot = await firebaseStorageRef
+            .ref()
+            .child('user_profiles/${DateTime.now()}.jpg')
+            .putFile(image!);
+        // UploadTask uploadTask = firebaseStorageRef.putFile(image!);
+        // await uploadTask.whenComplete(() => print('Image uploaded'));
+        var downlodurl = await snapshot.ref.getDownloadURL();
+        setState(() {
+          imageUrls = downlodurl;
+          // imageUrls.add(downlodurl);
+          print(imageUrls);
+        });
+      } catch (e) {
+        print(e.toString());
+      }
+    } else {
+      print('No image to upload.');
+    }
+    return imageUrls;
+  }
 }

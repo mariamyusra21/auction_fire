@@ -170,7 +170,13 @@ class CustomSearch extends SearchDelegate {
           children: results!
               .map<Widget>((a) => Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(a['productName']),
+                    child: InkWell(
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    BuyerProductDetail(doc: a))),
+                        child: Text(a['productName'])),
                   ))
               .toList(),
         );

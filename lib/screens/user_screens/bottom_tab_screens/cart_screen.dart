@@ -67,6 +67,7 @@ class CartScreen extends StatelessWidget {
                                   elevation: 10.0,
                                   color: Colors.white,
                                   child: Row(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Image.network(
                                         res['image'],
@@ -86,7 +87,7 @@ class CartScreen extends StatelessWidget {
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 150,
+                                        width: 70,
                                       ),
                                       InkWell(
                                         onTap: () {

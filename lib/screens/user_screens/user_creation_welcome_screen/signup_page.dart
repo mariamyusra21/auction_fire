@@ -192,7 +192,7 @@ class _SignUpState extends State<SignUp> {
                               // },
                               validator: Validators.compose([
                                 Validators.required('email is required'),
-                                Validators.email('invalid email')
+                                Validators.email('invalid email'),
                               ]),
                             ),
                           ),

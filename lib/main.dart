@@ -23,16 +23,6 @@ void main() async {
     await Firebase.initializeApp();
   }
 
-  // ignore: unrelated_type_equality_checks
-  // if (Firebase.apps.length == 0) {
-  //   Firebase.initializeApp(
-  //       options: FirebaseOptions(
-  //           apiKey: "AIzaSyB4Jz2bdb6MMaVksxaJdYafTX9RBpDk06k",
-  //           appId: "1:812678785636:web:d9f89cd19564b1e3d90d71",
-  //           messagingSenderId: "812678785636",
-  //           projectId: "fyp-auction-fire"));
-  // }
-
   runApp(Sizer(
     builder: (context, orientation, deviceType) => MaterialApp(
       theme: ThemeData(

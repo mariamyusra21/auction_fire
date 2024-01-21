@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:auction_fire/screens/user_screens/bottom_tab_screens/cart_screen.dart';
 import 'package:auction_fire/screens/user_screens/bottom_tab_screens/favourite_screen.dart';
 import 'package:auction_fire/screens/user_screens/seller_pages/seller_home_screen.dart';
@@ -50,25 +48,25 @@ class _bottomPageScreenState extends State<bottomPageScreen> {
               Positioned(
                   bottom: 1,
                   right: -4,
-                  child: ProcartNo == 0 ? 
-                        Container() : 
-                   Stack(
-                    children: [
-                      Icon(
-                        Icons.brightness_1,
-                        size: 20,
-                        color: Colors.black,
-                      ),
-                      Positioned.fill(
-                          child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "$ProcartNo",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ))
-                    ],
-                  ))
+                  child: ProcartNo == 0
+                      ? Container()
+                      : Stack(
+                          children: [
+                            Icon(
+                              Icons.brightness_1,
+                              size: 20,
+                              color: Colors.black,
+                            ),
+                            Positioned.fill(
+                                child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "$ProcartNo",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ))
+                          ],
+                        ))
             ],
           )),
         ]),

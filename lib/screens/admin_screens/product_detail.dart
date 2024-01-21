@@ -1,28 +1,23 @@
 import 'package:auction_fire/widgets/bidbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-class UserDetails extends StatefulWidget {
+class ProductDetails extends StatefulWidget {
   final DocumentSnapshot detailSnapshot;
-  const UserDetails({super.key, required this.detailSnapshot});
+  const ProductDetails({super.key, required this.detailSnapshot});
 
   @override
-  State<UserDetails> createState() => _UserDetailsState();
+  State<ProductDetails> createState() => _ProductDetailsState();
 }
 
-class _UserDetailsState extends State<UserDetails> {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  CollectionReference referenceUsers =
-      FirebaseFirestore.instance.collection('Users');
-
+class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text('${widget.detailSnapshot.get('displayName')} Details'),
+        title: Text('${widget.detailSnapshot.get('productName')} Details'),
         centerTitle: true,
       ),
       body: Padding(
@@ -33,15 +28,26 @@ class _UserDetailsState extends State<UserDetails> {
               Padding(
                 padding: const EdgeInsets.all(20.0),
               ),
-              Text('User Name: ${widget.detailSnapshot['username']}',
+              Text('Product Name: ${widget.detailSnapshot['productName']}',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
-              Text('Display Name: ${widget.detailSnapshot['displayName']}',
+              Text('Details: ${widget.detailSnapshot['detail']}',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
-              Text('Phone Number: ${widget.detailSnapshot['phoneNumber']}',
+              Text('Category: ${widget.detailSnapshot['category']}',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
-              Text('Email: ${widget.detailSnapshot['email']}',
+              Text('Brand Name: ${widget.detailSnapshot['brandName']}',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
-              Text('Address: ${widget.detailSnapshot['address']}',
+              Text('Price: ${widget.detailSnapshot['price']}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
+              Text('Discount: ${widget.detailSnapshot['discountPrice']}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
+              Text(
+                  'Current Highest Bid: ${widget.detailSnapshot['currentHighestBid']}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
+              Text('Seller ID: ${widget.detailSnapshot['UserID']}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
+              Text('Product ID: ${widget.detailSnapshot['id']}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
+              Text('Serial Code: ${widget.detailSnapshot['serial Code']}',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
               Padding(
                 padding: const EdgeInsets.all(20.0),

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:auction_fire/services/utilities.dart';
 import 'package:auction_fire/widgets/bidbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +19,9 @@ class BuyerBidPage extends StatefulWidget {
 class _BuyerBidPageState extends State<BuyerBidPage> {
   final TextEditingController bidController = TextEditingController();
   int? currentHighestBid;
+  Timer? bidTimer;
+  bool isTimerStarted = false;
+  Duration remainingTime = Duration.zero;
 
   @override
   void initState() {
@@ -24,23 +30,19 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
     fetchCurrentHighestBid();
   }
 
-  Future<BidData?> fetchCurrentHighestBid() async {
+  Future<void> fetchCurrentHighestBid() async {
     try {
-      // Fetch the current bid document from Firestore
       var documentSnapshot = await FirebaseFirestore.instance
           .collection('bids')
           .doc(widget.prodDoc.id)
           .get();
 
-      // Check if the document exists
       if (documentSnapshot.exists) {
-        // Extract bidHistory array from the document
         List<Map<String, dynamic>> bidHistory = List<Map<String, dynamic>>.from(
           documentSnapshot['bidHistory'] ?? [],
         );
 
-        // Find the highest bid value
-        int highestBid = 0; // Initialize with a default value
+        int highestBid = 0;
         String userId = '';
 
         bidHistory.forEach((bid) {
@@ -54,13 +56,24 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
         });
 
         setState(() {
-          // Set currentHighestBid to highestBid
           currentHighestBid = highestBid;
         });
 
-        return BidData(userId, highestBid);
+        // Start the bid timer if it hasn't been started yet
+        if (!isTimerStarted && currentHighestBid != null) {
+          // Check if this is the first bid and add 24 hours to the bid end time
+          if (bidHistory.isEmpty) {
+            final DateTime bidEndTime = DateTime.now().add(Duration(hours: 24));
+            await add24HoursToBidEndTime(
+                documentSnapshot.reference, bidEndTime);
+            startBidTimer(bidEndTime);
+          } else {
+            // Use the bid end time retrieved from Firestore
+            final DateTime bidEndTime = documentSnapshot['bidEndTime'].toDate();
+            startBidTimer(bidEndTime);
+          }
+        }
       } else {
-        // Handle the case where the document doesn't exist
         print('Document does not exist');
         documentSnapshot = await FirebaseFirestore.instance
             .collection('Updateproduct')
@@ -70,13 +83,39 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
         setState(() {
           currentHighestBid = documentSnapshot['currentHighestBid'];
         });
-        return null;
       }
     } catch (e) {
-      // Handle any errors that may occur during the fetch operation
       print('Error fetching bid document: $e');
-      return null;
+      Utilities().toastMessage('Error fetching bid document: $e');
     }
+  }
+
+  Future<void> add24HoursToBidEndTime(
+      DocumentReference bidReference, DateTime bidEndTime) async {
+    // Update the bid document with the new bid end time
+    await bidReference.update({'bidEndTime': bidEndTime});
+  }
+
+  void startBidTimer(DateTime bidEndTime) {
+    isTimerStarted = true;
+
+    remainingTime = bidEndTime.difference(DateTime.now());
+
+    bidTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        remainingTime = bidEndTime.difference(DateTime.now());
+      });
+
+      if (remainingTime.isNegative) {
+        timer.cancel();
+        setState(() {
+          remainingTime = Duration.zero;
+          isTimerStarted = false;
+        });
+        print('Bid timer expired!');
+        // Additional actions when the timer expires can be added here
+      }
+    });
   }
 
   void placeBid() async {
@@ -88,9 +127,7 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
           .doc(widget.prodDoc.id)
           .get();
 
-      // Check if the document exists
       if (documentSnapshot.exists) {
-        // update the bidDocument for bidHistory
         FirebaseFirestore.instance
             .collection('bids')
             .doc(widget.prodDoc.id)
@@ -98,13 +135,19 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
           'productName': '${widget.prodDoc.get('productName')}',
           'bidHistory': FieldValue.arrayUnion([
             {
-              'userID': '${widget.user?.uid}',
+              'userID': '${widget.user?.displayName}',
               'userBid': userBid,
             }
           ]),
         });
+
+        FirebaseFirestore.instance
+            .collection('Updateproduct')
+            .doc(widget.prodDoc.id)
+            .update({
+          'currentHighestBid': userBid,
+        });
       } else {
-        // create the bidDocument for bidHistory
         FirebaseFirestore.instance
             .collection('bids')
             .doc(widget.prodDoc.id)
@@ -112,10 +155,19 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
           'productName': '${widget.prodDoc.get('productName')}',
           'bidHistory': FieldValue.arrayUnion([
             {
-              'userID': '${widget.user?.uid}',
+              'userID': '${widget.user?.displayName}',
               'userBid': userBid,
             }
           ]),
+          'bidEndTime': DateTime.now().add(Duration(minutes: 10)),
+          // Add the bid timer of 24 hours to Firestore...
+        });
+
+        FirebaseFirestore.instance
+            .collection('Updateproduct')
+            .doc(widget.prodDoc.id)
+            .update({
+          'currentHighestBid': userBid,
         });
       }
 
@@ -148,6 +200,8 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isBidButtonActive = isTimerStarted && remainingTime.inSeconds >= 0;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFD45A2D),
@@ -162,7 +216,7 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
             colors: [
               Color(0xFFD45A2D),
               Color(0xFFBD861C),
-              Color.fromARGB(67, 0, 130, 181)
+              Color.fromARGB(67, 0, 130, 181),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -174,6 +228,10 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
             child: Column(
               children: [
                 Text('Current Highest Bid: ${currentHighestBid ?? 'N/A'}'),
+                Text(
+                  'Remaining Time: ${remainingTime.inHours}h ${remainingTime.inMinutes.remainder(60)}m ${remainingTime.inSeconds.remainder(60)}s',
+                  style: TextStyle(fontSize: 18),
+                ),
                 TextField(
                   controller: bidController,
                   keyboardType: TextInputType.number,
@@ -198,15 +256,59 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
                         colors: [
                           Color(0xFFD45A2D),
                           Color(0xFFBD861C),
-                          Color.fromARGB(67, 0, 130, 181)
+                          Color.fromARGB(67, 0, 130, 181),
                         ],
                       ),
                     ),
-                    child: BidButton(
-                      buttonTitle: "Place bid",
-                      onPress: () async {
-                        placeBid();
-                      },
+                    child: GestureDetector(
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: 200,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black,
+                            style: BorderStyle.solid,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(50),
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color(0xFFD45A2D),
+                              Color(0xFFBD861C),
+                              Color.fromARGB(67, 0, 130, 181),
+                            ],
+                          ),
+                        ),
+                        child: BidButton(
+                          buttonTitle: "Place bid",
+                          onPress: () async {
+                            if (isBidButtonActive) {
+                              // Allow placing bid
+                              placeBid();
+                            } else {
+                              // Inactivate bid button if time has expired
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('Bid Time Expired'),
+                                    content: Text('The bid time has expired.'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -216,6 +318,12 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    bidTimer?.cancel();
+    super.dispose();
   }
 }
 
