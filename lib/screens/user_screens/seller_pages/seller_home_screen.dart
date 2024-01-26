@@ -31,13 +31,13 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
   final String docID =
       FirebaseFirestore.instance.collection('Updateproduct').doc().id;
 
-  // Exclude user's products stream
-  Stream<QuerySnapshot<Map<String, dynamic>>> getProductStream(String userId) {
-    return FirebaseFirestore.instance
-        .collection('Updateproduct')
-        .where('UserID', isNotEqualTo: userId) // Exclude user's products
-        .snapshots();
-  }
+  // // Exclude user's products stream
+  // Stream<QuerySnapshot<Map<String, dynamic>>> getProductStream(String userId) {
+  //   return FirebaseFirestore.instance
+  //       .collection('Updateproduct')
+  //       .where('UserID', isNotEqualTo: userId) // Exclude user's products
+  //       .snapshots();
+  // }
 
   //signout function
   signOut() async {
@@ -167,10 +167,10 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
         // leading: IconButton(onPressed: () {}, icon: Icon(Icons.menu)), this is like a drawer in appbar
         actions: <Widget>[
           //notice bell button
-          IconButton(
-            icon: Icon(Icons.notifications),
-            onPressed: () {},
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.notifications),
+          //   onPressed: () {},
+          // ),
 
           IconButton(
               onPressed: () {

@@ -121,7 +121,7 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
   void placeBid() async {
     final int userBid = int.parse(bidController.text);
 
-    if (currentHighestBid == null || userBid >= currentHighestBid!) {
+    if (currentHighestBid == null || userBid >= (currentHighestBid! + 50)) {
       var documentSnapshot = await FirebaseFirestore.instance
           .collection('bids')
           .doc(widget.prodDoc.id)
@@ -137,6 +137,7 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
             {
               'userID': '${widget.user?.displayName}',
               'userBid': userBid,
+              'userEmail': '${widget.user?.email}'
             }
           ]),
         });
@@ -157,9 +158,10 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
             {
               'userID': '${widget.user?.displayName}',
               'userBid': userBid,
+              'userEmail': '${widget.user?.email}'
             }
           ]),
-          'bidEndTime': DateTime.now().add(Duration(minutes: 10)),
+          'bidEndTime': DateTime.now().add(Duration(hours: 24)),
           // Add the bid timer of 24 hours to Firestore...
         });
 
@@ -182,8 +184,8 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
         builder: (context) {
           return AlertDialog(
             title: Text('Invalid Bid'),
-            content:
-                Text('Your bid must be higher than the current highest bid.'),
+            content: Text(
+                'Your bid must be higher than 50 Rs of current highest bid.'),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
@@ -283,29 +285,29 @@ class _BuyerBidPageState extends State<BuyerBidPage> {
                         child: BidButton(
                           buttonTitle: "Place bid",
                           onPress: () async {
-                            if (isBidButtonActive) {
-                              // Allow placing bid
-                              placeBid();
-                            } else {
-                              // Inactivate bid button if time has expired
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text('Bid Time Expired'),
-                                    content: Text('The bid time has expired.'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('OK'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
+                            // if (isBidButtonActive) {
+                            // Allow placing bid
+                            placeBid();
+                            // } else {
+                            //   // Inactivate bid button if time has expired
+                            //   showDialog(
+                            //     context: context,
+                            //     builder: (context) {
+                            //       return AlertDialog(
+                            //         title: Text('Bid Time Expired'),
+                            //         content: Text('The bid time has expired.'),
+                            //         actions: <Widget>[
+                            //           TextButton(
+                            //             onPressed: () {
+                            //               Navigator.of(context).pop();
+                            //             },
+                            //             child: Text('OK'),
+                            //           ),
+                            //         ],
+                            //       );
+                            //     },
+                            //   );
+                            // }
                           },
                         ),
                       ),

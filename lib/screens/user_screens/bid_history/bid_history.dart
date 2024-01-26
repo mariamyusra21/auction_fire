@@ -77,7 +77,7 @@ class _BidHistoryState extends State<BidHistory> {
                               color: Colors.white,
                               child: ListTile(
                                 title: Text(
-                                    'User Name: $userID, UserBid: $userBid',
+                                    'User Name: $userID,\nBid Price: $userBid Rs/=',
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 20)),
                               ),

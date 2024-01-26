@@ -59,12 +59,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               Color.fromARGB(67, 0, 130, 181)
             ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
             child: Center(
-                child: StreamBuilder(
+                child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                     stream: FirebaseFirestore.instance
                         .collection('Updateproduct')
                         .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                    builder: (BuildContext context, snapshot) {
                       if (!snapshot.hasData) {
                         return CircularStepProgressIndicator(
                           totalSteps: 12,

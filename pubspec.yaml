@@ -29,6 +29,7 @@ dependencies:
   cached_network_image: ^3.3.0
   # chached network used to maintain image data if the internet problem this will bring itself image
   step_progress_indicator: ^1.0.2
+  paymob_pakistan : 
 
 
 dev_dependencies:

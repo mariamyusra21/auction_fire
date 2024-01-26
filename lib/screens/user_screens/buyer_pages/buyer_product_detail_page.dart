@@ -168,7 +168,7 @@ class _BuyerProductDetailState extends State<BuyerProductDetail> {
                                         child: Padding(
                                           padding: EdgeInsets.all(8.0),
                                           child: Text(
-                                              "Price: ${widget.doc['price']}"
+                                              "Price: ${widget.doc['currentHighestBid']}"
                                               // style: TextStyle(
                                               //     fontSize: 20, color: Colors.white
                                               //),

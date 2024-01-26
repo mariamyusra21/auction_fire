@@ -1,3 +1,4 @@
+import 'package:auction_fire/screens/payment_systems/payment_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
@@ -61,6 +62,7 @@ class CartScreen extends StatelessWidget {
                           itemCount: snapshot.data?.docs.length,
                           itemBuilder: (BuildContext build, int index) {
                             final res = snapshot.data!.docs[index];
+                            final price = res['price'] * 100;
                             return Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Card(
@@ -87,7 +89,7 @@ class CartScreen extends StatelessWidget {
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 70,
+                                        width: 90,
                                       ),
                                       InkWell(
                                         onTap: () {
@@ -98,11 +100,32 @@ class CartScreen extends StatelessWidget {
                                           backgroundColor: Colors.red,
                                           child: Icon(
                                             Icons.remove,
-                                            size: 10,
+                                            size: 20,
                                             color: Colors.white,
                                           ),
                                         ),
-                                      )
+                                      ),
+                                      SizedBox(
+                                        width: 30,
+                                      ),
+                                      InkWell(
+                                        onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PaymentView(
+                                                      price: price.toString(),
+                                                    ))),
+                                        child: CircleAvatar(
+                                          radius: 10,
+                                          backgroundColor: Colors.blue,
+                                          child: Icon(
+                                            Icons.payment,
+                                            size: 20,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   )),
                             );

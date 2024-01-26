@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:auction_fire/models/add_product_model.dart';
 import 'package:auction_fire/widgets/bidbutton.dart';
 import 'package:auction_fire/widgets/bidtextfield.dart';
-import 'package:auction_fire/widgets/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -160,6 +159,14 @@ class _AddProductState extends State<AddProduct> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFFD45A2D),
+        title: Text(
+          'Add Product',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -177,10 +184,10 @@ class _AddProductState extends State<AddProduct> {
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
               child: Column(
                 children: [
-                  const Text(
-                    'add products',
-                    style: BidStyle.boldStyle,
-                  ),
+                  // const Text(
+                  //   'add products',
+                  //   style: BidStyle.boldStyle,
+                  // ),
                   Container(
                     margin:
                         const EdgeInsets.symmetric(horizontal: 13, vertical: 7),

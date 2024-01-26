@@ -6,7 +6,11 @@ import 'package:auction_fire/screens/user_screens/user_creation_welcome_screen/s
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:paymob_pakistan/paymob_payment.dart';
 import 'package:sizer/sizer.dart';
+
+final String paymobApi =
+    'ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2TVRJM05ERTJMQ0p1WVcxbElqb2lhVzVwZEdsaGJDSjkuaUZFeGVEaVppLWVwd1FCRzNqbm1UMjBuTF9wR08yZlJzcnZTMFZCQzZ4OWc1c1RtR2xnbWNMTXRyamlFeTBkVUEybVFNNG1TaUxpeWQwNTdMME4yN2c=';
 
 void main() async {
   if (kIsWeb) {
@@ -20,7 +24,14 @@ void main() async {
             appId: "1:1010301042124:web:c778f85322ce4ff6a6b169"));
   } else {
     WidgetsFlutterBinding.ensureInitialized();
+
     await Firebase.initializeApp();
+    await PaymobPakistan.instance.initialize(
+        apiKey: paymobApi,
+        integrationID: 144948,
+        iFrameID: 156276,
+        jazzcashIntegrationId: 149385,
+        easypaisaIntegrationID: 144948);
   }
 
   runApp(Sizer(
