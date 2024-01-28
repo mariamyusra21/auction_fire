@@ -89,7 +89,7 @@ class CartScreen extends StatelessWidget {
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 90,
+                                        width: 70,
                                       ),
                                       InkWell(
                                         onTap: () {

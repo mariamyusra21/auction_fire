@@ -244,7 +244,40 @@ class _ProfileDataState extends State<ProfileData> {
                           Padding(
                             padding: EdgeInsets.fromLTRB(20, 20, 40, 20),
                           ),
+                          // GestureDetector(
+                          //   child: Container(
+                          //     alignment: Alignment.center,
+                          //     width: 250,
+                          //     decoration: BoxDecoration(
+                          //         borderRadius: BorderRadius.circular(50),
+                          //         gradient: LinearGradient(colors: [
+                          //           Color(0xFFD45A2D),
+                          //           Color(0xFFBD861C),
+                          //           Color.fromARGB(67, 0, 130, 181)
+                          //         ])),
+                          //     child: TextButton(
+                          //       onPressed: () {
+                          //         if (_formKey.currentState!.validate()) {
+                          //           // form validation
+                          //           saveProfile(
+                          //               displayNameC.text,
+                          //               addressController.text,
+                          //               phoneNumController.text,
+                          //               usernameController.text);
+                          //         }
+                          //       },
+                          //       child: Text(
+                          //         "Update & Save",
+                          //         style: TextStyle(
+                          //             color: Colors.white,
+                          //             fontSize: 20,
+                          //             fontWeight: FontWeight.bold),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                           GestureDetector(
+                            onTap: () => Navigator.pop(context),
                             child: Container(
                               alignment: Alignment.center,
                               width: 250,
@@ -255,37 +288,13 @@ class _ProfileDataState extends State<ProfileData> {
                                     Color(0xFFBD861C),
                                     Color.fromARGB(67, 0, 130, 181)
                                   ])),
-                              child: TextButton(
-                                onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    // form validation
-                                    saveProfile(
-                                        displayNameC.text,
-                                        addressController.text,
-                                        phoneNumController.text,
-                                        usernameController.text);
-                                  }
-                                },
-                                child: Text(
-                                  "Update & Save",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                              child: Text(
+                                "Back",
+                                style: TextStyle(
+                                    // color: Colors.orangeAccent[700],
+                                    color: Colors.white,
+                                    fontSize: 18),
                               ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              // Navigator.pushNamed(context, 'LoginPage');
-                            },
-                            child: Text(
-                              "Back",
-                              style: TextStyle(
-                                  color: Colors.orangeAccent[700],
-                                  fontSize: 18),
                             ),
                           ),
                         ],

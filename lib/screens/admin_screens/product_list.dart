@@ -76,8 +76,8 @@ class _ProductListState extends State<ProductList> {
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  IconButton(
-                                      onPressed: () {}, icon: Icon(Icons.edit)),
+                                  // IconButton(
+                                  //     onPressed: () {}, icon: Icon(Icons.edit)),
                                   IconButton(
                                       onPressed: () {
                                         showDialog(

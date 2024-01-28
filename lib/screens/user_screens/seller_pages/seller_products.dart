@@ -101,34 +101,34 @@ class _SellerProductsState extends State<SellerProducts> {
                                     trailing: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        IconButton(
-                                          // Edit the product...
-                                          onPressed: () {
-                                            // Navigator.push(context,
-                                            //     MaterialPageRoute(builder: (_) {
-                                            //   return EditProdDetailScr(
-                                            //     id: doc.id,
-                                            //     products: Uploadproduct(
-                                            //       category: doc["category"],
-                                            //       productName:
-                                            //           doc["productName"],
-                                            //       detail: doc["detail"],
-                                            //       price: doc["price"],
-                                            //       discountPrice:
-                                            //           doc["discountPrice"],
-                                            //       serialNo: doc["serial Code"],
-                                            //       imageUrls: doc["ImageUrls"],
-                                            //       isOnSale: doc["isOnSale"],
-                                            //       isPopular: doc["isPopular"],
-                                            //       isFavorite: doc["isFavorite"],
-                                            //     ),
-                                            //   );
-                                            // }));
-                                          },
-                                          icon: Icon(Icons.edit),
-                                          color: Colors.grey,
-                                          iconSize: 20,
-                                        ),
+                                        // IconButton(
+                                        //   // Edit the product...
+                                        //   onPressed: () {
+                                        //     // Navigator.push(context,
+                                        //     //     MaterialPageRoute(builder: (_) {
+                                        //     //   return EditProdDetailScr(
+                                        //     //     id: doc.id,
+                                        //     //     products: Uploadproduct(
+                                        //     //       category: doc["category"],
+                                        //     //       productName:
+                                        //     //           doc["productName"],
+                                        //     //       detail: doc["detail"],
+                                        //     //       price: doc["price"],
+                                        //     //       discountPrice:
+                                        //     //           doc["discountPrice"],
+                                        //     //       serialNo: doc["serial Code"],
+                                        //     //       imageUrls: doc["ImageUrls"],
+                                        //     //       isOnSale: doc["isOnSale"],
+                                        //     //       isPopular: doc["isPopular"],
+                                        //     //       isFavorite: doc["isFavorite"],
+                                        //     //     ),
+                                        //     //   );
+                                        //     // }));
+                                        //   },
+                                        //   icon: Icon(Icons.edit),
+                                        //   color: Colors.grey,
+                                        //   iconSize: 20,
+                                        // ),
                                         IconButton(
                                           // Delete Product Pop-up function...
                                           onPressed: () {

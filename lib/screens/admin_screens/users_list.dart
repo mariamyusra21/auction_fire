@@ -70,8 +70,8 @@ class _UserListScreenState extends State<UserListScreen> {
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  IconButton(
-                                      onPressed: () {}, icon: Icon(Icons.edit)),
+                                  // IconButton(
+                                  //     onPressed: () {}, icon: Icon(Icons.edit)),
                                   IconButton(
                                       onPressed: () {
                                         showDialog(
