@@ -1,11 +1,17 @@
 import 'package:auction_fire/screens/payment_systems/payment_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   CartScreen({super.key});
 
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
   CollectionReference db = FirebaseFirestore.instance.collection('Cart');
 
   DeleteCart(String id, BuildContext context) {
@@ -89,43 +95,48 @@ class CartScreen extends StatelessWidget {
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 70,
+                                        width: 40,
                                       ),
-                                      InkWell(
-                                        onTap: () {
-                                          DeleteCart(res.id, context);
-                                        },
-                                        child: CircleAvatar(
-                                          radius: 10,
-                                          backgroundColor: Colors.red,
-                                          child: Icon(
-                                            Icons.remove,
-                                            size: 20,
-                                            color: Colors.white,
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              DeleteCart(res.id, context);
+                                            },
+                                            child: CircleAvatar(
+                                              radius: 10,
+                                              backgroundColor: Colors.red,
+                                              child: Icon(
+                                                Icons.remove,
+                                                size: 20,
+                                                color: Colors.white,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 30,
-                                      ),
-                                      InkWell(
-                                        onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    PaymentView(
-                                                      price: price.toString(),
-                                                    ))),
-                                        child: CircleAvatar(
-                                          radius: 10,
-                                          backgroundColor: Colors.blue,
-                                          child: Icon(
-                                            Icons.payment,
-                                            size: 20,
-                                            color: Colors.white,
+                                          // SizedBox(
+                                          //   width: 10,
+                                          // ),
+                                          // Padding(
+                                          //     padding:
+                                          //         EdgeInsets.only(right: 5)),
+                                          IconButton(
+                                            onPressed: () => Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PaymentView(
+                                                          price:
+                                                              price.toString(),
+                                                        ))),
+                                            icon: Icon(
+                                              FontAwesomeIcons.ccMastercard,
+                                              size: 20,
+                                              color: Colors.lightBlue,
+                                            ),
                                           ),
-                                        ),
-                                      ),
+                                        ],
+                                      )
                                     ],
                                   )),
                             );

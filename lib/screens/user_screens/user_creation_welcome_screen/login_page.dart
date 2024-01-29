@@ -295,32 +295,32 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(
                         height: 30,
                       ),
-                      Text(
-                        "Or Login using other account ",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            onPressed: () async {},
-                            icon: Icon(
-                              FontAwesomeIcons.google,
-                              color: Colors.orangeAccent[700],
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              FontAwesomeIcons.facebook,
-                              color: Colors.orangeAccent[700],
-                            ),
-                          ),
-                        ],
-                      )
+                      // Text(
+                      //   "Or Login using other account ",
+                      //   style: TextStyle(fontWeight: FontWeight.bold),
+                      // ),
+                      // SizedBox(
+                      //   height: 20,
+                      // ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //   children: [
+                      //     IconButton(
+                      //       onPressed: () async {},
+                      //       icon: Icon(
+                      //         FontAwesomeIcons.google,
+                      //         color: Colors.orangeAccent[700],
+                      //       ),
+                      //     ),
+                      //     IconButton(
+                      //       onPressed: () {},
+                      //       icon: Icon(
+                      //         FontAwesomeIcons.facebook,
+                      //         color: Colors.orangeAccent[700],
+                      //       ),
+                      //     ),
+                      //   ],
+                      // )
                     ],
                   ),
                 ),
