@@ -1,6 +1,7 @@
-import 'package:auction_fire/screens/landing_screen.dart';
+import 'package:auction_fire/screens/user_screens/user_creation_welcome_screen/landing_screen.dart';
 import 'package:flutter/material.dart';
-import 'admin_screens/web_login.dart';
+
+import '../../admin_screens/web_login.dart';
 
 class Layout_Screen extends StatelessWidget {
   const Layout_Screen({super.key});
@@ -9,10 +10,10 @@ class Layout_Screen extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       //contraints check the max and min height, width of the screen on which app is running
-      if (constraints.minWidth > 700) {
-        return WebLoginScreen();
-      } else {
+      if (constraints.maxWidth < 700) {
         return LandiingScreen();
+      } else {
+        return WebLoginScreen();
       }
     });
   }

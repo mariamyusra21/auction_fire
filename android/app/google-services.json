@@ -1,44 +1,26 @@
 {
   "project_info": {
-    "project_number": "812678785636",
-    "project_id": "fyp-auction-fire",
-    "storage_bucket": "fyp-auction-fire.appspot.com"
+    "project_number": "1010301042124",
+    "project_id": "fyp-auction-fire-4c1ea",
+    "storage_bucket": "fyp-auction-fire-4c1ea.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:812678785636:android:9935c6ae78e00a3bd90d71",
+        "mobilesdk_app_id": "1:1010301042124:android:864cdccfcd2b523aa6b169",
         "android_client_info": {
           "package_name": "com.example.auction_fire"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "812678785636-i7gdcq0h9ggbgeapagi6il79j2mos2g1.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.auction_fire",
-            "certificate_hash": "281bc5b194d2b82705f115b97d96a3ef4195382d"
-          }
-        },
-        {
-          "client_id": "812678785636-6l9brrg6uhs3gmnc4mq1gr0s364hh64a.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCIMla3FMEDMMhCekV0nOXE4oYeg_37ORk"
+          "current_key": "AIzaSyAeLPTg8hCOuZ8M3WTiv3gdmJ-BtKrKoLI"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "812678785636-51e7gj8lpmbrg46io16bn8g2i56espvr.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

@@ -8,6 +8,14 @@ class FirebaseServices {
     return result;
   }
 
+  static Future<String> getCurrentUID() async {
+    return (await FirebaseAuth.instance.currentUser)!.uid;
+  }
+
+  static Future getCurrentUser() async {
+    return (await FirebaseAuth.instance.currentUser);
+  }
+
   static Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
   }

@@ -108,6 +108,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
                     BidButton(
                       isLoginButton: true,
                       isLoading: formStateLoading,
+                      color: Colors.black,
                       onPress: () {
                         submit(context);
                       },
