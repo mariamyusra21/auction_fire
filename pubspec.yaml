@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: '>=2.19.2 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -20,6 +20,17 @@ dependencies:
   wc_form_validators: ^1.0.0
   sizer:
   flutter_admin_scaffold: ^1.2.0
+  image_picker: ^1.0.2
+  uuid: ^3.0.7
+  permission_handler: ^10.4.3
+  file_picker: ^5.5.0
+  multi_image_picker: ^4.8.01
+  carousel_slider: ^4.2.1
+  cached_network_image: ^3.3.0
+  # chached network used to maintain image data if the internet problem this will bring itself image
+  step_progress_indicator: ^1.0.2
+  paymob_pakistan : 
+
 
 dev_dependencies:
   flutter_test:

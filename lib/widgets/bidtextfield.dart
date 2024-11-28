@@ -9,7 +9,7 @@ class BidTextField extends StatefulWidget {
 bool check;  //used to check whether the textfeild is password if yes then visibility should turn on and off
 Widget icon;
 int? maxLines;
-final TextInputAction inputAction;  // use to change one action button in keyboard can go through that button to next textfeild
+final TextInputAction? inputAction;  // use to change one action button in keyboard can go through that button to next textfeild
 // late FocusNode focusNode;
    BidTextField( {super.key , 
    required this.HintText, 
@@ -19,8 +19,9 @@ final TextInputAction inputAction;  // use to change one action button in keyboa
    this.isPassword=false,
    this.check=false,
    required this.icon,
-   required this.inputAction, 
-   required String? Function(String v) validate, 
+   this.inputAction, 
+    String? Function(String v)? validate, 
+     TextInputType? keyboardType, 
    //required this.focusNode
    });
  
@@ -46,7 +47,7 @@ class _BidTextFieldState extends State<BidTextField> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 13,vertical: 7),
        decoration: BoxDecoration(
-         color: Colors.grey.withOpacity(0.5) ,     // color of formfeild where we input information like email, password etc
+         color: Colors.white,     // color of formfeild where we input information like email, password etc
          borderRadius: BorderRadius.circular(10)
         ),
         child: TextFormField(
@@ -64,7 +65,7 @@ class _BidTextFieldState extends State<BidTextField> {
           // focusNode: focusNode,
           textInputAction: inputAction,
           decoration: InputDecoration(
-            border: InputBorder.none,
+            border: UnderlineInputBorder(),
             labelText: widget.HintText,
             suffixIcon: widget.icon,
             // suffixIcon: IconButton(onPressed: (){

@@ -48,6 +48,8 @@ class _WebMainScreenState extends State<WebMainScreen> {
   Widget build(BuildContext context) {
     return AdminScaffold(
         appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.black,
           title: Text("ADMIN"),
           // backgroundColor: Colors.black
         ),
